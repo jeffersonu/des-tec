@@ -154,7 +154,7 @@ export default function Portfolio({ projects, onSelectProject }: PortfolioProps)
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-[var(--color-secondary)] tracking-tight leading-tight"
+            className="text-[clamp(1.35rem,5vw,3rem)] whitespace-nowrap font-display font-black text-[var(--color-secondary)] tracking-tight leading-tight"
           >
             Laboratorio Interactivo Des-Tec
           </motion.h2>
