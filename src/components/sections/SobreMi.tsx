@@ -3,6 +3,13 @@ import { AppConfig } from '../../types';
 import { Code2, Target, Server, ShieldCheck } from 'lucide-react';
 import { motion } from 'motion/react';
 import developerPortrait from '../../assets/images/developer_portrait_real_1783794065776.jpg';
+import iconLaravel from '../../assets/tech-icons/laravel.svg';
+import iconPhp from '../../assets/tech-icons/php.svg';
+import iconJavascript from '../../assets/tech-icons/javascript.svg';
+import iconDocker from '../../assets/tech-icons/docker.svg';
+import iconFlutter from '../../assets/tech-icons/flutter.svg';
+import iconN8n from '../../assets/tech-icons/n8n.svg';
+import iconGithub from '../../assets/tech-icons/github.svg';
 
 interface SobreMiProps {
   config: AppConfig;
@@ -50,13 +57,13 @@ export default function SobreMi({ config }: SobreMiProps) {
                 transition={{ repeat: Infinity, duration: 32, ease: "linear" }}
               >
                 {[
-                  { name: 'Laravel', url: 'https://cdn.simpleicons.org/laravel' },
-                  { name: 'PHP', url: 'https://cdn.simpleicons.org/php' },
-                  { name: 'JavaScript', url: 'https://cdn.simpleicons.org/javascript' },
-                  { name: 'Docker', url: 'https://cdn.simpleicons.org/docker' },
-                  { name: 'Flutter', url: 'https://cdn.simpleicons.org/flutter' },
-                  { name: 'n8n', url: 'https://cdn.simpleicons.org/n8n' },
-                  { name: 'GitHub', url: 'https://cdn.simpleicons.org/github' },
+                  { name: 'Laravel', url: iconLaravel },
+                  { name: 'PHP', url: iconPhp },
+                  { name: 'JavaScript', url: iconJavascript },
+                  { name: 'Docker', url: iconDocker },
+                  { name: 'Flutter', url: iconFlutter },
+                  { name: 'n8n', url: iconN8n },
+                  { name: 'GitHub', url: iconGithub },
                 ].map((tech, index, arr) => {
                   const angle = (index * 360) / arr.length;
                   const radius = 135; // orbit radius in pixels
