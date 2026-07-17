@@ -1,0 +1,6 @@
+{
+  "name": "Des-Tec",
+  "description": "Página web premium e interactiva de Des-Tec. Soluciones tecnológicas y desarrollo web de nivel empresarial con interfaces futuristas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
