@@ -3,6 +3,12 @@ import React, { useEffect, useState, useRef } from 'react';
 export default function Cursor() {
   const [hovered, setHovered] = useState(false);
   const [hidden, setHidden] = useState(true);
+  // Only devices whose PRIMARY input is a real mouse/trackpad (fine pointer)
+  // should get the custom cursor. Touch devices fire a synthetic 'mousemove'
+  // once per tap (for legacy web compatibility), which is exactly what made
+  // the dot appear to "teleport" to whatever was tapped and then freeze —
+  // there's no real continuous mouse movement to follow on a phone.
+  const [isFinePointer, setIsFinePointer] = useState(false);
   const mouseRef = useRef({ x: 0, y: 0 });
   const dotPos = useRef({ x: 0, y: 0 });
   const ringPos = useRef({ x: 0, y: 0 });
@@ -12,6 +18,16 @@ export default function Cursor() {
   const requestRef = useRef<number | null>(null);
 
   useEffect(() => {
+    const mq = window.matchMedia('(pointer: fine)');
+    setIsFinePointer(mq.matches);
+    const handleChange = (e: MediaQueryListEvent) => setIsFinePointer(e.matches);
+    mq.addEventListener('change', handleChange);
+    return () => mq.removeEventListener('change', handleChange);
+  }, []);
+
+  useEffect(() => {
+    if (!isFinePointer) return;
+
     const onMouseMove = (e: MouseEvent) => {
       mouseRef.current.x = e.clientX;
       mouseRef.current.y = e.clientY;
@@ -103,7 +119,11 @@ export default function Cursor() {
         cancelAnimationFrame(requestRef.current);
       }
     };
-  }, []);
+  }, [isFinePointer]);
+
+  // Touch/coarse-pointer devices get no custom cursor at all — nothing to
+  // mount, nothing to freeze mid-screen.
+  if (!isFinePointer) return null;
 
   return (
     <>
