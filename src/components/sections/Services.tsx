@@ -169,6 +169,16 @@ export default function Services({ services }: ServicesProps) {
   const { theme } = useTimeTheme();
   const isDark = theme.id === 'night';
 
+  // Discreet per-card accent (only used for subtle icon-ring tints — never overrides brand primary)
+  const cardAccent: Record<string, string> = {
+    'web-dev': '#2563EB',
+    'automation': '#10B981',
+    'integrations': '#F59E0B',
+    'whatsapp-chatbots': '#10B981',
+    'seo-speed': '#22D3EE',
+    'hosting-consulting': '#475569',
+  };
+
   // Map specific illustration relative to the service ID
   const renderIllustration = (id: string) => {
     switch (id) {
@@ -207,11 +217,11 @@ export default function Services({ services }: ServicesProps) {
   };
 
   return (
-    <section id="servicios" className={`py-14 relative overflow-hidden ${theme.sectionBgDark} transition-all duration-700`}>
+    <section id="servicios" className={`py-20 relative overflow-hidden ${theme.sectionBgDark} transition-all duration-700`}>
       {/* Premium blurred radial lights */}
       <div className="absolute top-10 left-1/4 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(228,168,83,0.04)_0%,rgba(228,168,83,0)_70%)] pointer-events-none -z-10 blur-2xl" />
       <div className="absolute bottom-10 right-1/4 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(95,141,122,0.04)_0%,rgba(95,141,122,0)_70%)] pointer-events-none -z-10 blur-2xl" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[radial-gradient(circle,rgba(108, 76, 245,0.02)_0%,rgba(108, 76, 245,0)_75%)] pointer-events-none -z-10 blur-3xl animate-pulse" style={{ animationDuration: '8s' }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[radial-gradient(circle,rgba(37, 99, 235,0.02)_0%,rgba(37, 99, 235,0)_75%)] pointer-events-none -z-10 blur-3xl animate-pulse" style={{ animationDuration: '8s' }} />
 
       {/* Subtle tech background patterns */}
       <div className="absolute inset-0 bg-[radial-gradient(var(--color-primary)_1px,transparent_1px)] [background-size:32px_32px] opacity-[0.015] pointer-events-none -z-10" />
@@ -262,12 +272,12 @@ export default function Services({ services }: ServicesProps) {
         </motion.div>
 
         {/* Services Premium Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
           {services.map((srv, index) => (
             <motion.div
               key={srv.id}
               id={`service-card-${srv.id}`}
-              className={`group relative ${theme.cardBg} border ${theme.cardBorder} p-8 sm:p-9 rounded-[24px] flex flex-col justify-between text-left ${theme.cardShadow} overflow-hidden cursor-pointer transition-all duration-500 ease-out`}
+              className={`group relative ${theme.cardBg} border ${theme.cardBorder} p-8 sm:p-10 rounded-[26px] flex flex-col justify-between text-left ${theme.cardShadow} overflow-hidden cursor-pointer transition-all duration-500 ease-out`}
               initial={{ opacity: 0, y: 35, filter: 'blur(4px)' }}
               whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               viewport={{ once: true, margin: "-10%" }}
@@ -278,14 +288,17 @@ export default function Services({ services }: ServicesProps) {
               }}
               whileHover={{
                 y: -6,
-                borderColor: 'rgba(108, 76, 245, 0.45)',
+                borderColor: 'rgba(37, 99, 235, 0.45)',
                 boxShadow: isDark
-                  ? '0 24px 48px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(108, 76, 245,0.15)'
-                  : '0 24px 48px -12px rgba(15,23,42,0.08), 0 0 0 1px rgba(108, 76, 245,0.08)'
+                  ? '0 24px 48px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(37, 99, 235,0.15)'
+                  : '0 24px 48px -12px rgba(15,23,42,0.08), 0 0 0 1px rgba(37, 99, 235,0.08)'
               }}
             >
               {/* Premium top border animated line */}
-              <div className="absolute top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary-hover)] to-[var(--color-primary)] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-center z-20" />
+              <div
+                className="absolute top-0 left-0 right-0 h-[2.5px] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-center z-20"
+                style={{ background: `linear-gradient(90deg, ${cardAccent[srv.id] || 'var(--color-primary)'}, var(--color-primary), ${cardAccent[srv.id] || 'var(--color-primary)'})` }}
+              />
 
               {/* Dynamic sleek sweeping glare reflex */}
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/12 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-[1000ms] ease-out pointer-events-none z-10" />
@@ -299,7 +312,10 @@ export default function Services({ services }: ServicesProps) {
                 {/* Header elements inside card */}
                 <div className="flex items-start justify-between mb-7">
                   {/* Modern Icon container with nested ring and responsive hover effects */}
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-b from-white to-[var(--color-background)] border border-[var(--color-secondary)]/[0.08] shadow-[0_2px_8px_rgba(15,23,42,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] flex items-center justify-center text-[var(--color-primary)] group-hover:text-white group-hover:bg-gradient-to-b group-hover:from-[var(--color-primary)] group-hover:to-[#B6692D] group-hover:border-[var(--color-primary)]/30 transition-all duration-300">
+                  <div
+                    className="w-12 h-12 rounded-2xl bg-gradient-to-b from-white to-[var(--color-background)] border border-[var(--accent)]/15 shadow-[0_2px_8px_rgba(15,23,42,0.04),inset_0_1px_0_rgba(255,255,255,0.8)] flex items-center justify-center text-[var(--color-primary)] group-hover:text-white group-hover:bg-[var(--accent)] group-hover:border-[var(--accent)]/40 transition-all duration-300"
+                    style={{ ['--accent' as any]: cardAccent[srv.id] || 'var(--color-primary)' }}
+                  >
                     {renderIcon(srv.icon)}
                   </div>
 

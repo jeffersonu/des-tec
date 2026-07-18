@@ -3,13 +3,6 @@ import { AppConfig } from '../../types';
 import { Code2, Target, Server, ShieldCheck } from 'lucide-react';
 import { motion } from 'motion/react';
 import developerPortrait from '../../assets/images/developer_portrait_real_1783794065776.jpg';
-import iconLaravel from '../../assets/tech-icons/laravel.svg';
-import iconPhp from '../../assets/tech-icons/php.svg';
-import iconJavascript from '../../assets/tech-icons/javascript.svg';
-import iconDocker from '../../assets/tech-icons/docker.svg';
-import iconFlutter from '../../assets/tech-icons/flutter.svg';
-import iconN8n from '../../assets/tech-icons/n8n.svg';
-import iconGithub from '../../assets/tech-icons/github.svg';
 
 interface SobreMiProps {
   config: AppConfig;
@@ -24,9 +17,9 @@ export default function SobreMi({ config }: SobreMiProps) {
   ];
 
   return (
-    <section id="sobre-mi" className="py-14 relative overflow-hidden bg-[#FAFAFB]">
+    <section id="sobre-mi" className="py-20 relative overflow-hidden bg-[#FAFAFB]">
       {/* Premium background flows & lights */}
-      <div className="absolute top-1/3 right-10 w-96 h-96 bg-[radial-gradient(circle,rgba(108, 76, 245,0.05)_0%,rgba(108, 76, 245,0)_70%)] rounded-full blur-2xl pointer-events-none -z-10" />
+      <div className="absolute top-1/3 right-10 w-96 h-96 bg-[radial-gradient(circle,rgba(37, 99, 235,0.05)_0%,rgba(37, 99, 235,0)_70%)] rounded-full blur-2xl pointer-events-none -z-10" />
       <div className="absolute bottom-10 left-10 w-80 h-80 bg-[radial-gradient(circle,rgba(95,141,122,0.03)_0%,rgba(95,141,122,0)_70%)] rounded-full blur-2xl pointer-events-none -z-10" />
 
       {/* Sutiles patrones tecnológicos */}
@@ -57,13 +50,13 @@ export default function SobreMi({ config }: SobreMiProps) {
                 transition={{ repeat: Infinity, duration: 32, ease: "linear" }}
               >
                 {[
-                  { name: 'Laravel', url: iconLaravel },
-                  { name: 'PHP', url: iconPhp },
-                  { name: 'JavaScript', url: iconJavascript },
-                  { name: 'Docker', url: iconDocker },
-                  { name: 'Flutter', url: iconFlutter },
-                  { name: 'n8n', url: iconN8n },
-                  { name: 'GitHub', url: iconGithub },
+                  { name: 'Laravel', url: 'https://cdn.simpleicons.org/laravel' },
+                  { name: 'PHP', url: 'https://cdn.simpleicons.org/php' },
+                  { name: 'JavaScript', url: 'https://cdn.simpleicons.org/javascript' },
+                  { name: 'Docker', url: 'https://cdn.simpleicons.org/docker' },
+                  { name: 'Flutter', url: 'https://cdn.simpleicons.org/flutter' },
+                  { name: 'n8n', url: 'https://cdn.simpleicons.org/n8n' },
+                  { name: 'GitHub', url: 'https://cdn.simpleicons.org/github' },
                 ].map((tech, index, arr) => {
                   const angle = (index * 360) / arr.length;
                   const radius = 135; // orbit radius in pixels
@@ -192,8 +185,8 @@ export default function SobreMi({ config }: SobreMiProps) {
                   transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: sIdx * 0.08 }}
                   whileHover={{
                     x: 4,
-                    borderColor: 'rgba(108, 76, 245, 0.35)',
-                    boxShadow: '0 8px 30px rgba(108, 76, 245,0.03)'
+                    borderColor: 'rgba(37, 99, 235, 0.35)',
+                    boxShadow: '0 8px 30px rgba(37, 99, 235,0.03)'
                   }}
                 >
                   <div className="p-1.5 bg-[var(--color-primary)]/10 rounded-lg border border-[var(--color-primary)]/20 text-[var(--color-primary)] mt-0.5 shrink-0">

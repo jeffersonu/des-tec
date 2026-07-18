@@ -342,7 +342,7 @@ export default function App() {
                 <button
                   onClick={() => scrollTo('contacto')}
                   id="hero-cta-quote-btn"
-                  className="group px-8 py-4 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary-hover)] to-[var(--color-primary)] bg-[length:200%_auto] hover:bg-[right_center] text-white rounded-xl border border-[var(--color-primary)]/10 transition-all duration-500 shadow-[0_4px_20px_rgba(108, 76, 245,0.2)] hover:shadow-[0_4px_25px_rgba(108, 76, 245,0.45)] font-bold flex items-center justify-center space-x-1.5 cursor-pointer hover:scale-[1.02] active:scale-[0.985]"
+                  className="group px-8 py-4 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary-hover)] to-[var(--color-primary)] bg-[length:200%_auto] hover:bg-[right_center] text-white rounded-xl border border-[var(--color-primary)]/10 transition-all duration-500 shadow-[0_4px_20px_rgba(37, 99, 235,0.2)] hover:shadow-[0_4px_25px_rgba(37, 99, 235,0.45)] font-bold flex items-center justify-center space-x-1.5 cursor-pointer hover:scale-[1.02] active:scale-[0.985]"
                 >
                   <span>Solicitar Cotización</span>
                   <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

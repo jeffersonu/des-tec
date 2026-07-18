@@ -263,9 +263,9 @@ export default function Contact({ config }: ContactProps) {
   };
 
   return (
-    <section id="contacto" className="py-14 relative overflow-hidden bg-[#F7F8FC]">
+    <section id="contacto" className="py-20 relative overflow-hidden bg-[#F7F8FC]">
       {/* Glow spot & radial lighting */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[radial-gradient(circle,rgba(108, 76, 245,0.06)_0%,rgba(108, 76, 245,0)_70%)] pointer-events-none -z-10 blur-3xl animate-pulse" style={{ animationDuration: '11s' }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[radial-gradient(circle,rgba(37, 99, 235,0.06)_0%,rgba(37, 99, 235,0)_70%)] pointer-events-none -z-10 blur-3xl animate-pulse" style={{ animationDuration: '11s' }} />
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(95,141,122,0.03)_0%,rgba(95,141,122,0)_70%)] pointer-events-none -z-10 blur-2xl" />
 
       {/* Sutiles patrones tecnológicos */}
@@ -521,7 +521,7 @@ export default function Contact({ config }: ContactProps) {
                           }}
                           className={`px-3 py-1 text-[9px] font-sans font-extrabold rounded-md transition-all ${
                             currency === cur
-                              ? 'bg-[var(--color-primary)] text-white shadow-[0_2px_6px_rgba(108, 76, 245,0.2)]'
+                              ? 'bg-[var(--color-primary)] text-white shadow-[0_2px_6px_rgba(37, 99, 235,0.2)]'
                               : 'text-gray-500 hover:text-[var(--color-secondary)]'
                           }`}
                         >
@@ -542,7 +542,7 @@ export default function Contact({ config }: ContactProps) {
                           onClick={() => setFormData({ ...formData, presupuesto: btn.key })}
                           className={`relative p-3.5 rounded-xl text-left border transition-all duration-300 flex flex-col justify-between overflow-hidden group ${
                             isActive
-                              ? 'bg-gradient-to-br from-[var(--color-surface)] to-[var(--color-primary)]/5 border-[var(--color-primary)] shadow-[0_8px_20px_rgba(108, 76, 245,0.06)]'
+                              ? 'bg-gradient-to-br from-[var(--color-surface)] to-[var(--color-primary)]/5 border-[var(--color-primary)] shadow-[0_8px_20px_rgba(37, 99, 235,0.06)]'
                               : 'bg-[var(--color-background)] border-[var(--color-text)]/10 hover:border-slate-300 hover:bg-slate-50'
                           }`}
                         >
@@ -625,7 +625,7 @@ export default function Contact({ config }: ContactProps) {
                     type="submit"
                     disabled={isSending}
                     id="submit-contact-form-btn"
-                    className="group w-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary-hover)] to-[var(--color-primary)] bg-[length:200%_auto] hover:bg-[right_center] disabled:from-[var(--color-text)]/15 disabled:to-[var(--color-text)]/25 text-white font-sans text-xs font-bold py-3.5 rounded-xl border border-[var(--color-primary)]/10 transition-all duration-500 flex items-center justify-center space-x-2 shadow-[0_4px_15px_rgba(108, 76, 245,0.2)] hover:shadow-[0_4px_22px_rgba(108, 76, 245,0.45)] cursor-pointer hover:scale-[1.015] active:scale-[0.985]"
+                    className="group w-full bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary-hover)] to-[var(--color-primary)] bg-[length:200%_auto] hover:bg-[right_center] disabled:from-[var(--color-text)]/15 disabled:to-[var(--color-text)]/25 text-white font-sans text-xs font-bold py-3.5 rounded-xl border border-[var(--color-primary)]/10 transition-all duration-500 flex items-center justify-center space-x-2 shadow-[0_4px_15px_rgba(37, 99, 235,0.2)] hover:shadow-[0_4px_22px_rgba(37, 99, 235,0.45)] cursor-pointer hover:scale-[1.015] active:scale-[0.985]"
                   >
                     <span>
                       {isSending 

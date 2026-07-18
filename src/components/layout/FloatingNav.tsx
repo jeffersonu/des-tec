@@ -166,7 +166,7 @@ export default function FloatingNav({ activeSection }: FloatingNavProps) {
                         scale: isActive ? 1.1 : 0.6,
                         opacity: isActive ? 1 : 0,
                       }}
-                      className={`absolute w-5 h-5 rounded-full border border-[var(--color-primary)] shadow-[0_0_8px_rgba(108, 76, 245,0.25)] -z-10 ${
+                      className={`absolute w-5 h-5 rounded-full border border-[var(--color-primary)] shadow-[0_0_8px_rgba(37, 99, 235,0.25)] -z-10 ${
                         isDark ? 'bg-slate-900' : 'bg-white'
                       }`}
                       transition={{ type: 'spring', stiffness: 300, damping: 20 }}

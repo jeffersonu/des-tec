@@ -3,12 +3,6 @@ import React, { useEffect, useState, useRef } from 'react';
 export default function Cursor() {
   const [hovered, setHovered] = useState(false);
   const [hidden, setHidden] = useState(true);
-  // Only devices whose PRIMARY input is a real mouse/trackpad (fine pointer)
-  // should get the custom cursor. Touch devices fire a synthetic 'mousemove'
-  // once per tap (for legacy web compatibility), which is exactly what made
-  // the dot appear to "teleport" to whatever was tapped and then freeze —
-  // there's no real continuous mouse movement to follow on a phone.
-  const [isFinePointer, setIsFinePointer] = useState(false);
   const mouseRef = useRef({ x: 0, y: 0 });
   const dotPos = useRef({ x: 0, y: 0 });
   const ringPos = useRef({ x: 0, y: 0 });
@@ -18,16 +12,6 @@ export default function Cursor() {
   const requestRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const mq = window.matchMedia('(pointer: fine)');
-    setIsFinePointer(mq.matches);
-    const handleChange = (e: MediaQueryListEvent) => setIsFinePointer(e.matches);
-    mq.addEventListener('change', handleChange);
-    return () => mq.removeEventListener('change', handleChange);
-  }, []);
-
-  useEffect(() => {
-    if (!isFinePointer) return;
-
     const onMouseMove = (e: MouseEvent) => {
       mouseRef.current.x = e.clientX;
       mouseRef.current.y = e.clientY;
@@ -119,11 +103,7 @@ export default function Cursor() {
         cancelAnimationFrame(requestRef.current);
       }
     };
-  }, [isFinePointer]);
-
-  // Touch/coarse-pointer devices get no custom cursor at all — nothing to
-  // mount, nothing to freeze mid-screen.
-  if (!isFinePointer) return null;
+  }, []);
 
   return (
     <>
@@ -141,8 +121,8 @@ export default function Cursor() {
       >
         {/* Inner visual element of the Dot (handles hover states and scales smoothly with CSS transitions) */}
         <div
-          className={`w-2.5 h-2.5 bg-purple-400 rounded-full transition-transform duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] shadow-[0_0_10px_rgba(168,85,247,0.9)] ${
-            hovered ? 'scale-150 bg-purple-300 shadow-[0_0_14px_rgba(168,85,247,1)]' : 'scale-100'
+          className={`w-2.5 h-2.5 bg-blue-400 rounded-full transition-transform duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] shadow-[0_0_10px_rgba(168,85,247,0.9)] ${
+            hovered ? 'scale-150 bg-blue-300 shadow-[0_0_14px_rgba(168,85,247,1)]' : 'scale-100'
           } ${hidden ? 'scale-0' : 'scale-100'} transition-all`}
         />
       </div>
@@ -163,8 +143,8 @@ export default function Cursor() {
         <div
           className={`w-8 h-8 border rounded-full transition-all duration-300 ease-out shadow-[0_0_15px_rgba(147,51,234,0.15)] ${
             hovered
-              ? 'scale-150 border-purple-300 bg-purple-500/10 shadow-[0_0_20px_rgba(147,51,234,0.3)]'
-              : 'scale-100 border-purple-500/40 bg-transparent'
+              ? 'scale-150 border-blue-300 bg-blue-500/10 shadow-[0_0_20px_rgba(147,51,234,0.3)]'
+              : 'scale-100 border-blue-500/40 bg-transparent'
           } ${hidden ? 'scale-0' : 'scale-100'}`}
         />
       </div>

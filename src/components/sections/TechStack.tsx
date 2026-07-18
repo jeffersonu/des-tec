@@ -17,9 +17,9 @@ export default function TechStack({ technologies }: TechStackProps) {
   };
 
   return (
-    <section id="tecnologias" className="py-14 relative overflow-hidden bg-[var(--color-surface)]">
+    <section id="tecnologias" className="py-20 relative overflow-hidden bg-[var(--color-surface)]">
       {/* Glow effects & Radial Lights */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[radial-gradient(circle,rgba(108, 76, 245,0.06)_0%,rgba(108, 76, 245,0)_70%)] pointer-events-none -z-10 blur-3xl animate-pulse" style={{ animationDuration: '9s' }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[radial-gradient(circle,rgba(37, 99, 235,0.06)_0%,rgba(37, 99, 235,0)_70%)] pointer-events-none -z-10 blur-3xl animate-pulse" style={{ animationDuration: '9s' }} />
       <div className="absolute -top-10 left-10 w-[400px] h-[400px] bg-[radial-gradient(circle,rgba(95,141,122,0.04)_0%,rgba(95,141,122,0)_70%)] pointer-events-none -z-10 blur-2xl" />
 
       {/* Subtle tech background patterns */}

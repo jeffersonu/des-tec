@@ -15,9 +15,9 @@ export default function WorkProcess({ steps }: WorkProcessProps) {
   };
 
   return (
-    <section id="proceso" className="py-14 relative overflow-hidden bg-[var(--color-surface)]">
+    <section id="proceso" className="py-20 relative overflow-hidden bg-[var(--color-surface)]">
       {/* Premium blurred radial lights */}
-      <div className="absolute bottom-1/3 left-10 w-96 h-96 bg-[radial-gradient(circle,rgba(108, 76, 245,0.05)_0%,rgba(108, 76, 245,0)_70%)] pointer-events-none -z-10 blur-3xl animate-pulse" style={{ animationDuration: '8s' }} />
+      <div className="absolute bottom-1/3 left-10 w-96 h-96 bg-[radial-gradient(circle,rgba(37, 99, 235,0.05)_0%,rgba(37, 99, 235,0)_70%)] pointer-events-none -z-10 blur-3xl animate-pulse" style={{ animationDuration: '8s' }} />
       <div className="absolute top-1/4 right-10 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(95,141,122,0.04)_0%,rgba(95,141,122,0)_70%)] pointer-events-none -z-10 blur-2xl" />
 
       {/* Sutiles patrones tecnológicos */}
@@ -87,7 +87,7 @@ export default function WorkProcess({ steps }: WorkProcessProps) {
                 {/* Bullet node on timeline */}
                 <div
                   className={`absolute -left-[35px] sm:-left-[43px] top-6 w-4 h-4 rounded-full border-2 bg-[var(--color-background)] transition-all ${
-                    isExpanded ? 'border-[var(--color-primary)] scale-125 shadow-[0_0_8px_rgba(108, 76, 245,0.25)]' : 'border-[var(--color-text)]/35'
+                    isExpanded ? 'border-[var(--color-primary)] scale-125 shadow-[0_0_8px_rgba(37, 99, 235,0.25)]' : 'border-[var(--color-text)]/35'
                   }`}
                 />
 

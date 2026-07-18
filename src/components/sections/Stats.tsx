@@ -119,9 +119,9 @@ export default function Stats() {
   ];
 
   return (
-    <section id="metricas-estudio" className="py-12 bg-[#F7F8FC] relative overflow-hidden border-t border-b border-[var(--color-secondary)]/5">
+    <section id="metricas-estudio" className="py-16 bg-[#F7F8FC] relative overflow-hidden border-t border-b border-[var(--color-secondary)]/5">
       {/* Soft Apple background accents & glows */}
-      <div className="absolute top-0 left-1/3 w-[600px] h-[300px] bg-[radial-gradient(circle,rgba(108, 76, 245,0.05)_0%,rgba(108, 76, 245,0)_70%)] pointer-events-none -z-10 blur-2xl animate-pulse" style={{ animationDuration: '6s' }} />
+      <div className="absolute top-0 left-1/3 w-[600px] h-[300px] bg-[radial-gradient(circle,rgba(37, 99, 235,0.05)_0%,rgba(37, 99, 235,0)_70%)] pointer-events-none -z-10 blur-2xl animate-pulse" style={{ animationDuration: '6s' }} />
       <div className="absolute bottom-0 right-1/4 w-[400px] h-[250px] bg-[radial-gradient(circle,rgba(95,141,122,0.03)_0%,rgba(95,141,122,0)_70%)] pointer-events-none -z-10 blur-xl" />
 
       {/* Sutiles patrones tecnológicos */}
@@ -190,7 +190,7 @@ export default function Stats() {
               whileHover={{
                 y: -4,
                 scale: 1.015,
-                borderColor: 'rgba(108, 76, 245, 0.15)',
+                borderColor: 'rgba(37, 99, 235, 0.15)',
                 boxShadow: '0 12px 35px rgba(15,23,42,0.035)'
               }}
             >

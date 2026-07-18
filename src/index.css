@@ -2,15 +2,17 @@
 @import "tailwindcss";
 
 :root {
-  --color-primary: #6C4CF5;
-  --color-primary-hover: #8B6CFF;
-  --color-secondary: #2E2A47;
-  --color-support: #161822;
-  --color-background: #F5F6FA;
+  --color-primary: #2563EB;
+  --color-primary-hover: #3B82F6;
+  --color-secondary: #0F3B4C;
+  --color-support: #0B0F14;
+  --color-background: #F5F7FA;
   --color-surface: #FFFFFF;
-  --color-text: #1D2333;
-  --color-text-secondary: #6B7280;
-  --color-border: #D8DCE6;
+  --color-text: #101828;
+  --color-text-secondary: #5B6472;
+  --color-border: #DCE1E8;
+  --color-accent-cyan: #22D3EE;
+  --color-accent-success: #10B981;
 }
 
 @theme {
@@ -27,6 +29,8 @@
   --color-text: var(--color-text);
   --color-text-secondary: var(--color-text-secondary);
   --color-border: var(--color-border);
+  --color-accent-cyan: var(--color-accent-cyan);
+  --color-accent-success: var(--color-accent-success);
 
   /* Retain legacy variables mapped to the new palette for total compatibility */
   --color-brand-primary: var(--color-secondary);

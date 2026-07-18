@@ -130,8 +130,8 @@ const SLIDES: SliderSlide[] = [
     themeTag: 'COGNITIVE SYSTEMS',
     themeTitle: 'Automatización & IA',
     themeDesc: 'Diseñamos cerebros lógicos que integran todas tus aplicaciones y automatizan tareas rutinarias sin errores humanos.',
-    techGlow: 'from-[#FF6F61]/12 via-purple-950/20 to-transparent',
-    cardGradient: 'linear-gradient(135deg, #100b1a 0%, #201235 50%, #FF6F61 100%)'
+    techGlow: 'from-[#FF6F61]/12 via-slate-950/20 to-transparent',
+    cardGradient: 'linear-gradient(135deg, #0a0d12 0%, #0F3B4C 50%, #FF6F61 100%)'
   },
   {
     id: 'software',
@@ -146,7 +146,7 @@ const SLIDES: SliderSlide[] = [
     themeTag: 'HIGH-SCALE ARCHITECTURE',
     themeTitle: 'Infraestructura Nube',
     themeDesc: 'Contenedores seguros listos para recibir miles de visitas diarias sin latencia ni caídas del sistema.',
-    techGlow: 'from-[#2496ED]/10 via-emerald-950/20 to-transparent',
+    techGlow: 'from-[#2496ED]/10 via-slate-950/20 to-transparent',
     cardGradient: 'linear-gradient(135deg, #050a0f 0%, #0c2035 50%, #2496ED 100%)'
   }
 ];

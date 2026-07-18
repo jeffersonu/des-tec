@@ -60,7 +60,7 @@ export const SmartQuoteDemo: React.FC = () => {
       complexityColor = 'text-orange-400 border-orange-500/20 bg-orange-500/10';
     } else if (finalDays >= 35) {
       complexity = 'Complejo / Corporativo';
-      complexityColor = 'text-purple-400 border-purple-500/20 bg-purple-500/10';
+      complexityColor = 'text-blue-400 border-blue-500/20 bg-blue-500/10';
     }
 
     return { price: finalPrice, days: finalDays, complexity, complexityColor };

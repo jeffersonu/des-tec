@@ -123,7 +123,7 @@ export default function Header({ config, activeSection }: HeaderProps) {
               {activeSection === item.id && (
                 <motion.span
                   layoutId="activeUnderline"
-                  className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--color-primary)] rounded shadow-[0_0_8px_rgba(108, 76, 245,0.25)]"
+                  className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--color-primary)] rounded shadow-[0_0_8px_rgba(37, 99, 235,0.25)]"
                   transition={{ type: "spring", stiffness: 380, damping: 30 }}
                 />
               )}
@@ -155,7 +155,7 @@ export default function Header({ config, activeSection }: HeaderProps) {
             <motion.button
               onClick={() => scrollTo('contacto')}
               id="header-cta-btn"
-              className={`group px-5 py-2.5 font-bold rounded-xl transition-all duration-300 flex items-center space-x-1.5 shadow-sm hover:shadow-[0_4px_15px_rgba(108, 76, 245,0.25)] cursor-pointer border ${
+              className={`group px-5 py-2.5 font-bold rounded-xl transition-all duration-300 flex items-center space-x-1.5 shadow-sm hover:shadow-[0_4px_15px_rgba(37, 99, 235,0.25)] cursor-pointer border ${
                 isDark 
                   ? 'bg-gradient-to-r from-slate-800 to-slate-900 border-slate-700 hover:from-[var(--color-primary)] hover:to-[var(--color-primary-hover)] text-white' 
                   : 'bg-gradient-to-r from-[var(--color-secondary)] to-[var(--color-text)] hover:from-[var(--color-primary)] hover:to-[var(--color-primary-hover)] text-white border-[var(--color-secondary)]/5'
@@ -228,7 +228,7 @@ export default function Header({ config, activeSection }: HeaderProps) {
               )}
               <motion.button
                 onClick={() => scrollTo('contacto')}
-                className="mt-2 w-full p-3 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary-hover)] to-[var(--color-primary)] bg-[length:200%_auto] hover:bg-[right_center] text-white rounded-lg text-center font-bold transition-all duration-500 shadow-[0_4px_12px_rgba(108, 76, 245,0.2)] hover:shadow-[0_4px_18px_rgba(108, 76, 245,0.35)] hover:scale-[1.015]"
+                className="mt-2 w-full p-3 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary-hover)] to-[var(--color-primary)] bg-[length:200%_auto] hover:bg-[right_center] text-white rounded-lg text-center font-bold transition-all duration-500 shadow-[0_4px_12px_rgba(37, 99, 235,0.2)] hover:shadow-[0_4px_18px_rgba(37, 99, 235,0.35)] hover:scale-[1.015]"
                 whileTap={{ scale: 0.985 }}
               >
                 Solicitar Cotización

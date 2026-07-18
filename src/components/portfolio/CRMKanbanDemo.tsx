@@ -66,7 +66,7 @@ export const CRMKanbanDemo: React.FC = () => {
   const columnsDef = [
     { key: 'nuevo', label: 'Nuevo Lead', color: 'bg-blue-500/10 text-blue-500 border-blue-500/20' },
     { key: 'calificado', label: 'Calificado', color: 'bg-amber-500/10 text-amber-500 border-amber-500/20' },
-    { key: 'propuesta', label: 'Propuesta', color: 'bg-purple-500/10 text-purple-500 border-purple-500/20' },
+    { key: 'propuesta', label: 'Propuesta', color: 'bg-blue-500/10 text-blue-500 border-blue-500/20' },
     { key: 'proyecto', label: 'En Obra', color: 'bg-[var(--color-primary)]/10 text-[var(--color-primary)] border-[var(--color-primary)]/20' },
     { key: 'ganado', label: 'Cerrado', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' }
   ] as const;

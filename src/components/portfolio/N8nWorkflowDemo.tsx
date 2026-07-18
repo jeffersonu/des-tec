@@ -62,7 +62,7 @@ export const N8nWorkflowDemo: React.FC = () => {
    */
   const getBorderColor = (nodeId: string) => {
     if (activeNode === nodeId) {
-      return 'border-[var(--color-primary)] shadow-[0_0_10px_rgba(108, 76, 245,0.35)] bg-slate-800';
+      return 'border-[var(--color-primary)] shadow-[0_0_10px_rgba(37, 99, 235,0.35)] bg-slate-800';
     }
     if (completedNodes.includes(nodeId)) {
       return 'border-emerald-500 bg-slate-900/90';

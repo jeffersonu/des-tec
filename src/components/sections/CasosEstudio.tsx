@@ -21,7 +21,7 @@ export default function CasosEstudio({ casos }: CasosEstudioProps) {
   return (
     <section id="casos-estudio" className="py-20 relative overflow-hidden bg-[#FAFAFB]">
       {/* Decorative ambient blurred vector lights */}
-      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[radial-gradient(circle,rgba(108, 76, 245,0.06)_0%,rgba(108, 76, 245,0)_70%)] rounded-full blur-2xl pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '8s' }} />
+      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[radial-gradient(circle,rgba(37, 99, 235,0.06)_0%,rgba(37, 99, 235,0)_70%)] rounded-full blur-2xl pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '8s' }} />
       <div className="absolute bottom-10 left-10 w-[450px] h-[450px] bg-[radial-gradient(circle,rgba(95,141,122,0.05)_0%,rgba(95,141,122,0)_70%)] rounded-full blur-2xl pointer-events-none -z-10" />
 
       {/* Grid Pattern accents */}
@@ -82,7 +82,7 @@ export default function CasosEstudio({ casos }: CasosEstudioProps) {
             return (
               <motion.div
                 key={caso.id}
-                className="group relative bg-[var(--color-surface)] border border-[var(--color-text)]/10 p-7 sm:p-8 rounded-2xl flex flex-col justify-between text-left shadow-[0_4px_20px_rgba(15,23,42,0.02)] overflow-hidden hover:border-[var(--color-primary)]/20 hover:shadow-[0_15px_40px_rgba(108, 76, 245,0.06)] transition-all duration-500"
+                className="group relative bg-[var(--color-surface)] border border-[var(--color-text)]/10 p-7 sm:p-8 rounded-2xl flex flex-col justify-between text-left shadow-[0_4px_20px_rgba(15,23,42,0.02)] overflow-hidden hover:border-[var(--color-primary)]/20 hover:shadow-[0_15px_40px_rgba(37, 99, 235,0.06)] transition-all duration-500"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10%" }}

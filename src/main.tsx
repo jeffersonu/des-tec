@@ -5,19 +5,6 @@ import { TimeThemeInterfaceProvider } from './context/TimeThemeContext.tsx';
 import { PWAProvider } from './context/PWAContext.tsx';
 import './index.css';
 
-// Prevent the browser's native scroll-position restoration. By default,
-// browsers remember where you were scrolled to and silently jump back there
-// on reload / back-forward navigation — which is exactly what makes a page
-// appear to "open scrolled to the middle" even though no code told it to.
-// We opt out of that and decide the scroll position ourselves: top of the
-// page on a fresh load, or the requested #section if the URL asks for one.
-if (typeof window !== 'undefined' && 'scrollRestoration' in window.history) {
-  window.history.scrollRestoration = 'manual';
-}
-if (typeof window !== 'undefined' && !window.location.hash) {
-  window.scrollTo(0, 0);
-}
-
 // Intercept and handle benign cross-origin script errors or Turnstile script blocking inside the sandbox iframe
 if (typeof window !== 'undefined') {
   const isBenignError = (message: string, filename?: string) => {

@@ -129,7 +129,7 @@ export default function Portfolio({ projects, onSelectProject }: PortfolioProps)
     <section id="proyectos" className="py-24 relative overflow-hidden bg-[var(--color-background)]">
       {/* SaaS Ambient Glow spots */}
       <div
-        className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(108, 76, 245,0.04)_0%,rgba(108, 76, 245,0)_70%)] pointer-events-none -z-10 blur-3xl animate-pulse"
+        className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(37, 99, 235,0.04)_0%,rgba(37, 99, 235,0)_70%)] pointer-events-none -z-10 blur-3xl animate-pulse"
         style={{ animationDuration: '10s' }}
       />
       <div className="absolute bottom-1/3 right-1/4 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(95,141,122,0.03)_0%,rgba(95,141,122,0)_70%)] pointer-events-none -z-10 blur-3xl" />
@@ -154,7 +154,7 @@ export default function Portfolio({ projects, onSelectProject }: PortfolioProps)
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-[clamp(1.35rem,5vw,3rem)] whitespace-nowrap font-display font-black text-[var(--color-secondary)] tracking-tight leading-tight"
+            className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-[var(--color-secondary)] tracking-tight leading-tight"
           >
             Laboratorio Interactivo Des-Tec
           </motion.h2>
@@ -203,10 +203,10 @@ export default function Portfolio({ projects, onSelectProject }: PortfolioProps)
                 viewport={{ once: true, margin: "-10%" }}
                 transition={{ duration: 0.5, delay: index * 0.05 }}
               >
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch h-full">
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-stretch h-full">
                   {/* Left Column: Information Card details */}
-                  <div className="md:col-span-7 flex flex-col justify-between space-y-4">
-                    <div className="space-y-3">
+                  <div className="md:col-span-7 flex flex-col justify-between space-y-5">
+                    <div className="space-y-3.5">
                       {/* Title with icon */}
                       <div className="flex items-center space-x-2.5">
                         <div className="p-2 rounded-xl bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/20">
@@ -269,11 +269,13 @@ export default function Portfolio({ projects, onSelectProject }: PortfolioProps)
                   </div>
 
                   {/* Right Column: Immersive active simulator panel */}
-                  <div className="md:col-span-5 flex items-center justify-center bg-slate-950/[0.02] border border-[var(--color-secondary)]/[0.03] rounded-2xl p-2 md:p-3 relative overflow-hidden min-h-[250px]">
+                  <div className="md:col-span-5 flex items-center justify-center bg-gradient-to-br from-slate-950 to-[#0B0F14] border border-[var(--color-primary)]/10 rounded-2xl p-3 md:p-4 relative overflow-hidden min-h-[270px] shadow-[inset_0_1px_0_rgba(255,255,255,0.04),0_10px_30px_-10px_rgba(0,0,0,0.25)]">
                     {/* Subtle grid styling */}
-                    <div className="absolute inset-0 bg-[linear-gradient(to_right,#000/[0.01]_1px,transparent_1px),linear-gradient(to_bottom,#000/[0.01]_1px,transparent_1px)] bg-[size:10px_10px] pointer-events-none" />
-                    
-                    <div className="w-full h-full flex flex-col justify-center">
+                    <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:10px_10px] pointer-events-none" />
+                    {/* Soft ambient accent glow to give the simulator more presence */}
+                    <div className="absolute -top-10 -right-10 w-40 h-40 bg-[var(--color-primary)]/10 rounded-full blur-3xl pointer-events-none" />
+
+                    <div className="w-full h-full flex flex-col justify-center relative z-10">
                       {demo.component}
                     </div>
                   </div>
