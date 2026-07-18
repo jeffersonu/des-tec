@@ -4,6 +4,8 @@ import App from './App.tsx';
 import { TimeThemeInterfaceProvider } from './context/TimeThemeContext.tsx';
 import { PWAProvider } from './context/PWAContext.tsx';
 import './index.css';
+import { SpeedInsights } from "@vercel/speed-insights/react";
+
 
 // Intercept and handle benign cross-origin script errors or Turnstile script blocking inside the sandbox iframe
 if (typeof window !== 'undefined') {
@@ -59,6 +61,7 @@ createRoot(document.getElementById('root')!).render(
       <PWAProvider>
         <App />
       </PWAProvider>
+      <SpeedInsights />
     </TimeThemeInterfaceProvider>
   </StrictMode>,
 );
