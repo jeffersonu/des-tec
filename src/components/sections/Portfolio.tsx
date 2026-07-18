@@ -156,7 +156,7 @@ export default function Portfolio({ projects, onSelectProject }: PortfolioProps)
             transition={{ duration: 0.6 }}
             className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-[var(--color-secondary)] tracking-tight leading-tight"
           >
-            Laboratorio Interactivo Des-Tec
+            Laboratorio Interactivo <span className="whitespace-nowrap">Des-Tec</span>
           </motion.h2>
 
           <motion.p 

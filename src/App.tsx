@@ -122,7 +122,7 @@ export default function App() {
           "url": `https://${config.dominio || 'des-tec.co'}`,
           "logo": {
             "@type": "ImageObject",
-            "url": `https://${config.dominio || 'des-tec.com'}/logo.jpg`,
+            "url": `https://${config.dominio || 'des-tec.co'}/logo.jpg`,
             "caption": `${config.nombre || 'Des-Tec'} Logo`
           },
           "image": `https://${config.dominio || 'des-tec.co'}/logo.jpg`,

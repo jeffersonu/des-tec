@@ -402,7 +402,7 @@ export default function HeroSlider() {
 
           <div className="flex-1 max-w-[320px] bg-slate-950/70 border border-white/[0.03] h-5.5 rounded-md flex items-center justify-center text-[8px] font-mono tracking-wider space-x-1.5">
             <span className="text-[var(--color-primary)]/80">https://</span>
-            <span className="text-slate-400">des-tec.com/</span>
+            <span className="text-slate-400">des-tec.co/</span>
             <span className="text-white font-bold">{currentSlide.id}</span>
           </div>
 

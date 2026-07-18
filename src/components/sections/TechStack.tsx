@@ -2,6 +2,28 @@ import React, { useState } from 'react';
 import { Technology } from '../../types';
 import * as Icons from 'lucide-react';
 import { motion } from 'motion/react';
+import iconHtml5 from '../../assets/tech-icons/html5.svg';
+import iconCss3 from '../../assets/tech-icons/css3.svg';
+import iconJavascript from '../../assets/tech-icons/javascript.svg';
+import iconReact from '../../assets/tech-icons/react.svg';
+import iconNodejs from '../../assets/tech-icons/nodejs.svg';
+import iconPhp from '../../assets/tech-icons/php.svg';
+import iconMysql from '../../assets/tech-icons/mysql.svg';
+import iconGithub from '../../assets/tech-icons/github.svg';
+import iconN8n from '../../assets/tech-icons/n8n.svg';
+
+// Mapa de logo real por nombre de tecnología (fallback al ícono genérico si no hay match)
+const REAL_TECH_LOGOS: Record<string, string> = {
+  'HTML5': iconHtml5,
+  'CSS3': iconCss3,
+  'JavaScript': iconJavascript,
+  'React': iconReact,
+  'Node.js': iconNodejs,
+  'PHP & Laravel': iconPhp,
+  'MySQL': iconMysql,
+  'Git & GitHub': iconGithub,
+  'n8n': iconN8n,
+};
 
 interface TechStackProps {
   technologies: Technology[];
@@ -10,8 +32,12 @@ interface TechStackProps {
 export default function TechStack({ technologies }: TechStackProps) {
   const [hoveredTech, setHoveredTech] = useState<Technology | null>(null);
 
-  const getIcon = (iconName: string) => {
-    const IconComponent = (Icons as any)[iconName];
+  const getIcon = (tech: Technology) => {
+    const realLogo = REAL_TECH_LOGOS[tech.name];
+    if (realLogo) {
+      return <img src={realLogo} alt={tech.name} className="w-6 h-6 object-contain" draggable={false} />;
+    }
+    const IconComponent = (Icons as any)[tech.iconName];
     if (!IconComponent) return <Icons.Cpu className="w-6 h-6 text-[var(--color-primary)]" />;
     return <IconComponent className="w-6 h-6 text-[var(--color-primary)] group-hover:text-[var(--color-primary-hover)] transition-all duration-[260ms] ease-[cubic-bezier(0.16,1,0.3,1)]" />;
   };
@@ -93,7 +119,7 @@ export default function TechStack({ technologies }: TechStackProps) {
                 <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-[var(--color-primary)] rounded-full opacity-0 group-hover:opacity-100 transition-all duration-[260ms] ease-[cubic-bezier(0.16,1,0.3,1)]" />
 
                 <div className="w-12 h-12 rounded-xl bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/15 flex items-center justify-center group-hover:bg-[var(--color-primary)]/20 group-hover:border-[var(--color-primary)] transition-all duration-[260ms] ease-[cubic-bezier(0.16,1,0.3,1)] shadow-inner">
-                  {getIcon(tech.iconName)}
+                  {getIcon(tech)}
                 </div>
                 <span className="text-xs font-sans font-bold text-[var(--color-text)] group-hover:text-[var(--color-secondary)] transition-colors duration-[260ms] ease-[cubic-bezier(0.16,1,0.3,1)]">
                   {tech.name}
