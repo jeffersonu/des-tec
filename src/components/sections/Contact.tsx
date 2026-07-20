@@ -38,6 +38,8 @@ export default function Contact({ config }: ContactProps) {
 
   const turnstileContainerRef = useRef<HTMLDivElement>(null);
   const turnstileWidgetIdRef = useRef<string | null>(null);
+  const [turnstileRetryCount, setTurnstileRetryCount] = useState(0);
+  const [turnstileStalled, setTurnstileStalled] = useState(false);
 
   // Dynamic loading and rendering of Cloudflare Turnstile
   useEffect(() => {
@@ -48,7 +50,22 @@ export default function Contact({ config }: ContactProps) {
     }
 
     let active = true;
+    setTurnstileStalled(false);
     const scriptId = 'cloudflare-turnstile-script';
+
+    // If the widget hasn't produced a token (or a clear error) within 9s,
+    // something is stuck — most commonly a Site Key whose allowed-domain
+    // list in the Cloudflare dashboard doesn't include this exact domain.
+    // Rather than leave the user staring at an endless spinner forever,
+    // surface it plainly and offer a one-click retry.
+    const stallTimer = window.setTimeout(() => {
+      if (active && !turnstileToken) {
+        setTurnstileStalled(true);
+        setTurnstileError(
+          'La verificación de seguridad está tardando más de lo normal. Puede deberse a una configuración pendiente del dominio en Cloudflare. Usa "Reintentar" o escríbenos directo por WhatsApp/correo mientras tanto.'
+        );
+      }
+    }, 9000);
 
     // Callback when Turnstile script has loaded and API is ready
     const initTurnstile = () => {
@@ -57,6 +74,9 @@ export default function Contact({ config }: ContactProps) {
       // 13. DÓNDE CONFIGURAR LAS CLAVES DE CLOUDFLARE TURNSTILE:
       // La clave del sitio (Site Key) se configura mediante la variable de entorno VITE_TURNSTILE_SITE_KEY.
       // Se utiliza una clave de prueba de Cloudflare por defecto para que funcione en entornos de sandbox sin configuración adicional.
+      // IMPORTANTE: esta variable debe configurarse también en Vercel (Project Settings
+      // -> Environment Variables), no solo en el .env local — Vercel nunca lee el .env
+      // local del equipo de desarrollo, ese archivo no viaja con el repositorio a propósito.
       const siteKey = (import.meta as any).env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
 
       try {
@@ -68,24 +88,32 @@ export default function Contact({ config }: ContactProps) {
         // Render Turnstile explicitly
         const widgetId = (window as any).turnstile.render(turnstileContainerRef.current, {
           sitekey: siteKey,
-          theme: 'light',
+          theme: 'auto',
           callback: (token: string) => {
             setTurnstileToken(token);
             setTurnstileError(null);
             setApiError(null);
+            setTurnstileStalled(false);
           },
           'expired-callback': () => {
             setTurnstileToken(null);
           },
-          'error-callback': () => {
+          'error-callback': (code?: string) => {
             setTurnstileToken(null);
-            setTurnstileError('Error de verificación con Turnstile. Intenta recargar la página.');
+            setTurnstileStalled(true);
+            setTurnstileError(
+              code
+                ? `Error de verificación con Turnstile (código ${code}). Es probable que el dominio no esté autorizado en Cloudflare para esta clave. Intenta "Reintentar" o contáctanos directo.`
+                : 'Error de verificación con Turnstile. Intenta "Reintentar" o contáctanos directo.'
+            );
           },
         });
 
         turnstileWidgetIdRef.current = widgetId;
       } catch (err) {
         console.error('[Turnstile] Error rendering widget:', err);
+        setTurnstileStalled(true);
+        setTurnstileError('No se pudo cargar la verificación de seguridad. Intenta "Reintentar" o contáctanos directo.');
       }
     };
 
@@ -105,6 +133,7 @@ export default function Contact({ config }: ContactProps) {
       script.onerror = () => {
         console.warn('[Turnstile] Could not load verification script. Operating in fallback mode.');
         setTurnstileToken('mock-token-sandbox-fallback');
+        setTurnstileStalled(false);
       };
       document.body.appendChild(script);
     } else {
@@ -116,6 +145,7 @@ export default function Contact({ config }: ContactProps) {
 
     return () => {
       active = false;
+      window.clearTimeout(stallTimer);
       // Cleanup Turnstile widget on unmount
       if (turnstileWidgetIdRef.current && (window as any).turnstile) {
         try {
@@ -125,7 +155,7 @@ export default function Contact({ config }: ContactProps) {
         }
       }
     };
-  }, [isOnline]);
+  }, [isOnline, turnstileRetryCount]);
 
   // 13. DÓNDE SE RECOGE Y PROCESA EL FORMULARIO EN EL CLIENTE
   const validate = () => {
@@ -201,7 +231,11 @@ export default function Contact({ config }: ContactProps) {
       // B. Turnstile Validation check
       if (!turnstileToken) {
         setIsSending(false);
-        setApiError('Por favor, completa la verificación de seguridad (Turnstile) antes de enviar.');
+        setApiError(
+          turnstileStalled
+            ? 'La verificación de seguridad no se ha completado. Usa el botón "Reintentar" abajo, o contáctanos directo por WhatsApp/correo.'
+            : 'Por favor, completa la verificación de seguridad antes de enviar.'
+        );
         return;
       }
 
@@ -613,9 +647,25 @@ export default function Contact({ config }: ContactProps) {
 
                 {/* Error handling messages (without tech jargon to stay user-friendly) */}
                 {(apiError || turnstileError) && (
-                  <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-600 rounded-xl text-xs font-sans flex items-center space-x-2">
-                    <AlertTriangle className="w-4 h-4 shrink-0 text-red-500" />
-                    <span>{apiError || turnstileError}</span>
+                  <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl text-xs font-sans flex flex-col sm:flex-row sm:items-center gap-2.5">
+                    <div className="flex items-start space-x-2">
+                      <AlertTriangle className="w-4 h-4 shrink-0 text-red-500 mt-0.5" />
+                      <span>{apiError || turnstileError}</span>
+                    </div>
+                    {turnstileStalled && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setTurnstileError(null);
+                          setTurnstileStalled(false);
+                          setTurnstileToken(null);
+                          setTurnstileRetryCount((c) => c + 1);
+                        }}
+                        className="shrink-0 self-start sm:self-auto px-3 py-1.5 bg-red-500/15 hover:bg-red-500/25 border border-red-500/25 rounded-lg text-[11px] font-bold transition-colors duration-300 cursor-pointer"
+                      >
+                        Reintentar
+                      </button>
+                    )}
                   </div>
                 )}
 
