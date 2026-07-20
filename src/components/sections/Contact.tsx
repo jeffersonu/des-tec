@@ -7,11 +7,13 @@ import { defaultBudgetConfig } from '../../data';
 import { usePWA } from '../../context/PWAContext';
 import { saveOfflineSubmission } from '../../utils/offlineDb';
 
+import ErrorBoundary from '../ui/ErrorBoundary';
+
 interface ContactProps {
   config: AppConfig;
 }
 
-export default function Contact({ config }: ContactProps) {
+function ContactForm({ config }: ContactProps) {
   const { isOnline, refreshQueueCount } = usePWA();
   const [isOfflineSubmitted, setIsOfflineSubmitted] = useState(false);
   const [currency, setCurrency] = useState<CurrencyCode>('USD');
@@ -80,9 +82,22 @@ export default function Contact({ config }: ContactProps) {
       const siteKey = (import.meta as any).env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
 
       try {
-        // Clear previous widget if any exists
+        // Clear previous widget if any exists — remove and render are now in
+        // separate try/catch blocks so a failure in one never silently skips
+        // resetting our ref, which is what could leave a stale widget behind
+        // on retry and cause a broken/duplicate iframe overlay.
         if (turnstileWidgetIdRef.current) {
-          (window as any).turnstile.remove(turnstileWidgetIdRef.current);
+          try {
+            (window as any).turnstile.remove(turnstileWidgetIdRef.current);
+          } catch (removeErr) {
+            console.warn('[Turnstile] Could not remove previous widget cleanly:', removeErr);
+          }
+          turnstileWidgetIdRef.current = null;
+        }
+        // Belt-and-suspenders: make sure no leftover DOM/iframe remains in
+        // the container before asking Turnstile to render a new widget into it.
+        if (turnstileContainerRef.current) {
+          turnstileContainerRef.current.innerHTML = '';
         }
 
         // Render Turnstile explicitly
@@ -694,5 +709,43 @@ export default function Contact({ config }: ContactProps) {
         </div>
       </div>
     </section>
+  );
+}
+
+export default function Contact({ config }: ContactProps) {
+  return (
+    <ErrorBoundary
+      fallback={
+        <section id="contacto" className="py-20 px-4 sm:px-6 lg:px-8 bg-[var(--color-support)]">
+          <div className="max-w-xl mx-auto text-center space-y-4 p-8 bg-white/[0.03] border border-white/10 rounded-3xl">
+            <AlertTriangle className="w-8 h-8 text-red-500 mx-auto" />
+            <h3 className="text-lg font-display font-bold text-white">
+              El formulario no pudo cargar en este momento
+            </h3>
+            <p className="text-sm text-slate-400">
+              Puedes escribirnos directo mientras lo solucionamos:
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+              <a
+                href={`https://wa.me/${(config.whatsapp || '').replace(/\D/g, '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-3 bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white rounded-xl text-sm font-bold transition-colors"
+              >
+                Escribir por WhatsApp
+              </a>
+              <a
+                href={`mailto:${config.correo || 'informacion.destec@gmail.com'}`}
+                className="px-5 py-3 bg-white/10 hover:bg-white/15 text-white rounded-xl text-sm font-bold transition-colors"
+              >
+                Enviar correo
+              </a>
+            </div>
+          </div>
+        </section>
+      }
+    >
+      <ContactForm config={config} />
+    </ErrorBoundary>
   );
 }
