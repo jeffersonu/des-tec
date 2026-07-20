@@ -19,7 +19,7 @@ interface CasosEstudioProps {
 
 export default function CasosEstudio({ casos }: CasosEstudioProps) {
   return (
-    <section id="casos-estudio" className="py-20 relative overflow-hidden bg-[#FAFAFB]">
+    <section id="casos-estudio" className="py-20 relative overflow-hidden bg-transparent">
       {/* Decorative ambient blurred vector lights */}
       <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[radial-gradient(circle,rgba(37, 99, 235,0.06)_0%,rgba(37, 99, 235,0)_70%)] rounded-full blur-2xl pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '8s' }} />
       <div className="absolute bottom-10 left-10 w-[450px] h-[450px] bg-[radial-gradient(circle,rgba(95,141,122,0.05)_0%,rgba(95,141,122,0)_70%)] rounded-full blur-2xl pointer-events-none -z-10" />
@@ -59,7 +59,7 @@ export default function CasosEstudio({ casos }: CasosEstudioProps) {
               hidden: { opacity: 0, y: 20, filter: 'blur(5px)' },
               visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
             }}
-            className="text-3xl sm:text-4xl font-display font-extrabold text-[var(--color-secondary)] tracking-tight leading-tight"
+            className="text-3xl sm:text-4xl font-display font-extrabold text-white tracking-tight leading-tight"
           >
             Estrategias de Ingeniería que Transforman Negocios
           </motion.h2>
@@ -82,7 +82,7 @@ export default function CasosEstudio({ casos }: CasosEstudioProps) {
             return (
               <motion.div
                 key={caso.id}
-                className="group relative bg-[var(--color-surface)] border border-[var(--color-text)]/10 p-7 sm:p-8 rounded-2xl flex flex-col justify-between text-left shadow-[0_4px_20px_rgba(15,23,42,0.02)] overflow-hidden hover:border-[var(--color-primary)]/20 hover:shadow-[0_15px_40px_rgba(37, 99, 235,0.06)] transition-all duration-500"
+                className="group relative bg-white/[0.05] backdrop-blur-xl border border-white/10 p-7 sm:p-8 rounded-2xl flex flex-col justify-between text-left shadow-[0_8px_30px_rgba(0,0,0,0.25)] overflow-hidden hover:border-[var(--color-primary)]/30 hover:shadow-[0_15px_40px_rgba(37,99,235,0.18)] transition-all duration-500"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-10%" }}
@@ -103,7 +103,7 @@ export default function CasosEstudio({ casos }: CasosEstudioProps) {
                     </div>
                     <div>
                       <span className="text-[10px] font-sans font-bold text-gray-400 uppercase tracking-widest block">Proyecto Desarrollado</span>
-                      <h3 className="text-lg font-display font-extrabold text-[var(--color-secondary)] tracking-tight group-hover:text-[var(--color-primary)] transition-colors duration-300">
+                      <h3 className="text-lg font-display font-extrabold text-white tracking-tight group-hover:text-[var(--color-primary)] transition-colors duration-300">
                         {caso.proyecto}
                       </h3>
                     </div>
@@ -124,7 +124,7 @@ export default function CasosEstudio({ casos }: CasosEstudioProps) {
 
                     {/* Solución */}
                     <div className="space-y-1.5">
-                      <div className="flex items-center space-x-1.5 text-[var(--color-secondary)] font-sans font-bold text-[10px] uppercase tracking-wider">
+                      <div className="flex items-center space-x-1.5 text-white font-sans font-bold text-[10px] uppercase tracking-wider">
                         <Sparkles className="w-3.5 h-3.5 text-[var(--color-primary)]" />
                         <span>Solución implementada</span>
                       </div>

@@ -67,13 +67,32 @@ export default function InteractiveStarsCanvas() {
       opacity: number;
     }
 
-    const particles: MicroParticle[] = Array.from({ length: 60 }, () => ({
+    interface Star {
+      x: number;
+      y: number;
+      size: number;
+      baseOpacity: number;
+      twinkleSpeed: number;
+      twinklePhase: number;
+    }
+
+    const particles: MicroParticle[] = Array.from({ length: 70 }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
       size: Math.random() * 1.5 + 0.8,
       speedY: -(Math.random() * 0.08 + 0.02), // Float upwards very slowly
       speedX: (Math.random() - 0.5) * 0.03,
       opacity: Math.random() * 0.2 + 0.05,
+    }));
+
+    // Dense twinkling starfield — the core of the "space laboratory" atmosphere
+    const stars: Star[] = Array.from({ length: 180 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: Math.random() * 1.3 + 0.3,
+      baseOpacity: Math.random() * 0.5 + 0.15,
+      twinkleSpeed: Math.random() * 0.015 + 0.004,
+      twinklePhase: Math.random() * Math.PI * 2,
     }));
 
     const render = () => {
@@ -93,7 +112,7 @@ export default function InteractiveStarsCanvas() {
         mouse.x, mouse.y, 420
       );
       
-      const glowOpacityBase = currentTheme.id === 'night' ? 0.08 : 0.04;
+      const glowOpacityBase = 0.08;
       mouseGlow.addColorStop(0, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${glowOpacityBase})`); 
       mouseGlow.addColorStop(0.5, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${glowOpacityBase * 0.25})`);
       mouseGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
@@ -102,9 +121,7 @@ export default function InteractiveStarsCanvas() {
 
       // Draw subtle micro-grid of corporate dots in a SINGLE batched path
       const gridSpacing = 60;
-      ctx.fillStyle = currentTheme.id === 'night' 
-        ? 'rgba(255, 255, 255, 0.015)' 
-        : 'rgba(107, 114, 128, 0.035)'; // extremely light gray/silver dots
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.02)';
         
       ctx.beginPath();
       for (let x = 0; x < width; x += gridSpacing) {
@@ -115,7 +132,18 @@ export default function InteractiveStarsCanvas() {
       }
       ctx.fill();
 
-      // Update and Draw gentle micro-particles
+      // Draw the twinkling starfield (core "space lab" atmosphere layer)
+      const t = Date.now();
+      stars.forEach((s) => {
+        const twinkle = Math.sin(t * s.twinkleSpeed + s.twinklePhase) * 0.35 + 0.65;
+        const op = Math.min(0.9, s.baseOpacity * twinkle);
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(226, 232, 240, ${op})`;
+        ctx.fill();
+      });
+
+      // Update and Draw gentle micro-particles (colored accent dust, uniform across all themes)
       particles.forEach((p) => {
         p.y += p.speedY;
         p.x += p.speedX;
@@ -130,10 +158,7 @@ export default function InteractiveStarsCanvas() {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        
-        // Multiplied opacity for richer night look
-        const opacityMult = currentTheme.id === 'night' ? 1.6 : 1.0;
-        ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${Math.min(0.9, p.opacity * opacityMult)})`;
+        ctx.fillStyle = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${Math.min(0.9, p.opacity * 1.5)})`;
         ctx.fill();
       });
 

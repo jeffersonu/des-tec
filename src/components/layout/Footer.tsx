@@ -24,7 +24,7 @@ interface FooterProps {
 
 export default function Footer({ config }: FooterProps) {
   const { theme } = useTimeTheme();
-  const isDark = theme.id === 'night';
+  const isDark = true; // Identidad visual espacial oscura permanente en todo el sitio
 
   const scrollUp = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -177,7 +177,7 @@ export default function Footer({ config }: FooterProps) {
               </div>
               <div>
                 <span className={`font-display font-black text-base tracking-tight block leading-none transition-colors duration-500 ${
-                  isDark ? 'text-white' : 'text-[var(--color-secondary)]'
+                  isDark ? 'text-white' : 'text-white'
                 }`}>
                   {config.nombre}
                 </span>
@@ -267,7 +267,7 @@ export default function Footer({ config }: FooterProps) {
           {/* COLUMNA 2: SERVICIOS (Span 2) */}
           <div className="lg:col-span-2 space-y-5">
             <h4 className={`text-xs font-bold uppercase tracking-wider transition-colors duration-500 ${
-              isDark ? 'text-slate-200' : 'text-[var(--color-secondary)]'
+              isDark ? 'text-slate-200' : 'text-white'
             }`}>
               Servicios
             </h4>
@@ -291,7 +291,7 @@ export default function Footer({ config }: FooterProps) {
           {/* COLUMNA 3: TECNOLOGÍAS (Span 2) */}
           <div className="lg:col-span-2 space-y-5">
             <h4 className={`text-xs font-bold uppercase tracking-wider transition-colors duration-500 ${
-              isDark ? 'text-slate-200' : 'text-[var(--color-secondary)]'
+              isDark ? 'text-slate-200' : 'text-white'
             }`}>
               Tecnologías
             </h4>
@@ -300,7 +300,7 @@ export default function Footer({ config }: FooterProps) {
                 <div 
                   key={idx}
                   className={`flex items-center space-x-2 text-xs transition-colors duration-300 select-none ${
-                    isDark ? 'text-slate-400 hover:text-slate-200' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-secondary)]'
+                    isDark ? 'text-slate-400 hover:text-slate-200' : 'text-[var(--color-text-secondary)] hover:text-white'
                   }`}
                 >
                   <div className={`w-5 h-5 flex items-center justify-center rounded-md border shadow-[0_1px_2px_rgba(0,0,0,0.02)] shrink-0 ${
@@ -317,7 +317,7 @@ export default function Footer({ config }: FooterProps) {
           {/* COLUMNA 4: CONTACTO (Span 2) */}
           <div className="lg:col-span-2 space-y-5">
             <h4 className={`text-xs font-bold uppercase tracking-wider transition-colors duration-500 ${
-              isDark ? 'text-slate-200' : 'text-[var(--color-secondary)]'
+              isDark ? 'text-slate-200' : 'text-white'
             }`}>
               Contacto
             </h4>
@@ -353,7 +353,7 @@ export default function Footer({ config }: FooterProps) {
           {/* COLUMNA 5: INFORMACIÓN LEGAL (Span 2) */}
           <div className="lg:col-span-2 space-y-5">
             <h4 className={`text-xs font-bold uppercase tracking-wider transition-colors duration-500 ${
-              isDark ? 'text-slate-200' : 'text-[var(--color-secondary)]'
+              isDark ? 'text-slate-200' : 'text-white'
             }`}>
               Información Legal
             </h4>
@@ -407,7 +407,7 @@ export default function Footer({ config }: FooterProps) {
               className={`group flex items-center space-x-1.5 border px-4 py-2 rounded-full text-xs transition-all duration-300 shadow-xs hover:shadow-sm cursor-pointer ${
                 isDark 
                   ? 'bg-slate-800 border-slate-700/60 hover:border-slate-600 text-slate-300 hover:text-white' 
-                  : 'bg-white border-slate-200/50 hover:border-slate-300 text-[var(--color-text-secondary)] hover:text-[var(--color-secondary)]'
+                  : 'bg-white border-slate-200/50 hover:border-slate-300 text-[var(--color-text-secondary)] hover:text-white'
               }`}
               whileHover={{ scale: 1.025 }}
               whileTap={{ scale: 0.95 }}

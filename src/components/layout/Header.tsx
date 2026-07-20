@@ -16,7 +16,7 @@ export default function Header({ config, activeSection }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
   const { theme } = useTimeTheme();
-  const isDark = theme.id === 'night';
+  const isDark = true; // Identidad visual espacial oscura permanente en todo el sitio
   const { isInstallable, isStandalone, installApp } = usePWA();
 
   React.useEffect(() => {
@@ -115,8 +115,8 @@ export default function Header({ config, activeSection }: HeaderProps) {
               onClick={() => scrollTo(item.id)}
               className={`px-1 py-2.5 rounded-lg transition-all relative group font-semibold interactive-hover ${
                 activeSection === item.id 
-                  ? isDark ? 'text-white font-extrabold' : 'text-[var(--color-secondary)] font-extrabold'
-                  : isDark ? 'text-slate-400 hover:text-white' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-secondary)]'
+                  ? isDark ? 'text-white font-extrabold' : 'text-white font-extrabold'
+                  : isDark ? 'text-slate-400 hover:text-white' : 'text-[var(--color-text-secondary)] hover:text-white'
               }`}
             >
               <span className="relative z-10 transition-all">{item.label}</span>
@@ -142,7 +142,7 @@ export default function Header({ config, activeSection }: HeaderProps) {
               className={`group px-4 py-2.5 font-semibold rounded-xl transition-all duration-300 flex items-center space-x-1.5 cursor-pointer border ${
                 isDark 
                   ? 'bg-slate-900/60 hover:bg-slate-800 border-slate-800/80 hover:border-[var(--color-primary)]/30 text-slate-300 hover:text-white' 
-                  : 'bg-[#FCFCFD] hover:bg-[#F3F4F6] border-slate-200 hover:border-[var(--color-primary)]/30 text-[var(--color-text-secondary)] hover:text-[var(--color-secondary)]'
+                  : 'bg-[#FCFCFD] hover:bg-[#F3F4F6] border-slate-200 hover:border-[var(--color-primary)]/30 text-[var(--color-text-secondary)] hover:text-white'
               }`}
               whileHover={{ scale: 1.025 }}
               whileTap={{ scale: 0.985 }}
@@ -175,7 +175,7 @@ export default function Header({ config, activeSection }: HeaderProps) {
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           id="mobile-menu-trigger"
           className={`lg:hidden p-2 transition-all focus:outline-none ${
-            isDark ? 'text-slate-400 hover:text-white' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-secondary)]'
+            isDark ? 'text-slate-400 hover:text-white' : 'text-[var(--color-text-secondary)] hover:text-white'
           }`}
         >
           {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -207,7 +207,7 @@ export default function Header({ config, activeSection }: HeaderProps) {
                        ? 'bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-bold border-l-2 border-[var(--color-primary)]'
                        : isDark 
                          ? 'text-slate-300 hover:bg-slate-800 hover:text-white' 
-                         : 'text-[var(--color-text-secondary)] hover:bg-slate-100 hover:text-[var(--color-secondary)]'
+                         : 'text-[var(--color-text-secondary)] hover:bg-slate-100 hover:text-white'
                    }`}
                 >
                   {item.label}
@@ -219,7 +219,7 @@ export default function Header({ config, activeSection }: HeaderProps) {
                   className={`p-3 rounded-lg text-left transition-all font-semibold flex items-center gap-2 border ${
                     isDark 
                       ? 'border-slate-800 bg-slate-900/40 text-slate-200 hover:bg-slate-800 hover:text-white' 
-                      : 'border-slate-100 bg-[#FCFCFD] text-[var(--color-text-secondary)] hover:bg-slate-100 hover:text-[var(--color-secondary)]'
+                      : 'border-slate-100 bg-[#FCFCFD] text-[var(--color-text-secondary)] hover:bg-slate-100 hover:text-white'
                   }`}
                 >
                   <Download className="w-4 h-4 text-[var(--color-primary)]" />

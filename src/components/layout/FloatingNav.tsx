@@ -23,7 +23,7 @@ export default function FloatingNav({ activeSection }: FloatingNavProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [isMouseOver, setIsMouseOver] = useState(false);
   const { theme } = useTimeTheme();
-  const isDark = theme.id === 'night';
+  const isDark = true; // Identidad visual espacial oscura permanente en todo el sitio
 
   // Scroll spy observer & Auto-hide scroll timer
   useEffect(() => {
@@ -194,11 +194,11 @@ export default function FloatingNav({ activeSection }: FloatingNavProps) {
                         className={`absolute left-9 py-2 px-3.5 border rounded-xl shadow-[0_10px_25px_rgba(15,23,42,0.06)] min-w-[150px] pointer-events-none text-left ${
                           isDark 
                             ? 'bg-[#131926]/95 backdrop-blur-xl border-slate-800 text-white' 
-                            : 'bg-white/95 backdrop-blur-xl border-slate-100 text-[var(--color-secondary)]'
+                            : 'bg-white/95 backdrop-blur-xl border-slate-100 text-white'
                         }`}
                       >
                         <div className={`text-[10px] font-extrabold uppercase tracking-wider ${
-                          isDark ? 'text-slate-100' : 'text-[var(--color-secondary)]'
+                          isDark ? 'text-slate-100' : 'text-white'
                         }`}>
                           {sec.label}
                         </div>

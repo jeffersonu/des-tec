@@ -154,7 +154,7 @@ export default function Portfolio({ projects, onSelectProject }: PortfolioProps)
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-[var(--color-secondary)] tracking-tight leading-tight"
+            className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-white tracking-tight leading-tight"
           >
             Laboratorio Interactivo <span className="whitespace-nowrap">Des-Tec</span>
           </motion.h2>
@@ -174,7 +174,7 @@ export default function Portfolio({ projects, onSelectProject }: PortfolioProps)
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-[11px] font-bold text-[var(--color-secondary)] max-w-md mx-auto font-mono uppercase tracking-wider bg-[var(--color-secondary)]/5 border border-[var(--color-secondary)]/15 py-1 px-3 rounded-lg"
+            className="text-[11px] font-bold text-white max-w-md mx-auto font-mono uppercase tracking-wider bg-[var(--color-secondary)]/5 border border-[var(--color-secondary)]/15 py-1 px-3 rounded-lg"
           >
             No utilizamos videos ni imágenes estáticas. Todas las demostraciones son simulaciones funcionales que representan el comportamiento real del software desarrollado.
           </motion.p>
@@ -213,10 +213,10 @@ export default function Portfolio({ projects, onSelectProject }: PortfolioProps)
                           <IconComponent className="w-5 h-5 animate-pulse" />
                         </div>
                         <div>
-                          <h3 className="text-base sm:text-lg font-black text-[var(--color-secondary)] tracking-tight group-hover:text-[var(--color-primary)] transition-colors font-display leading-tight">
+                          <h3 className="text-base sm:text-lg font-black text-white tracking-tight group-hover:text-[var(--color-primary)] transition-colors font-display leading-tight">
                             {demo.title}
                           </h3>
-                          <span className="text-[10px] font-bold text-[var(--color-secondary)] uppercase tracking-wide">
+                          <span className="text-[10px] font-bold text-white uppercase tracking-wide">
                             {demo.subtitle}
                           </span>
                         </div>
@@ -233,11 +233,11 @@ export default function Portfolio({ projects, onSelectProject }: PortfolioProps)
                       <div className="grid grid-cols-2 gap-3 p-3 bg-slate-50 border border-[var(--color-secondary)]/[0.03] rounded-xl text-[10.5px]">
                         <div>
                           <span className="text-[8px] text-slate-400 font-bold uppercase tracking-wider block">Complejidad</span>
-                          <span className="font-bold text-[var(--color-secondary)] font-mono">{demo.complexity}</span>
+                          <span className="font-bold text-white font-mono">{demo.complexity}</span>
                         </div>
                         <div>
                           <span className="text-[8px] text-slate-400 font-bold uppercase tracking-wider block">Est. Desarrollo</span>
-                          <span className="font-bold text-[var(--color-secondary)] font-mono">{demo.devTime}</span>
+                          <span className="font-bold text-white font-mono">{demo.devTime}</span>
                         </div>
                       </div>
 
@@ -291,9 +291,9 @@ export default function Portfolio({ projects, onSelectProject }: PortfolioProps)
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="mt-16 text-center max-w-xl mx-auto space-y-2 p-4 bg-white border border-[var(--color-secondary)]/[0.05] rounded-2xl shadow-xs"
+          className="mt-16 text-center max-w-xl mx-auto space-y-2 p-4 bg-white/[0.04] backdrop-blur-xl border border-white/10 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.25)]"
         >
-          <div className="flex items-center justify-center space-x-2 text-[var(--color-secondary)]">
+          <div className="flex items-center justify-center space-x-2 text-white">
             <Shield className="w-4 h-4 animate-pulse" />
             <span className="text-[10px] font-sans font-bold uppercase tracking-wider">ENTORNO DEMO SEGURO Y CONFIGURABLE</span>
           </div>

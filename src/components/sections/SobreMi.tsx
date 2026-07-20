@@ -24,7 +24,7 @@ export default function SobreMi({ config }: SobreMiProps) {
   ];
 
   return (
-    <section id="sobre-mi" className="py-20 relative overflow-hidden bg-[#FAFAFB]">
+    <section id="sobre-mi" className="py-16 relative overflow-hidden bg-transparent">
       {/* Premium background flows & lights */}
       <div className="absolute top-1/3 right-10 w-96 h-96 bg-[radial-gradient(circle,rgba(37, 99, 235,0.05)_0%,rgba(37, 99, 235,0)_70%)] rounded-full blur-2xl pointer-events-none -z-10" />
       <div className="absolute bottom-10 left-10 w-80 h-80 bg-[radial-gradient(circle,rgba(95,141,122,0.03)_0%,rgba(95,141,122,0)_70%)] rounded-full blur-2xl pointer-events-none -z-10" />
@@ -157,7 +157,7 @@ export default function SobreMi({ config }: SobreMiProps) {
                 hidden: { opacity: 0, y: 20, filter: 'blur(4px)' },
                 visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
               }}
-              className="text-3xl sm:text-4xl font-display font-extrabold text-[var(--color-secondary)] tracking-tight leading-tight"
+              className="text-3xl sm:text-4xl font-display font-extrabold text-white tracking-tight leading-tight"
             >
               Diseño de Nivel Enterprise, Código Sin Plantillas
             </motion.h2>
@@ -200,7 +200,7 @@ export default function SobreMi({ config }: SobreMiProps) {
                     <spec.icon className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-[var(--color-secondary)] font-sans">{spec.title}</h4>
+                    <h4 className="text-xs font-bold text-white font-sans">{spec.title}</h4>
                     <p className="text-[11px] text-[var(--color-text-secondary)] leading-snug font-sans mt-0.5">{spec.desc}</p>
                   </div>
                 </motion.div>

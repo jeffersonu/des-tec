@@ -15,6 +15,7 @@ import { AppConfig, PortfolioProject } from './types';
 
 // Modular Subcomponents
 const InteractiveStarsCanvas = lazy(() => import('./components/ui/InteractiveStarsCanvas'));
+import CosmicBackdrop from './components/ui/CosmicBackdrop';
 import Cursor from './components/ui/Cursor';
 import Header from './components/layout/Header';
 import HeroSlider from './components/sections/HeroSlider';
@@ -235,6 +236,9 @@ export default function App() {
 
   return (
     <div id="des-tec-app-root" className={`min-h-screen ${theme.appRootBg} ${theme.textPrimary} overflow-x-hidden selection:bg-[var(--color-primary-hover)]/20 selection:text-[var(--color-text)] relative transition-colors duration-700`}>
+      {/* Immersive continuous space backdrop: nebulas, drifting blurred planets, parallax */}
+      <CosmicBackdrop />
+
       {/* High-Performance Interactive Star & Nebula Particle Canvas */}
       <Suspense fallback={null}>
         <InteractiveStarsCanvas />

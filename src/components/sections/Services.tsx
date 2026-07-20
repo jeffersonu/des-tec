@@ -167,7 +167,7 @@ const HostingIllustration = () => (
 
 export default function Services({ services }: ServicesProps) {
   const { theme } = useTimeTheme();
-  const isDark = theme.id === 'night';
+  const isDark = true; // El sitio completo usa ahora una identidad visual espacial oscura permanente
 
   // Discreet per-card accent (only used for subtle icon-ring tints — never overrides brand primary)
   const cardAccent: Record<string, string> = {
@@ -217,7 +217,7 @@ export default function Services({ services }: ServicesProps) {
   };
 
   return (
-    <section id="servicios" className={`py-20 relative overflow-hidden ${theme.sectionBgDark} transition-all duration-700`}>
+    <section id="servicios" className={`py-16 relative overflow-hidden ${theme.sectionBgDark} transition-all duration-700`}>
       {/* Premium blurred radial lights */}
       <div className="absolute top-10 left-1/4 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(228,168,83,0.04)_0%,rgba(228,168,83,0)_70%)] pointer-events-none -z-10 blur-2xl" />
       <div className="absolute bottom-10 right-1/4 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(95,141,122,0.04)_0%,rgba(95,141,122,0)_70%)] pointer-events-none -z-10 blur-2xl" />
@@ -256,7 +256,7 @@ export default function Services({ services }: ServicesProps) {
               hidden: { opacity: 0, y: 20, filter: 'blur(5px)' },
               visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
             }}
-            className={`text-3xl sm:text-4xl md:text-5xl font-display font-extrabold ${isDark ? 'text-white' : 'text-[var(--color-secondary)]'} tracking-tight leading-tight transition-all duration-700`}
+            className={`text-3xl sm:text-4xl md:text-5xl font-display font-extrabold ${isDark ? 'text-white' : 'text-white'} tracking-tight leading-tight transition-all duration-700`}
           >
             ¿Qué podemos desarrollar para tu empresa?
           </motion.h2>
@@ -326,7 +326,7 @@ export default function Services({ services }: ServicesProps) {
                 </div>
 
                 {/* Service Title */}
-                <h3 className={`text-lg sm:text-xl font-display font-bold ${isDark ? 'text-slate-100' : 'text-[var(--color-secondary)]'} tracking-tight mb-3 transition-colors duration-300 group-hover:text-[var(--color-primary)]`}>
+                <h3 className={`text-lg sm:text-xl font-display font-bold ${isDark ? 'text-slate-100' : 'text-white'} tracking-tight mb-3 transition-colors duration-300 group-hover:text-[var(--color-primary)]`}>
                   {srv.title}
                 </h3>
 
@@ -343,7 +343,7 @@ export default function Services({ services }: ServicesProps) {
                   {srv.features.map((feature, fIdx) => (
                     <div key={fIdx} className={`flex items-center space-x-3 ${isDark ? 'text-slate-300' : 'text-[var(--color-text)]'}`}>
                       <div className="w-4 h-4 rounded-full bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/20 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
-                        <Icons.Check className="w-2.5 h-2.5 text-[var(--color-secondary)]" strokeWidth={4} />
+                        <Icons.Check className="w-2.5 h-2.5 text-white" strokeWidth={4} />
                       </div>
                       <span className={`text-[11.5px] font-sans font-medium ${isDark ? 'text-slate-400' : 'text-[#4B5563]'} group-hover:text-slate-200 transition-colors duration-300`}>{feature}</span>
                     </div>
@@ -360,7 +360,7 @@ export default function Services({ services }: ServicesProps) {
                       className={`group/btn w-full py-2.5 text-xs font-bold font-sans rounded-xl border transition-all duration-300 flex items-center justify-center space-x-2 shadow-[0_1px_2px_rgba(0,0,0,0.01)] ${
                         isDark 
                           ? 'bg-slate-800/80 hover:bg-slate-700 text-slate-100 border-slate-700/60' 
-                          : 'bg-gradient-to-r from-white to-[var(--color-background)] hover:to-[var(--color-secondary)] hover:text-white text-[var(--color-secondary)] border-[var(--color-secondary)]/[0.08]'
+                          : 'bg-gradient-to-r from-white to-[var(--color-background)] hover:to-[var(--color-secondary)] hover:text-white text-white border-[var(--color-secondary)]/[0.08]'
                       } hover:border-transparent cursor-pointer`}
                     >
                       <span>Más información</span>

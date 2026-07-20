@@ -15,7 +15,7 @@ export default function WorkProcess({ steps }: WorkProcessProps) {
   };
 
   return (
-    <section id="proceso" className="py-20 relative overflow-hidden bg-[var(--color-surface)]">
+    <section id="proceso" className="py-16 relative overflow-hidden bg-[var(--color-surface)]">
       {/* Premium blurred radial lights */}
       <div className="absolute bottom-1/3 left-10 w-96 h-96 bg-[radial-gradient(circle,rgba(37, 99, 235,0.05)_0%,rgba(37, 99, 235,0)_70%)] pointer-events-none -z-10 blur-3xl animate-pulse" style={{ animationDuration: '8s' }} />
       <div className="absolute top-1/4 right-10 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(95,141,122,0.04)_0%,rgba(95,141,122,0)_70%)] pointer-events-none -z-10 blur-2xl" />
@@ -54,7 +54,7 @@ export default function WorkProcess({ steps }: WorkProcessProps) {
               hidden: { opacity: 0, y: 20, filter: 'blur(5px)' },
               visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
             }}
-            className="text-3xl sm:text-4xl font-display font-extrabold text-[var(--color-secondary)] tracking-tight leading-tight"
+            className="text-3xl sm:text-4xl font-display font-extrabold text-white tracking-tight leading-tight"
           >
             Flujo de Trabajo Orientado al Éxito
           </motion.h2>
@@ -100,11 +100,11 @@ export default function WorkProcess({ steps }: WorkProcessProps) {
                     <span className="text-sm font-sans font-extrabold text-[var(--color-primary)] bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 px-2.5 py-1 rounded">
                       {step.number}
                     </span>
-                    <h3 className="text-base sm:text-lg font-bold text-[var(--color-secondary)] tracking-tight font-display">
+                    <h3 className="text-base sm:text-lg font-bold text-white tracking-tight font-display">
                       {step.title}
                     </h3>
                   </div>
-                  <button className="text-[var(--color-text-secondary)] hover:text-[var(--color-secondary)] transition-all p-1">
+                  <button className="text-[var(--color-text-secondary)] hover:text-white transition-all p-1">
                     {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </button>
                 </div>
@@ -128,7 +128,7 @@ export default function WorkProcess({ steps }: WorkProcessProps) {
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 font-sans text-[11px] text-[var(--color-text)]">
                           {step.details.map((detail, dIdx) => (
                             <div key={dIdx} className="flex items-center space-x-2 bg-[var(--color-background)] border border-[var(--color-text)]/5 p-1.5 rounded">
-                              <CheckCircle2 className="w-3.5 h-3.5 text-[var(--color-secondary)] shrink-0" />
+                              <CheckCircle2 className="w-3.5 h-3.5 text-white shrink-0" />
                               <span className="truncate">{detail}</span>
                             </div>
                           ))}

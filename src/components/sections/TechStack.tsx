@@ -43,7 +43,7 @@ export default function TechStack({ technologies }: TechStackProps) {
   };
 
   return (
-    <section id="tecnologias" className="py-20 relative overflow-hidden bg-[var(--color-surface)]">
+    <section id="tecnologias" className="py-16 relative overflow-hidden bg-[var(--color-surface)]">
       {/* Glow effects & Radial Lights */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-[radial-gradient(circle,rgba(37, 99, 235,0.06)_0%,rgba(37, 99, 235,0)_70%)] pointer-events-none -z-10 blur-3xl animate-pulse" style={{ animationDuration: '9s' }} />
       <div className="absolute -top-10 left-10 w-[400px] h-[400px] bg-[radial-gradient(circle,rgba(95,141,122,0.04)_0%,rgba(95,141,122,0)_70%)] pointer-events-none -z-10 blur-2xl" />
@@ -81,7 +81,7 @@ export default function TechStack({ technologies }: TechStackProps) {
               hidden: { opacity: 0, y: 20, filter: 'blur(5px)' },
               visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
             }}
-            className="text-3xl sm:text-4xl font-display font-extrabold text-[var(--color-secondary)] tracking-tight leading-tight"
+            className="text-3xl sm:text-4xl font-display font-extrabold text-white tracking-tight leading-tight"
           >
             Nuestra Fórmula de Alto Rendimiento
           </motion.h2>
@@ -114,14 +114,14 @@ export default function TechStack({ technologies }: TechStackProps) {
               }}
             >
               {/* Inner animated card element with static outer boundary tracking */}
-              <div className="w-full h-full bg-[var(--color-surface)] border border-[var(--color-text)]/10 p-5 rounded-2xl flex flex-col items-center justify-center space-y-3 shadow-sm transition-all duration-[260ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1.5 group-hover:border-[var(--color-primary)]/35 group-hover:shadow-[0_12px_30px_rgba(15,23,42,0.06)] relative overflow-hidden">
+              <div className="w-full h-full bg-white/[0.05] backdrop-blur-xl border border-white/10 p-5 rounded-2xl flex flex-col items-center justify-center space-y-3 shadow-[0_8px_30px_rgba(0,0,0,0.25)] transition-all duration-[260ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-1.5 group-hover:border-[var(--color-primary)]/40 group-hover:shadow-[0_12px_36px_rgba(37,99,235,0.18)] relative overflow-hidden">
                 {/* Glow border dot */}
                 <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-[var(--color-primary)] rounded-full opacity-0 group-hover:opacity-100 transition-all duration-[260ms] ease-[cubic-bezier(0.16,1,0.3,1)]" />
 
                 <div className="w-12 h-12 rounded-xl bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/15 flex items-center justify-center group-hover:bg-[var(--color-primary)]/20 group-hover:border-[var(--color-primary)] transition-all duration-[260ms] ease-[cubic-bezier(0.16,1,0.3,1)] shadow-inner">
                   {getIcon(tech)}
                 </div>
-                <span className="text-xs font-sans font-bold text-[var(--color-text)] group-hover:text-[var(--color-secondary)] transition-colors duration-[260ms] ease-[cubic-bezier(0.16,1,0.3,1)]">
+                <span className="text-xs font-sans font-bold text-slate-200 group-hover:text-white transition-colors duration-[260ms] ease-[cubic-bezier(0.16,1,0.3,1)]">
                   {tech.name}
                 </span>
               </div>
@@ -142,11 +142,11 @@ export default function TechStack({ technologies }: TechStackProps) {
               <div className="space-y-1 w-full animate-fade-in flex flex-col items-center justify-center">
                 <div className="flex items-center justify-center space-x-1.5">
                   <span className="w-1.5 h-1.5 bg-[var(--color-secondary)] rounded-full animate-ping" />
-                  <span className="text-[10px] font-sans font-extrabold text-[var(--color-secondary)] uppercase tracking-wider">
+                  <span className="text-[10px] font-sans font-extrabold text-white uppercase tracking-wider">
                     {hoveredTech.category.toUpperCase()} ESPECIFICACIÓN
                   </span>
                 </div>
-                <h4 className="text-xs font-bold text-[var(--color-secondary)] font-sans leading-none">{hoveredTech.name}</h4>
+                <h4 className="text-xs font-bold text-white font-sans leading-none">{hoveredTech.name}</h4>
                 <p className="text-xs text-[var(--color-text-secondary)] font-sans leading-normal max-w-lg mx-auto">
                   {hoveredTech.tooltip}
                 </p>

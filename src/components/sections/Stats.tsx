@@ -54,7 +54,7 @@ function CountUp({ end, duration = 2000, prefix = '', suffix = '' }: CountUpProp
   }, [end, duration]);
 
   return (
-    <span ref={elementRef} className="tabular-nums font-mono font-extrabold text-3xl sm:text-4xl text-[var(--color-secondary)] tracking-tight">
+    <span ref={elementRef} className="tabular-nums font-mono font-extrabold text-3xl sm:text-4xl text-white tracking-tight">
       {prefix}{count}{suffix}
     </span>
   );
@@ -119,7 +119,7 @@ export default function Stats() {
   ];
 
   return (
-    <section id="metricas-estudio" className="py-16 bg-[#F7F8FC] relative overflow-hidden border-t border-b border-[var(--color-secondary)]/5">
+    <section id="metricas-estudio" className="py-16 bg-[var(--color-secondary)]/20 relative overflow-hidden border-t border-b border-white/[0.06]">
       {/* Soft Apple background accents & glows */}
       <div className="absolute top-0 left-1/3 w-[600px] h-[300px] bg-[radial-gradient(circle,rgba(37, 99, 235,0.05)_0%,rgba(37, 99, 235,0)_70%)] pointer-events-none -z-10 blur-2xl animate-pulse" style={{ animationDuration: '6s' }} />
       <div className="absolute bottom-0 right-1/4 w-[400px] h-[250px] bg-[radial-gradient(circle,rgba(95,141,122,0.03)_0%,rgba(95,141,122,0)_70%)] pointer-events-none -z-10 blur-xl" />
@@ -157,7 +157,7 @@ export default function Stats() {
               hidden: { opacity: 0, y: 20, filter: 'blur(3px)' },
               visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
             }}
-            className="text-2xl sm:text-3xl font-display font-extrabold text-[var(--color-secondary)] tracking-tight"
+            className="text-2xl sm:text-3xl font-display font-extrabold text-white tracking-tight"
           >
             Ingeniería de Precisión en Cifras
           </motion.h3>
@@ -178,7 +178,7 @@ export default function Stats() {
             <motion.div
               key={item.id}
               id={`stat-card-${item.id}`}
-              className="group relative bg-[var(--color-surface)] border border-[var(--color-text)]/5 p-6 sm:p-7 rounded-[22px] flex flex-col items-center text-center shadow-[0_4px_20px_rgba(15,23,42,0.01)] overflow-hidden cursor-pointer"
+              className="group relative bg-white/[0.05] backdrop-blur-xl border border-white/10 p-6 sm:p-7 rounded-[22px] flex flex-col items-center text-center shadow-[0_8px_30px_rgba(0,0,0,0.25)] overflow-hidden cursor-pointer"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -209,7 +209,7 @@ export default function Stats() {
               </div>
 
               {/* Labels with premium hierarchy */}
-              <div className="text-xs font-sans font-bold text-[var(--color-secondary)] mt-2 group-hover:text-[var(--color-primary)] transition-colors duration-300">
+              <div className="text-xs font-sans font-bold text-white mt-2 group-hover:text-[var(--color-primary)] transition-colors duration-300">
                 {item.label}
               </div>
 

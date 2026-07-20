@@ -263,7 +263,7 @@ export default function Contact({ config }: ContactProps) {
   };
 
   return (
-    <section id="contacto" className="py-20 relative overflow-hidden bg-[#F7F8FC]">
+    <section id="contacto" className="py-16 relative overflow-hidden bg-[var(--color-secondary)]/15">
       {/* Glow spot & radial lighting */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[radial-gradient(circle,rgba(37, 99, 235,0.06)_0%,rgba(37, 99, 235,0)_70%)] pointer-events-none -z-10 blur-3xl animate-pulse" style={{ animationDuration: '11s' }} />
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(95,141,122,0.03)_0%,rgba(95,141,122,0)_70%)] pointer-events-none -z-10 blur-2xl" />
@@ -304,7 +304,7 @@ export default function Contact({ config }: ContactProps) {
                   hidden: { opacity: 0, y: 20, filter: 'blur(4px)' },
                   visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } }
                 }}
-                className="text-3xl sm:text-4xl font-display font-extrabold text-[var(--color-secondary)] tracking-tight leading-tight"
+                className="text-3xl sm:text-4xl font-display font-extrabold text-white tracking-tight leading-tight"
               >
                 Hablemos de tu próximo gran proyecto
               </motion.h2>
@@ -333,7 +333,7 @@ export default function Contact({ config }: ContactProps) {
                 </div>
                 <div className="font-sans text-xs">
                   <div className="text-[var(--color-text-secondary)] font-bold uppercase">Enviar Correo</div>
-                  <a href={`mailto:${config.correo}`} className="text-[var(--color-secondary)] hover:text-[var(--color-primary)] font-semibold transition-all">
+                  <a href={`mailto:${config.correo}`} className="text-white hover:text-[var(--color-primary)] font-semibold transition-all">
                     {config.correo}
                   </a>
                 </div>
@@ -345,7 +345,7 @@ export default function Contact({ config }: ContactProps) {
                 </div>
                 <div className="font-sans text-xs">
                   <div className="text-[var(--color-text-secondary)] font-bold uppercase">WhatsApp Directo</div>
-                  <a href={`https://wa.me/${config.whatsapp.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-[var(--color-secondary)] hover:text-[var(--color-primary)] font-semibold transition-all">
+                  <a href={`https://wa.me/${config.whatsapp.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-white hover:text-[var(--color-primary)] font-semibold transition-all">
                     {config.whatsapp}
                   </a>
                 </div>
@@ -357,7 +357,7 @@ export default function Contact({ config }: ContactProps) {
                 </div>
                 <div className="font-sans text-xs">
                   <div className="text-[var(--color-text-secondary)] font-bold uppercase">Sede Central</div>
-                  <span className="text-[var(--color-secondary)] font-semibold">
+                  <span className="text-white font-semibold">
                     {config.ciudad}, {config.pais}
                   </span>
                 </div>
@@ -367,7 +367,7 @@ export default function Contact({ config }: ContactProps) {
 
           {/* RIGHT SIDE: FORM MODULE */}
           <motion.div 
-            className="col-span-1 lg:col-span-7 bg-[var(--color-surface)] border border-[var(--color-text)]/10 p-6 sm:p-8 rounded-3xl shadow-sm text-left"
+            className="col-span-1 lg:col-span-7 bg-white/[0.05] backdrop-blur-xl border border-white/10 p-6 sm:p-8 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.25)] text-left"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-10%" }}
@@ -379,11 +379,11 @@ export default function Contact({ config }: ContactProps) {
                 <div className={`w-16 h-16 rounded-full border flex items-center justify-center ${
                   isOfflineSubmitted
                     ? 'bg-[var(--color-primary)]/15 border-[var(--color-primary)] text-[var(--color-primary)]'
-                    : 'bg-[var(--color-secondary)]/15 border-[var(--color-secondary)] text-[var(--color-secondary)]'
+                    : 'bg-[var(--color-secondary)]/15 border-[var(--color-secondary)] text-white'
                 }`}>
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-bold text-[var(--color-secondary)] font-sans">
+                <h3 className="text-2xl font-bold text-white font-sans">
                   {isOfflineSubmitted ? 'Solicitud Guardada' : '¡Solicitud Enviada con Éxito!'}
                 </h3>
                 <p className="text-sm text-[var(--color-text-secondary)] font-sans max-w-md leading-relaxed">
@@ -414,7 +414,7 @@ export default function Contact({ config }: ContactProps) {
                       placeholder="Ej. Alejandro Silva"
                       value={formData.nombre}
                       onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                      className={`w-full bg-[var(--color-background)] border ${errors.nombre ? 'border-red-500' : 'border-[var(--color-text)]/15'} rounded-xl px-3.5 py-2.5 text-xs font-sans text-[var(--color-text)] placeholder-gray-400 focus:outline-none focus:bg-white focus:border-[var(--color-primary)] transition-all`}
+                      className={`w-full bg-[var(--color-background)] border ${errors.nombre ? 'border-red-500' : 'border-[var(--color-text)]/15'} rounded-xl px-3.5 py-2.5 text-xs font-sans text-[var(--color-text)] placeholder-gray-400 focus:outline-none focus:bg-[var(--color-surface)] focus:border-[var(--color-primary)] transition-all`}
                     />
                     {errors.nombre && (
                       <span className="text-[10px] text-red-500 font-sans flex items-center space-x-1">
@@ -431,7 +431,7 @@ export default function Contact({ config }: ContactProps) {
                       placeholder="Ej. Nova S.L."
                       value={formData.empresa}
                       onChange={(e) => setFormData({ ...formData, empresa: e.target.value })}
-                      className="w-full bg-[var(--color-background)] border border-[var(--color-text)]/15 rounded-xl px-3.5 py-2.5 text-xs font-sans text-[var(--color-text)] placeholder-gray-400 focus:outline-none focus:bg-white focus:border-[var(--color-primary)] transition-all"
+                      className="w-full bg-[var(--color-background)] border border-[var(--color-text)]/15 rounded-xl px-3.5 py-2.5 text-xs font-sans text-[var(--color-text)] placeholder-gray-400 focus:outline-none focus:bg-[var(--color-surface)] focus:border-[var(--color-primary)] transition-all"
                     />
                   </div>
                 </div>
@@ -445,7 +445,7 @@ export default function Contact({ config }: ContactProps) {
                       placeholder="Ej. alejandro@empresa.com"
                       value={formData.correo}
                       onChange={(e) => setFormData({ ...formData, correo: e.target.value })}
-                      className={`w-full bg-[var(--color-background)] border ${errors.correo ? 'border-red-500' : 'border-[var(--color-text)]/15'} rounded-xl px-3.5 py-2.5 text-xs font-sans text-[var(--color-text)] placeholder-gray-400 focus:outline-none focus:bg-white focus:border-[var(--color-primary)] transition-all`}
+                      className={`w-full bg-[var(--color-background)] border ${errors.correo ? 'border-red-500' : 'border-[var(--color-text)]/15'} rounded-xl px-3.5 py-2.5 text-xs font-sans text-[var(--color-text)] placeholder-gray-400 focus:outline-none focus:bg-[var(--color-surface)] focus:border-[var(--color-primary)] transition-all`}
                     />
                     {errors.correo && (
                       <span className="text-[10px] text-red-500 font-sans flex items-center space-x-1">
@@ -462,7 +462,7 @@ export default function Contact({ config }: ContactProps) {
                       placeholder="Ej. +34 600 000 000"
                       value={formData.whatsapp}
                       onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
-                      className={`w-full bg-[var(--color-background)] border ${errors.whatsapp ? 'border-red-500' : 'border-[var(--color-text)]/15'} rounded-xl px-3.5 py-2.5 text-xs font-sans text-[var(--color-text)] placeholder-gray-400 focus:outline-none focus:bg-white focus:border-[var(--color-primary)] transition-all`}
+                      className={`w-full bg-[var(--color-background)] border ${errors.whatsapp ? 'border-red-500' : 'border-[var(--color-text)]/15'} rounded-xl px-3.5 py-2.5 text-xs font-sans text-[var(--color-text)] placeholder-gray-400 focus:outline-none focus:bg-[var(--color-surface)] focus:border-[var(--color-primary)] transition-all`}
                     />
                     {errors.whatsapp && (
                       <span className="text-[10px] text-red-500 font-sans flex items-center space-x-1">
@@ -482,7 +482,7 @@ export default function Contact({ config }: ContactProps) {
                       placeholder="Ej. Madrid, España"
                       value={formData.ciudad}
                       onChange={(e) => setFormData({ ...formData, ciudad: e.target.value })}
-                      className="w-full bg-[var(--color-background)] border border-[var(--color-text)]/15 rounded-xl px-3.5 py-2.5 text-xs font-sans text-[var(--color-text)] placeholder-gray-400 focus:outline-none focus:bg-white focus:border-[var(--color-primary)] transition-all"
+                      className="w-full bg-[var(--color-background)] border border-[var(--color-text)]/15 rounded-xl px-3.5 py-2.5 text-xs font-sans text-[var(--color-text)] placeholder-gray-400 focus:outline-none focus:bg-[var(--color-surface)] focus:border-[var(--color-primary)] transition-all"
                     />
                   </div>
 
@@ -491,7 +491,7 @@ export default function Contact({ config }: ContactProps) {
                     <select
                       value={formData.servicio}
                       onChange={(e) => setFormData({ ...formData, servicio: e.target.value })}
-                      className="w-full bg-[var(--color-background)] border border-[var(--color-text)]/15 rounded-xl px-3.5 py-2.5 text-xs font-sans text-[var(--color-text)] focus:outline-none focus:bg-white focus:border-[var(--color-primary)] transition-all"
+                      className="w-full bg-[var(--color-background)] border border-[var(--color-text)]/15 rounded-xl px-3.5 py-2.5 text-xs font-sans text-[var(--color-text)] focus:outline-none focus:bg-[var(--color-surface)] focus:border-[var(--color-primary)] transition-all"
                     >
                       <option value="web-dev">Desarrollo Web & Apps Premium</option>
                       <option value="automation">Automatización Avanzada & n8n</option>
@@ -522,7 +522,7 @@ export default function Contact({ config }: ContactProps) {
                           className={`px-3 py-1 text-[9px] font-sans font-extrabold rounded-md transition-all ${
                             currency === cur
                               ? 'bg-[var(--color-primary)] text-white shadow-[0_2px_6px_rgba(37, 99, 235,0.2)]'
-                              : 'text-gray-500 hover:text-[var(--color-secondary)]'
+                              : 'text-gray-500 hover:text-white'
                           }`}
                         >
                           {cur}
@@ -556,7 +556,7 @@ export default function Contact({ config }: ContactProps) {
                             </div>
                           </div>
                           
-                          <span className={`text-xs sm:text-sm font-display font-extrabold tracking-tight ${isActive ? 'text-[var(--color-secondary)]' : 'text-[var(--color-text-secondary)]'}`}>
+                          <span className={`text-xs sm:text-sm font-display font-extrabold tracking-tight ${isActive ? 'text-white' : 'text-[var(--color-text-secondary)]'}`}>
                             {btn.label}
                           </span>
                           
@@ -582,7 +582,7 @@ export default function Contact({ config }: ContactProps) {
                     value={formData.mensaje}
                     onChange={(e) => setFormData({ ...formData, mensaje: e.target.value })}
                     rows={4}
-                    className={`w-full bg-[var(--color-background)] border ${errors.mensaje ? 'border-red-500' : 'border-[var(--color-text)]/15'} rounded-xl px-3.5 py-2.5 text-xs font-sans text-[var(--color-text)] placeholder-gray-400 focus:outline-none focus:bg-white focus:border-[var(--color-primary)] transition-all`}
+                    className={`w-full bg-[var(--color-background)] border ${errors.mensaje ? 'border-red-500' : 'border-[var(--color-text)]/15'} rounded-xl px-3.5 py-2.5 text-xs font-sans text-[var(--color-text)] placeholder-gray-400 focus:outline-none focus:bg-[var(--color-surface)] focus:border-[var(--color-primary)] transition-all`}
                   />
                   {errors.mensaje && (
                     <span className="text-[10px] text-red-500 font-sans flex items-center space-x-1">
