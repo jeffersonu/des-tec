@@ -257,7 +257,7 @@ export async function processContactSubmission(
     hubspotFormGuid?: string;
   }
 ): Promise<ContactProcessResult> {
-  const { nombre, empresa, correo, whatsapp, ciudad, servicio, presupuesto, mensaje, turnstileToken, honeypot, isOfflineSync } = payload;
+  const { nombre, empresa, correo, whatsapp, ciudad, servicio, presupuesto, mensaje, honeypot } = payload;
 
   // A. Honeypot (trampa señuelo para bots)
   if (honeypot) {
@@ -279,23 +279,15 @@ export async function processContactSubmission(
     return { status: 400, body: { success: false, message: 'La longitud de los datos proporcionados supera los límites de seguridad permitidos.' } };
   }
 
-  // C. Verificación de Cloudflare Turnstile
-  if (!isOfflineSync) {
-    if (!turnstileToken) {
-      return { status: 400, body: { success: false, message: 'Error de verificación de seguridad: Token de Turnstile ausente.' } };
-    }
-
-    const result = await verifyTurnstile(turnstileToken, opts.turnstileSecretKey, opts.clientIp);
-    if (!result.success) {
-      console.error(`[Security Alert] Verificación de Turnstile fallida para IP: ${opts.clientIp}. Códigos:`, result.errors);
-      return { status: 400, body: { success: false, message: 'La validación de seguridad (Turnstile) ha fallado. Por favor, reinténtalo.' } };
-    }
-  } else {
-    // Datos sincronizados offline: filtro heurístico adicional anti-spam masivo
+  // C. Filtro heurístico anti-spam (reemplaza la verificación de Cloudflare Turnstile,
+  // desactivada a petición del cliente). Se aplica siempre, tanto en envíos online
+  // como en sincronizaciones offline, junto con el honeypot y el rate limiting ya
+  // aplicados antes de llegar aquí.
+  {
     const blockWords = ['viagra', 'cialis', 'bitcoin', 'lottery', 'sex', 'casino', 'free money'];
     const textToAnalyze = `${nombre} ${mensaje}`.toLowerCase();
     if (blockWords.some((word) => textToAnalyze.includes(word))) {
-      console.warn(`[Security Alert] Patrón spam detectado en datos sincronizados offline desde IP: ${opts.clientIp}`);
+      console.warn(`[Security Alert] Patrón spam detectado desde IP: ${opts.clientIp}`);
       return { status: 400, body: { success: false, message: 'La solicitud contiene patrones de contenido bloqueados por seguridad.' } };
     }
   }

@@ -38,12 +38,12 @@ app.use((req, res, next) => {
     res.setHeader(
       'Content-Security-Policy',
       "default-src 'self'; " +
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com; " +
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
       "img-src 'self' data: blob: https:; " +
       "font-src 'self' data: https://fonts.gstatic.com; " +
-      "frame-src 'self' https://challenges.cloudflare.com; " +
-      "connect-src 'self' https://challenges.cloudflare.com; " +
+      "frame-src 'self'; " +
+      "connect-src 'self'; " +
       "media-src 'self'; " +
       "object-src 'none'; " +
       "base-uri 'self'; " +

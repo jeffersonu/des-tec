@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { ContactFormData, AppConfig, CurrencyCode } from '../../types';
 import { Send, CheckCircle2, AlertTriangle, Mail, Phone, MapPin } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -7,13 +7,11 @@ import { defaultBudgetConfig } from '../../data';
 import { usePWA } from '../../context/PWAContext';
 import { saveOfflineSubmission } from '../../utils/offlineDb';
 
-import ErrorBoundary from '../ui/ErrorBoundary';
-
 interface ContactProps {
   config: AppConfig;
 }
 
-function ContactForm({ config }: ContactProps) {
+export default function Contact({ config }: ContactProps) {
   const { isOnline, refreshQueueCount } = usePWA();
   const [isOfflineSubmitted, setIsOfflineSubmitted] = useState(false);
   const [currency, setCurrency] = useState<CurrencyCode>('USD');
@@ -32,145 +30,9 @@ function ContactForm({ config }: ContactProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSending, setIsSending] = useState(false);
 
-  // --- Turnstile & Security State & Refs ---
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
-  const [turnstileError, setTurnstileError] = useState<string | null>(null);
+  // --- Security State ---
   const [apiError, setApiError] = useState<string | null>(null);
   const [honeypot, setHoneypot] = useState(''); // Hidden honeypot trap for bots
-
-  const turnstileContainerRef = useRef<HTMLDivElement>(null);
-  const turnstileWidgetIdRef = useRef<string | null>(null);
-  const [turnstileRetryCount, setTurnstileRetryCount] = useState(0);
-  const [turnstileStalled, setTurnstileStalled] = useState(false);
-
-  // Dynamic loading and rendering of Cloudflare Turnstile
-  useEffect(() => {
-    if (!isOnline) {
-      setTurnstileToken(null);
-      setTurnstileError(null);
-      return;
-    }
-
-    let active = true;
-    setTurnstileStalled(false);
-    const scriptId = 'cloudflare-turnstile-script';
-
-    // If the widget hasn't produced a token (or a clear error) within 9s,
-    // something is stuck — most commonly a Site Key whose allowed-domain
-    // list in the Cloudflare dashboard doesn't include this exact domain.
-    // Rather than leave the user staring at an endless spinner forever,
-    // surface it plainly and offer a one-click retry.
-    const stallTimer = window.setTimeout(() => {
-      if (active && !turnstileToken) {
-        setTurnstileStalled(true);
-        setTurnstileError(
-          'La verificación de seguridad está tardando más de lo normal. Puede deberse a una configuración pendiente del dominio en Cloudflare. Usa "Reintentar" o escríbenos directo por WhatsApp/correo mientras tanto.'
-        );
-      }
-    }, 9000);
-
-    // Callback when Turnstile script has loaded and API is ready
-    const initTurnstile = () => {
-      if (!active || !turnstileContainerRef.current || !(window as any).turnstile) return;
-
-      // 13. DÓNDE CONFIGURAR LAS CLAVES DE CLOUDFLARE TURNSTILE:
-      // La clave del sitio (Site Key) se configura mediante la variable de entorno VITE_TURNSTILE_SITE_KEY.
-      // Se utiliza una clave de prueba de Cloudflare por defecto para que funcione en entornos de sandbox sin configuración adicional.
-      // IMPORTANTE: esta variable debe configurarse también en Vercel (Project Settings
-      // -> Environment Variables), no solo en el .env local — Vercel nunca lee el .env
-      // local del equipo de desarrollo, ese archivo no viaja con el repositorio a propósito.
-      const siteKey = (import.meta as any).env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
-
-      try {
-        // Clear previous widget if any exists — remove and render are now in
-        // separate try/catch blocks so a failure in one never silently skips
-        // resetting our ref, which is what could leave a stale widget behind
-        // on retry and cause a broken/duplicate iframe overlay.
-        if (turnstileWidgetIdRef.current) {
-          try {
-            (window as any).turnstile.remove(turnstileWidgetIdRef.current);
-          } catch (removeErr) {
-            console.warn('[Turnstile] Could not remove previous widget cleanly:', removeErr);
-          }
-          turnstileWidgetIdRef.current = null;
-        }
-        // Belt-and-suspenders: make sure no leftover DOM/iframe remains in
-        // the container before asking Turnstile to render a new widget into it.
-        if (turnstileContainerRef.current) {
-          turnstileContainerRef.current.innerHTML = '';
-        }
-
-        // Render Turnstile explicitly
-        const widgetId = (window as any).turnstile.render(turnstileContainerRef.current, {
-          sitekey: siteKey,
-          theme: 'auto',
-          callback: (token: string) => {
-            setTurnstileToken(token);
-            setTurnstileError(null);
-            setApiError(null);
-            setTurnstileStalled(false);
-          },
-          'expired-callback': () => {
-            setTurnstileToken(null);
-          },
-          'error-callback': (code?: string) => {
-            setTurnstileToken(null);
-            setTurnstileStalled(true);
-            setTurnstileError(
-              code
-                ? `Error de verificación con Turnstile (código ${code}). Es probable que el dominio no esté autorizado en Cloudflare para esta clave. Intenta "Reintentar" o contáctanos directo.`
-                : 'Error de verificación con Turnstile. Intenta "Reintentar" o contáctanos directo.'
-            );
-          },
-        });
-
-        turnstileWidgetIdRef.current = widgetId;
-      } catch (err) {
-        console.error('[Turnstile] Error rendering widget:', err);
-        setTurnstileStalled(true);
-        setTurnstileError('No se pudo cargar la verificación de seguridad. Intenta "Reintentar" o contáctanos directo.');
-      }
-    };
-
-    // If script is not present, inject it dynamically
-    let script = document.getElementById(scriptId) as HTMLScriptElement;
-    if (!script) {
-      script = document.createElement('script');
-      script.id = scriptId;
-      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
-      script.async = true;
-      script.defer = true;
-      script.onload = () => {
-        if ((window as any).turnstile) {
-          (window as any).turnstile.ready(initTurnstile);
-        }
-      };
-      script.onerror = () => {
-        console.warn('[Turnstile] Could not load verification script. Operating in fallback mode.');
-        setTurnstileToken('mock-token-sandbox-fallback');
-        setTurnstileStalled(false);
-      };
-      document.body.appendChild(script);
-    } else {
-      // Script already exists. If turnstile is loaded, render immediately.
-      if ((window as any).turnstile) {
-        (window as any).turnstile.ready(initTurnstile);
-      }
-    }
-
-    return () => {
-      active = false;
-      window.clearTimeout(stallTimer);
-      // Cleanup Turnstile widget on unmount
-      if (turnstileWidgetIdRef.current && (window as any).turnstile) {
-        try {
-          (window as any).turnstile.remove(turnstileWidgetIdRef.current);
-        } catch (e) {
-          // ignore cleanup errors if unmounted
-        }
-      }
-    };
-  }, [isOnline, turnstileRetryCount]);
 
   // 13. DÓNDE SE RECOGE Y PROCESA EL FORMULARIO EN EL CLIENTE
   const validate = () => {
@@ -243,17 +105,6 @@ function ContactForm({ config }: ContactProps) {
         return;
       }
 
-      // B. Turnstile Validation check
-      if (!turnstileToken) {
-        setIsSending(false);
-        setApiError(
-          turnstileStalled
-            ? 'La verificación de seguridad no se ha completado. Usa el botón "Reintentar" abajo, o contáctanos directo por WhatsApp/correo.'
-            : 'Por favor, completa la verificación de seguridad antes de enviar.'
-        );
-        return;
-      }
-
       try {
         // 13. DÓNDE SE ENVÍA EL TOKEN PARA VALIDACIÓN AL SERVIDOR
         // Se hace un POST a la API local /api/verify-contact pasando el token y los datos.
@@ -264,7 +115,6 @@ function ContactForm({ config }: ContactProps) {
           },
           body: JSON.stringify({
             ...formData,
-            turnstileToken,
             honeypot,
             isOfflineSync: false,
           }),
@@ -288,20 +138,9 @@ function ContactForm({ config }: ContactProps) {
             mensaje: '',
           });
           setHoneypot('');
-          setTurnstileToken(null);
-          
-          // Reset Turnstile widget state for subsequent entries
-          if (turnstileWidgetIdRef.current && (window as any).turnstile) {
-            (window as any).turnstile.reset(turnstileWidgetIdRef.current);
-          }
         } else {
           setIsSending(false);
-          setApiError(data.message || 'La validación de seguridad de Turnstile no ha sido exitosa.');
-          
-          // Reset Turnstile on failure so user can re-verify easily
-          if (turnstileWidgetIdRef.current && (window as any).turnstile) {
-            (window as any).turnstile.reset(turnstileWidgetIdRef.current);
-          }
+          setApiError(data.message || 'No se pudo enviar tu solicitud. Por favor, inténtalo de nuevo.');
         }
       } catch (error) {
         console.error('[Contact] API delivery error:', error);
@@ -653,34 +492,11 @@ function ContactForm({ config }: ContactProps) {
                   />
                 </div>
 
-                {/* Cloudflare Turnstile integration (Frontend validation) */}
-                {isOnline && (
-                  <div className="flex flex-col items-center sm:items-start space-y-2 py-1">
-                    <div ref={turnstileContainerRef} id="turnstile-container" className="min-h-[65px]" />
-                  </div>
-                )}
-
                 {/* Error handling messages (without tech jargon to stay user-friendly) */}
-                {(apiError || turnstileError) && (
-                  <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl text-xs font-sans flex flex-col sm:flex-row sm:items-center gap-2.5">
-                    <div className="flex items-start space-x-2">
-                      <AlertTriangle className="w-4 h-4 shrink-0 text-red-500 mt-0.5" />
-                      <span>{apiError || turnstileError}</span>
-                    </div>
-                    {turnstileStalled && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setTurnstileError(null);
-                          setTurnstileStalled(false);
-                          setTurnstileToken(null);
-                          setTurnstileRetryCount((c) => c + 1);
-                        }}
-                        className="shrink-0 self-start sm:self-auto px-3 py-1.5 bg-red-500/15 hover:bg-red-500/25 border border-red-500/25 rounded-lg text-[11px] font-bold transition-colors duration-300 cursor-pointer"
-                      >
-                        Reintentar
-                      </button>
-                    )}
+                {apiError && (
+                  <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-600 rounded-xl text-xs font-sans flex items-center space-x-2">
+                    <AlertTriangle className="w-4 h-4 shrink-0 text-red-500" />
+                    <span>{apiError}</span>
                   </div>
                 )}
 
@@ -709,43 +525,5 @@ function ContactForm({ config }: ContactProps) {
         </div>
       </div>
     </section>
-  );
-}
-
-export default function Contact({ config }: ContactProps) {
-  return (
-    <ErrorBoundary
-      fallback={
-        <section id="contacto" className="py-20 px-4 sm:px-6 lg:px-8 bg-[var(--color-support)]">
-          <div className="max-w-xl mx-auto text-center space-y-4 p-8 bg-white/[0.03] border border-white/10 rounded-3xl">
-            <AlertTriangle className="w-8 h-8 text-red-500 mx-auto" />
-            <h3 className="text-lg font-display font-bold text-white">
-              El formulario no pudo cargar en este momento
-            </h3>
-            <p className="text-sm text-slate-400">
-              Puedes escribirnos directo mientras lo solucionamos:
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-              <a
-                href={`https://wa.me/${(config.whatsapp || '').replace(/\D/g, '')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-5 py-3 bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white rounded-xl text-sm font-bold transition-colors"
-              >
-                Escribir por WhatsApp
-              </a>
-              <a
-                href={`mailto:${config.correo || 'informacion.destec@gmail.com'}`}
-                className="px-5 py-3 bg-white/10 hover:bg-white/15 text-white rounded-xl text-sm font-bold transition-colors"
-              >
-                Enviar correo
-              </a>
-            </div>
-          </div>
-        </section>
-      }
-    >
-      <ContactForm config={config} />
-    </ErrorBoundary>
   );
 }
