@@ -22,7 +22,7 @@ import {
   isOriginTrusted,
   processContactSubmission,
   type ContactPayload,
-} from '../lib/contactSecurity';
+} from '../lib/contactSecurity.js';
 
 export const config = {
   // Los eventos de Turnstile/HubSpot pueden tardar un poco: evitamos timeouts cortos.

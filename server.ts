@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import dotenv from 'dotenv';
-import { sanitizeAndFilter, isRateLimited, processContactSubmission, type ContactPayload } from './lib/contactSecurity';
+import { sanitizeAndFilter, isRateLimited, processContactSubmission, type ContactPayload } from './lib/contactSecurity.js';
 
 // Load environment variables from .env config file
 dotenv.config();
