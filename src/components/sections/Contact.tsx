@@ -30,6 +30,30 @@ export default function Contact({ config }: ContactProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSending, setIsSending] = useState(false);
 
+  // Traduce los valores técnicos internos (usados para la lógica de la UI) a
+  // texto legible, tal como lo ve el usuario en pantalla, antes de enviarlos
+  // a HubSpot / correo. Así el formulario sigue funcionando igual visualmente,
+  // pero lo que llega al CRM y al correo es legible en vez de claves como
+  // "web-dev" o "mid".
+  const servicioLabels: Record<string, string> = {
+    'web-dev': 'Desarrollo Web & Apps Premium',
+    'automation': 'Automatización Avanzada & n8n',
+    'integrations': 'Integraciones API & CRM',
+    'whatsapp-chatbots': 'Chatbots Inteligentes WhatsApp',
+    'seo-speed': 'SEO Técnico & Velocidad Core',
+    'hosting-consulting': 'Consultoría & Cloud Hosting',
+  };
+
+  const getReadableFormData = (data: ContactFormData): ContactFormData => {
+    const presupuestoLabel =
+      defaultBudgetConfig[currency].ranges.find((r) => r.key === data.presupuesto)?.label || data.presupuesto;
+    return {
+      ...data,
+      servicio: servicioLabels[data.servicio] || data.servicio,
+      presupuesto: presupuestoLabel,
+    };
+  };
+
   // --- Security State ---
   const [apiError, setApiError] = useState<string | null>(null);
   const [honeypot, setHoneypot] = useState(''); // Hidden honeypot trap for bots
@@ -59,8 +83,8 @@ export default function Contact({ config }: ContactProps) {
 
     if (!isOnline) {
       try {
-        // Save to offline database
-        await saveOfflineSubmission(formData);
+        // Save to offline database (con los valores ya traducidos a texto legible)
+        await saveOfflineSubmission(getReadableFormData(formData));
         await refreshQueueCount();
         setIsSending(false);
         setIsOfflineSubmitted(true);
@@ -114,7 +138,7 @@ export default function Contact({ config }: ContactProps) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            ...formData,
+            ...getReadableFormData(formData),
             honeypot,
             isOfflineSync: false,
           }),
