@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CargoFlow ERP - Plataforma de Logística & Carga Internacional</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .gradient-header {
+      background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col custom-scrollbar">
+
+  <!-- TOP APP BAR -->
+  <header class="gradient-header text-white border-b border-slate-700 sticky top-0 z-40 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- LOGO & TITLE -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
+          <i class="fa-solid fa-ship text-lg"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="font-extrabold text-lg tracking-tight text-white">CargoFlow <span class="text-blue-400 font-semibold text-sm">ERP</span></h1>
+            <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">v2.4 Live</span>
+          </div>
+          <p class="text-[11px] text-slate-400">Sistema Integral de Carga & Importaciones</p>
+        </div>
+      </div>
+
+      <!-- MAIN NAVIGATION -->
+      <nav class="hidden md:flex items-center space-x-1 text-sm font-medium">
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="px-3 py-2 rounded-lg bg-blue-600 text-white font-semibold flex items-center space-x-2 transition-all">
+          <i class="fa-solid fa-chart-line text-xs"></i>
+          <span>Dashboard</span>
+        </button>
+        <button onclick="switchTab('cbm-calculator')" id="nav-cbm-calculator" class="px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 flex items-center space-x-2 transition-all">
+          <i class="fa-solid fa-calculator text-xs"></i>
+          <span>Cotizador CBM</span>
+        </button>
+        <button onclick="switchTab('tracking')" id="nav-tracking" class="px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 flex items-center space-x-2 transition-all">
+          <i class="fa-solid fa-location-dot text-xs"></i>
+          <span>Rastreo B/L</span>
+        </button>
+        <button onclick="switchTab('shipments')" id="nav-shipments" class="px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 flex items-center space-x-2 transition-all">
+          <i class="fa-solid fa-boxes-packing text-xs"></i>
+          <span>Envíos</span>
+        </button>
+      </nav>
+
+      <!-- RIGHT USER CONTROLS -->
+      <div class="flex items-center space-x-3">
+        <button onclick="openNewQuoteModal()" class="hidden sm:flex items-center space-x-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-3 py-2 rounded-lg shadow-md transition-all">
+          <i class="fa-solid fa-plus"></i>
+          <span>Nueva Cotización</span>
+        </button>
+        
+        <div class="h-6 w-px bg-slate-700 hidden sm:block"></div>
+
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-full bg-slate-700 border border-slate-600 flex items-center justify-center text-xs font-bold text-white">
+            JU
+          </div>
+          <div class="hidden lg:block text-left">
+            <p class="text-xs font-bold leading-none text-slate-200">Jefferson U.</p>
+            <p class="text-[10px] text-slate-400">Logistics Manager</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- CONTENT CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- TAB 1: DASHBOARD OVERVIEW -->
+    <div id="tab-dashboard" class="space-y-6">
+
+      <!-- HERO BANNER & KPI METRICS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Metric 1 -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Contenedores Activos</p>
+            <h3 class="text-2xl font-black text-slate-900 mt-1">42 <span class="text-xs font-normal text-slate-500">unidades</span></h3>
+            <p class="text-xs text-emerald-600 font-medium mt-1 flex items-center">
+              <i class="fa-solid fa-arrow-up mr-1 text-[10px]"></i> +12% este mes
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-box-archive"></i>
+          </div>
+        </div>
+
+        <!-- Metric 2 -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Volumen CBM Total</p>
+            <h3 class="text-2xl font-black text-slate-900 mt-1">1,480.5 <span class="text-xs font-normal text-slate-500">m³</span></h3>
+            <p class="text-xs text-blue-600 font-medium mt-1 flex items-center">
+              <i class="fa-solid fa-ship mr-1 text-[10px]"></i> 85% Carga Marítima
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-cubes"></i>
+          </div>
+        </div>
+
+        <!-- Metric 3 -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Cotizaciones Mes</p>
+            <h3 class="text-2xl font-black text-slate-900 mt-1">$142,500 <span class="text-xs font-normal text-slate-500">USD</span></h3>
+            <p class="text-xs text-emerald-600 font-medium mt-1 flex items-center">
+              <i class="fa-solid fa-check mr-1 text-[10px]"></i> 38 Aprobadas
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-file-invoice-dollar"></i>
+          </div>
+        </div>
+
+        <!-- Metric 4 -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Eficiencia de Tránsito</p>
+            <h3 class="text-2xl font-black text-slate-900 mt-1">98.4%</h3>
+            <p class="text-xs text-slate-500 font-medium mt-1 flex items-center">
+              <i class="fa-solid fa-clock mr-1 text-[10px]"></i> ETA Promedio 24 días
+            </p>
+          </div>
+          <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- QUICK TRACKING & CALCULATOR BANNER -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- QUICK CBM CALCULATOR PREVIEW -->
+        <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-base font-bold text-slate-900">Simulador de Cubicaje Rápido (CBM)</h3>
+              <p class="text-xs text-slate-500">Calcula metros cúbicos y espacio requerido en contenedor</p>
+            </div>
+            <button onclick="switchTab('cbm-calculator')" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center space-x-1">
+              <span>Modo Avanzado</span>
+              <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 pt-2">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Largo (cm)</label>
+              <input type="number" id="quick-length" value="60" oninput="calcQuickCBM()" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Ancho (cm)</label>
+              <input type="number" id="quick-width" value="40" oninput="calcQuickCBM()" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Alto (cm)</label>
+              <input type="number" id="quick-height" value="40" oninput="calcQuickCBM()" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Cantidad Cajas</label>
+              <input type="number" id="quick-qty" value="50" oninput="calcQuickCBM()" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+            <div class="col-span-2 sm:col-span-1 bg-blue-50 border border-blue-200 rounded-lg p-2 flex flex-col justify-center text-center">
+              <span class="text-[10px] text-blue-600 font-bold uppercase">Resultado</span>
+              <span id="quick-cbm-result" class="text-base font-black text-blue-900">4.80 m³</span>
+            </div>
+          </div>
+
+          <!-- CONTAINER SUGGESTION BAR -->
+          <div id="quick-recommendation" class="bg-slate-50 p-3 rounded-xl border border-slate-200 flex items-center justify-between text-xs">
+            <span class="text-slate-600"><i class="fa-solid fa-circle-info text-blue-500 mr-1.5"></i> Capacidad ocupada: <strong>14.5%</strong> de un contenedor 20FT ST (33 m³)</span>
+            <span class="font-bold text-blue-600 bg-white px-2.5 py-1 rounded-md border border-slate-200">Recomendado: LCL / Consolidado</span>
+          </div>
+        </div>
+
+        <!-- B/L QUICK LOOKUP -->
+        <div class="bg-gradient-to-br from-slate-900 to-blue-950 rounded-2xl p-6 text-white shadow-lg flex flex-col justify-between">
+          <div>
+            <div class="flex items-center space-x-2 text-blue-400 text-xs font-bold uppercase tracking-wider mb-2">
+              <i class="fa-solid fa-radar"></i>
+              <span>Rastreo en Tiempo Real</span>
+            </div>
+            <h3 class="text-lg font-extrabold">Consulta de Contenedor o B/L</h3>
+            <p class="text-xs text-slate-300 mt-1">Ingresa el código de guía o contenedor de naviera para verificar localización.</p>
+          </div>
+
+          <div class="space-y-3 my-4">
+            <div class="relative">
+              <input type="text" id="quick-bl-input" placeholder="Ej: MSKU9823410 o BL-84920" class="w-full bg-slate-800/80 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <button onclick="runQuickTracking()" class="absolute right-1.5 top-1.5 bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all">
+                Rastrear
+              </button>
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-slate-400">
+              <span>Navieras soportadas:</span>
+              <span class="font-medium text-slate-200">Maersk • MSC • COSCO • CMA CGM</span>
+            </div>
+          </div>
+
+          <div class="text-[11px] text-slate-400 border-t border-slate-800 pt-3 flex items-center justify-between">
+            <span>Última actualización GPS:</span>
+            <span class="text-emerald-400 font-mono">Hace 12 min</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SHIPMENTS TABLE -->
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Envíos & Cargas Recientes</h3>
+            <p class="text-xs text-slate-500">Estado de operaciones marítimas y aéreas activas</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <input type="text" placeholder="Buscar por cliente o B/L..." class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs focus:bg-white outline-none w-48">
+            <button onclick="openNewQuoteModal()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-all">
+              <i class="fa-solid fa-plus mr-1"></i> Nuevo Envío
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-600">
+            <thead class="bg-slate-50 text-slate-700 font-bold uppercase text-[10px] tracking-wider border-b border-slate-200">
+              <tr>
+                <th class="py-3.5 px-4">Guía / B/L</th>
+                <th class="py-3.5 px-4">Cliente / Empresa</th>
+                <th class="py-3.5 px-4">Ruta (Origen - Destino)</th>
+                <th class="py-3.5 px-4">Tipo Carga</th>
+                <th class="py-3.5 px-4">Volumen (CBM)</th>
+                <th class="py-3.5 px-4">Estado</th>
+                <th class="py-3.5 px-4">ETA Estimado</th>
+                <th class="py-3.5 px-4 text-right">Acción</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium">
+              <tr class="hover:bg-slate-50/80 transition-all">
+                <td class="py-3 px-4 font-bold text-slate-900 font-mono">MSKU9823410</td>
+                <td class="py-3 px-4">Importaciones Globales S.A.</td>
+                <td class="py-3 px-4"><span class="font-semibold text-slate-800">Ningbo (CN)</span> → Buenaventura (CO)</td>
+                <td class="py-3 px-4"><span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded">FCL 40HQ</span></td>
+                <td class="py-3 px-4 font-mono font-bold">68.0 m³</td>
+                <td class="py-3 px-4"><span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center"><i class="fa-solid fa-ship mr-1 text-[8px]"></i> En Tránsito Marítimo</span></td>
+                <td class="py-3 px-4 font-semibold">12 Ago 2026</td>
+                <td class="py-3 px-4 text-right">
+                  <button onclick="viewTrackingDetail('MSKU9823410')" class="text-blue-600 hover:text-blue-800 font-bold text-xs bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded transition-all">Detalle</button>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-50/80 transition-all">
+                <td class="py-3 px-4 font-bold text-slate-900 font-mono">COSU6102934</td>
+                <td class="py-3 px-4">Comercializadora Textil LLC</td>
+                <td class="py-3 px-4"><span class="font-semibold text-slate-800">Shanghai (CN)</span> → Manzanillo (MX)</td>
+                <td class="py-3 px-4"><span class="bg-purple-100 text-purple-800 text-[10px] font-bold px-2 py-0.5 rounded">LCL (Consolidado)</span></td>
+                <td class="py-3 px-4 font-mono font-bold">14.2 m³</td>
+                <td class="py-3 px-4"><span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center"><i class="fa-solid fa-warehouse mr-1 text-[8px]"></i> En Aduana Puerto</span></td>
+                <td class="py-3 px-4 font-semibold">04 Ago 2026</td>
+                <td class="py-3 px-4 text-right">
+                  <button onclick="viewTrackingDetail('COSU6102934')" class="text-blue-600 hover:text-blue-800 font-bold text-xs bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded transition-all">Detalle</button>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-50/80 transition-all">
+                <td class="py-3 px-4 font-bold text-slate-900 font-mono">AWB-984210</td>
+                <td class="py-3 px-4">Tecnología & Componentes Inc</td>
+                <td class="py-3 px-4"><span class="font-semibold text-slate-800">Shenzhen (CN)</span> → Miami (US)</td>
+                <td class="py-3 px-4"><span class="bg-sky-100 text-sky-800 text-[10px] font-bold px-2 py-0.5 rounded">Aéreo Carga</span></td>
+                <td class="py-3 px-4 font-mono font-bold">3.8 m³</td>
+                <td class="py-3 px-4"><span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center"><i class="fa-solid fa-circle-check mr-1 text-[8px]"></i> Entregado Cliente</span></td>
+                <td class="py-3 px-4 font-semibold text-slate-400">28 Jul 2026</td>
+                <td class="py-3 px-4 text-right">
+                  <button onclick="viewTrackingDetail('AWB-984210')" class="text-blue-600 hover:text-blue-800 font-bold text-xs bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded transition-all">Detalle</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB 2: ADVANCED CBM CALCULATOR -->
+    <div id="tab-cbm-calculator" class="hidden space-y-6">
+      
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
+        <div class="border-b border-slate-100 pb-4">
+          <h2 class="text-lg font-extrabold text-slate-900">Cotizador & Calculadora de Volumen CBM (Metros Cúbicos)</h2>
+          <p class="text-xs text-slate-500">Herramienta de ingeniería logísticas para cálculo exacto de carga consolidada (LCL) o contenedor completo (FCL).</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          
+          <!-- CALCULATOR INPUT FORM -->
+          <div class="space-y-4">
+            <h3 class="text-sm font-bold text-slate-800 border-l-4 border-blue-600 pl-2">Dimensiones del Empaque / Cajas</h3>
+
+            <div class="grid grid-cols-3 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Largo (cm)</label>
+                <input type="number" id="adv-length" value="80" oninput="calculateAdvancedCBM()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Ancho (cm)</label>
+                <input type="number" id="adv-width" value="60" oninput="calculateAdvancedCBM()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Alto (cm)</label>
+                <input type="number" id="adv-height" value="50" oninput="calculateAdvancedCBM()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Cantidad de Cajas</label>
+                <input type="number" id="adv-qty" value="100" oninput="calculateAdvancedCBM()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Peso por Caja (kg)</label>
+                <input type="number" id="adv-weight" value="15" oninput="calculateAdvancedCBM()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Tarifa Flete Marítimo Base ($/CBM)</label>
+              <input type="number" id="adv-rate" value="180" oninput="calculateAdvancedCBM()" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm font-bold text-slate-900 focus:bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+            </div>
+
+          </div>
+
+          <!-- CALCULATOR OUTPUT RESULTS -->
+          <div class="bg-slate-900 rounded-2xl p-6 text-white space-y-5 flex flex-col justify-between shadow-xl">
+            
+            <div class="space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-400">Resumen CBM</span>
+                <span class="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded border border-blue-400/30">Motor Algorítmico</span>
+              </div>
+
+              <div class="grid grid-cols-2 gap-4">
+                <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700">
+                  <p class="text-[11px] text-slate-400 font-medium">Volumen Total CBM</p>
+                  <p id="adv-cbm-total" class="text-2xl font-black text-emerald-400">24.00 m³</p>
+                </div>
+                <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700">
+                  <p class="text-[11px] text-slate-400 font-medium">Peso Bruto Total</p>
+                  <p id="adv-gross-weight" class="text-2xl font-black text-white">1,500 kg</p>
+                </div>
+              </div>
+
+              <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700 space-y-2">
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-400">Peso Volumétrico Aéreo (1:167):</span>
+                  <span id="adv-air-weight" class="font-bold font-mono text-slate-200">4,008 kg</span>
+                </div>
+                <div class="flex justify-between text-xs">
+                  <span class="text-slate-400">Estimado Flete Marítimo:</span>
+                  <span id="adv-ocean-cost" class="font-bold font-mono text-emerald-400">$4,320.00 USD</span>
+                </div>
+              </div>
+
+              <div class="bg-blue-950/60 p-4 rounded-xl border border-blue-800/60 text-xs text-blue-200 space-y-1">
+                <p class="font-bold flex items-center">
+                  <i class="fa-solid fa-box-open mr-2 text-blue-400"></i>
+                  <span>Recomendación Logística de Contenedor:</span>
+                </p>
+                <p id="adv-container-recommendation" class="text-slate-300">
+                  Carga adecuada para LCL o 1x20FT ST (Ocupación del 72%).
+                </p>
+              </div>
+            </div>
+
+            <button onclick="openNewQuoteModal()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl shadow-lg transition-all text-xs">
+              Generar Cotización Formal en PDF
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB 3: CONTAINER TRACKING TIMELINE -->
+    <div id="tab-tracking" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+          <div>
+            <h2 class="text-lg font-extrabold text-slate-900">Seguimiento de Contenedores & B/L</h2>
+            <p class="text-xs text-slate-500">Trazabilidad en tiempo real desde puerto de origen a destino final.</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <input type="text" id="tracking-search-input" value="MSKU9823410" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none w-56 focus:ring-2 focus:ring-blue-500">
+            <button onclick="runTrackingSearch()" class="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-blue-700 transition-all">
+              Consultar
+            </button>
+          </div>
+        </div>
+
+        <!-- TRACKING TIMELINE GRAPHIC -->
+        <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 space-y-6">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase bg-blue-100 text-blue-800 px-2 py-0.5 rounded">B/L Activo</span>
+              <h3 class="text-xl font-black text-slate-900 mt-1">MSKU9823410</h3>
+              <p class="text-xs text-slate-500">Maersk Line • Vessel: MAERSK SELETAR • Voyage: 2408W</p>
+            </div>
+            <div class="text-right">
+              <span class="text-xs text-slate-400 block">ETA Puerto Destino</span>
+              <span class="text-lg font-black text-blue-600">12 de Agosto, 2026</span>
+            </div>
+          </div>
+
+          <!-- TIMELINE STEPS -->
+          <div class="relative py-4">
+            <div class="absolute left-8 top-10 bottom-10 w-1 bg-slate-200 hidden md:block" style="left: calc(12.5% + 1rem); right: calc(12.5% + 1rem); top: 2.2rem; height: 4px; width: 75%; z-index: 1;"></div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 relative z-10">
+              
+              <!-- Step 1 -->
+              <div class="bg-white p-4 rounded-xl border-2 border-emerald-500 shadow-sm space-y-2">
+                <div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-xs">
+                  <i class="fa-solid fa-check"></i>
+                </div>
+                <h4 class="font-bold text-xs text-slate-900">1. Carga en Origen</h4>
+                <p class="text-[11px] text-slate-500">Puerto de Ningbo (China)</p>
+                <p class="text-[10px] text-emerald-600 font-bold">20 Jul 2026 - Complete</p>
+              </div>
+
+              <!-- Step 2 -->
+              <div class="bg-white p-4 rounded-xl border-2 border-emerald-500 shadow-sm space-y-2">
+                <div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-xs">
+                  <i class="fa-solid fa-check"></i>
+                </div>
+                <h4 class="font-bold text-xs text-slate-900">2. Zarpe Marítimo</h4>
+                <p class="text-[11px] text-slate-500">En Navegación Pacífico</p>
+                <p class="text-[10px] text-emerald-600 font-bold">24 Jul 2026 - Complete</p>
+              </div>
+
+              <!-- Step 3 -->
+              <div class="bg-white p-4 rounded-xl border-2 border-blue-600 shadow-md ring-4 ring-blue-100 space-y-2">
+                <div class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs animate-pulse">
+                  <i class="fa-solid fa-ship"></i>
+                </div>
+                <h4 class="font-bold text-xs text-blue-900">3. En Tránsito</h4>
+                <p class="text-[11px] text-slate-500">Lat: 14.821 | Lon: -108.920</p>
+                <p class="text-[10px] text-blue-600 font-bold">En Progreso (ETA 12 Aug)</p>
+              </div>
+
+              <!-- Step 4 -->
+              <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-2 opacity-60">
+                <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center font-bold text-xs">
+                  4
+                </div>
+                <h4 class="font-bold text-xs text-slate-700">4. Arribo & Entrega</h4>
+                <p class="text-[11px] text-slate-500">Puerto Buenaventura</p>
+                <p class="text-[10px] text-slate-400 font-bold">Pendiente</p>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 4: SHIPMENTS LIST -->
+    <div id="tab-shipments" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <h2 class="text-lg font-extrabold text-slate-900 mb-2">Gestión Integral de Envíos</h2>
+        <p class="text-xs text-slate-500 mb-4">Administra todas las guías, documentos de embarque y estados de facturación.</p>
+        <div class="p-8 text-center bg-slate-50 rounded-xl border border-dashed border-slate-300 space-y-3">
+          <i class="fa-solid fa-folder-open text-3xl text-slate-400"></i>
+          <h3 class="text-sm font-bold text-slate-700">Módulo de Archivos & Manifiestos</h3>
+          <p class="text-xs text-slate-500 max-w-md mx-auto">Selecciona una guía en el dashboard principal para previsualizar facturas comerciales, BLs y certificados de origen.</p>
+          <button onclick="switchTab('dashboard')" class="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded-lg">Volver al Dashboard</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL: NUEVA COTIZACION -->
+  <div id="quote-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h3 class="text-base font-extrabold text-slate-900">Nueva Cotización CargoFlow</h3>
+        <button onclick="closeNewQuoteModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Nombre del Cliente / Empresa</label>
+          <input type="text" placeholder="Ej: Importaciones Logistic SAS" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 font-medium outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Puerto Origen</label>
+            <select class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 font-medium">
+              <option>Ningbo, CN</option>
+              <option>Shanghai, CN</option>
+              <option>Shenzhen, CN</option>
+              <option>Hamburg, DE</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Puerto Destino</label>
+            <select class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 font-medium">
+              <option>Buenaventura, CO</option>
+              <option>Manzanillo, MX</option>
+              <option>Callao, PE</option>
+              <option>Valparaíso, CL</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Modalidad Carga</label>
+            <select class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 font-medium">
+              <option>FCL (Contenedor Completo)</option>
+              <option>LCL (Consolidado CBM)</option>
+              <option>Aéreo Express</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Volumen Estimado (CBM)</label>
+            <input type="number" value="18.5" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 font-medium">
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end space-x-2">
+        <button onclick="closeNewQuoteModal()" class="px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-100 font-bold text-xs">Cancelar</button>
+        <button onclick="closeNewQuoteModal(); alert('Cotización creada exitosamente con número #CF-8491');" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs">Guardar & Generar PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APP LOGIC -->
+  <script>
+    function switchTab(tabId) {
+      const tabs = ['dashboard', 'cbm-calculator', 'tracking', 'shipments'];
+      tabs.forEach(t => {
+        document.getElementById(`tab-${t}`).classList.add('hidden');
+        const navBtn = document.getElementById(`nav-${t}`);
+        if (navBtn) {
+          navBtn.className = "px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 flex items-center space-x-2 transition-all";
+        }
+      });
+
+      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+      const activeNav = document.getElementById(`nav-${tabId}`);
+      if (activeNav) {
+        activeNav.className = "px-3 py-2 rounded-lg bg-blue-600 text-white font-semibold flex items-center space-x-2 transition-all";
+      }
+    }
+
+    function calcQuickCBM() {
+      const l = parseFloat(document.getElementById('quick-length').value) || 0;
+      const w = parseFloat(document.getElementById('quick-width').value) || 0;
+      const h = parseFloat(document.getElementById('quick-height').value) || 0;
+      const q = parseFloat(document.getElementById('quick-qty').value) || 0;
+
+      const totalCBM = ((l * w * h) / 1000000) * q;
+      document.getElementById('quick-cbm-result').innerText = `${totalCBM.toFixed(2)} m³`;
+
+      const pct = ((totalCBM / 33) * 100).toFixed(1);
+      let recText = "LCL / Consolidado";
+      if (totalCBM >= 25 && totalCBM <= 33) recText = "1x20FT ST (Recomendado)";
+      if (totalCBM > 33) recText = "1x40HQ (Contenedor Grande)";
+
+      document.getElementById('quick-recommendation').innerHTML = `
+        <span class="text-slate-600"><i class="fa-solid fa-circle-info text-blue-500 mr-1.5"></i> Capacidad ocupada: <strong>${pct}%</strong> de un contenedor 20FT ST (33 m³)</span>
+        <span class="font-bold text-blue-600 bg-white px-2.5 py-1 rounded-md border border-slate-200">Recomendado: ${recText}</span>
+      `;
+    }
+
+    function calculateAdvancedCBM() {
+      const l = parseFloat(document.getElementById('adv-length').value) || 0;
+      const w = parseFloat(document.getElementById('adv-width').value) || 0;
+      const h = parseFloat(document.getElementById('adv-height').value) || 0;
+      const q = parseFloat(document.getElementById('adv-qty').value) || 0;
+      const weightPerBox = parseFloat(document.getElementById('adv-weight').value) || 0;
+      const rate = parseFloat(document.getElementById('adv-rate').value) || 0;
+
+      const totalCBM = ((l * w * h) / 1000000) * q;
+      const grossWeight = weightPerBox * q;
+      const airVolumetricWeight = totalCBM * 167;
+      const oceanCost = totalCBM * rate;
+
+      document.getElementById('adv-cbm-total').innerText = `${totalCBM.toFixed(2)} m³`;
+      document.getElementById('adv-gross-weight').innerText = `${grossWeight.toLocaleString()} kg`;
+      document.getElementById('adv-air-weight').innerText = `${Math.round(airVolumetricWeight).toLocaleString()} kg`;
+      document.getElementById('adv-ocean-cost').innerText = `$${oceanCost.toLocaleString('en-US', {minimumFractionDigits: 2})} USD`;
+
+      let recommendation = "Carga adecuada para servicio LCL (Consolidado).";
+      if (totalCBM >= 24) recommendation = "Carga voluminosa ideal para 1x20FT FCL.";
+      if (totalCBM >= 55) recommendation = "Carga muy amplia ideal para 1x40HQ FCL.";
+      document.getElementById('adv-container-recommendation').innerText = recommendation;
+    }
+
+    function runQuickTracking() {
+      const val = document.getElementById('quick-bl-input').value.trim();
+      if (!val) {
+        alert("Por favor ingresa un número de B/L o contenedor.");
+        return;
+      }
+      document.getElementById('tracking-search-input').value = val;
+      switchTab('tracking');
+    }
+
+    function viewTrackingDetail(bl) {
+      document.getElementById('tracking-search-input').value = bl;
+      switchTab('tracking');
+    }
+
+    function runTrackingSearch() {
+      const bl = document.getElementById('tracking-search-input').value;
+      alert(`Consultando posición GPS y manifesto para el B/L: ${bl}`);
+    }
+
+    function openNewQuoteModal() {
+      document.getElementById('quote-modal').classList.remove('hidden');
+    }
+
+    function closeNewQuoteModal() {
+      document.getElementById('quote-modal').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+/*
+  ============================================================
+  ARCHIVO    : css/nosotros.css
+  DESCRIPCIÓN: Sección "Sobre nosotros". Grid de dos columnas:
+               imagen decorativa a la izquierda, texto a la derecha.
+  ============================================================
+*/
+
+/* Contenedor de la sección */
+.nosotros {
+  padding: 8rem 4rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+}
+
+/* ----------------------------------------------------------
+  IMAGEN DECORATIVA IZQUIERDA
+  Para poner una imagen real, en index.html reemplaza el <i>
+  dentro de .nosotros-imagen por:
+  <img src="img/plomero.png" alt="Nuestro equipo de trabajo">
+  y quita los estilos de flex/align/justify de esta clase.
+---------------------------------------------------------- */
+.nosotros-imagen {
+  border-radius: 20px;
+  overflow: hidden;
+  height: 480px;
+  background-image: url('../img/fondo2.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Capa oscura sobre la imagen */
+.nosotros-imagen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(10, 17, 40, 0.35);
+}
+
+/* ----------------------------------------------------------
+  TEXTO DERECHO
+---------------------------------------------------------- */
+.nosotros-texto h2 {
+  font-size: var(--texto-2xl);
+  font-weight: 900;
+  color: var(--color-oscuro);
+  margin-bottom: 1.5rem;
+  line-height: 1.15;
+}
+
+/* El <span> dentro del h2 resalta en azul */
+.nosotros-texto h2 span {
+  color: var(--color-primario);
+}
+
+.nosotros-texto p {
+  color: var(--color-gris-txt);
+  font-size: 1.7rem;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+}
+
+/* Lista de beneficios con checkmarks */
+.nosotros-lista {
+  list-style: none;
+  margin-bottom: 3rem;
+}
+
+.nosotros-lista li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: var(--texto-base);
+  margin-bottom: 1.2rem;
+  color: var(--color-oscuro);
+}
+
+.nosotros-lista li i {
+  color: var(--color-primario);
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .nosotros {
+    grid-template-columns: 1fr;
+    padding: 5rem 2rem;
+    gap: 3rem;
+  }
+
+  .nosotros-imagen {
+    height: 300px;
+  }
+}

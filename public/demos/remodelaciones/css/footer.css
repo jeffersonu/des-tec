@@ -1,0 +1,52 @@
+/*
+  ============================================================
+  ARCHIVO    : css/footer.css
+  DESCRIPCIÓN: Pie de página del sitio web.
+               Muestra el logo y los créditos.
+               El año se actualiza automáticamente desde js/app.js
+  ============================================================
+*/
+
+.footer {
+  background-color: #05080f;
+  padding: 3rem 4rem;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+/* Logo del footer */
+.footer-logo {
+  font-family: var(--fuente-titulos);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.footer-logo span {
+  color: var(--color-primario);
+}
+
+/* Texto de derechos reservados */
+.footer p {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 1.4rem;
+  text-align: center;
+}
+
+.footer strong {
+  color: var(--color-primario);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+  }
+}

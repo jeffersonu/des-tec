@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gourmet POS & Restaurant System - Control de Restaurante</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .gradient-header {
+      background: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col custom-scrollbar">
+
+  <!-- TOP APP BAR -->
+  <header class="gradient-header text-white border-b border-indigo-900 sticky top-0 z-40 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- LOGO & BRAND -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-amber-500/30">
+          <i class="fa-solid fa-utensils"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="font-extrabold text-lg tracking-tight text-white">Sabor & Fuego <span class="text-amber-400 font-semibold text-sm">POS</span></h1>
+            <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/30">Restaurante v3.1</span>
+          </div>
+          <p class="text-[11px] text-indigo-200">Sistema Integral POS, Mesas & Cocina KDS</p>
+        </div>
+      </div>
+
+      <!-- NAVIGATION TABS -->
+      <nav class="hidden md:flex items-center space-x-1 text-sm font-medium">
+        <button onclick="switchTab('pos')" id="nav-pos" class="px-3 py-2 rounded-lg bg-amber-500 text-slate-950 font-bold flex items-center space-x-2 transition-all">
+          <i class="fa-solid fa-cash-register text-xs"></i>
+          <span>Menú POS</span>
+        </button>
+        <button onclick="switchTab('tables')" id="nav-tables" class="px-3 py-2 rounded-lg text-indigo-200 hover:text-white hover:bg-indigo-900/60 flex items-center space-x-2 transition-all">
+          <i class="fa-solid fa-chair text-xs"></i>
+          <span>Mapa Mesas</span>
+        </button>
+        <button onclick="switchTab('kds')" id="nav-kds" class="px-3 py-2 rounded-lg text-indigo-200 hover:text-white hover:bg-indigo-900/60 flex items-center space-x-2 transition-all">
+          <i class="fa-solid fa-fire text-xs"></i>
+          <span>Cocina (KDS)</span>
+          <span id="kds-badge-count" class="bg-rose-500 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold">2</span>
+        </button>
+        <button onclick="switchTab('analytics')" id="nav-analytics" class="px-3 py-2 rounded-lg text-indigo-200 hover:text-white hover:bg-indigo-900/60 flex items-center space-x-2 transition-all">
+          <i class="fa-solid fa-chart-pie text-xs"></i>
+          <span>Ventas</span>
+        </button>
+      </nav>
+
+      <!-- RIGHT STATUS & USER -->
+      <div class="flex items-center space-x-3">
+        <button onclick="switchTab('pos')" class="flex items-center space-x-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold px-3 py-2 rounded-lg shadow-md transition-all">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span>Ver Carrito (<span id="cart-item-count">0</span>)</span>
+        </button>
+
+        <div class="h-6 w-px bg-indigo-800 hidden sm:block"></div>
+
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-full bg-amber-400 text-slate-950 font-bold flex items-center justify-center text-xs">
+            JU
+          </div>
+          <div class="hidden lg:block text-left">
+            <p class="text-xs font-bold leading-none text-slate-100">Chef & Admin</p>
+            <p class="text-[10px] text-indigo-300">Turno Noche</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- TAB 1: MENU DIGITAL & POS -->
+    <div id="tab-pos" class="space-y-6">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- LEFT 2 COLS: MENU CATEGORIES & DISHES -->
+        <div class="lg:col-span-2 space-y-4">
+          
+          <!-- CATEGORY FILTER BUTTONS -->
+          <div class="flex items-center space-x-2 overflow-x-auto pb-2 custom-scrollbar">
+            <button onclick="filterCategory('all')" id="cat-all" class="px-4 py-2 rounded-xl bg-slate-900 text-white font-bold text-xs shrink-0 shadow-sm">
+              <i class="fa-solid fa-border-all mr-1"></i> Todos (10)
+            </button>
+            <button onclick="filterCategory('fuertes')" id="cat-fuertes" class="px-4 py-2 rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 font-bold text-xs shrink-0">
+              <i class="fa-solid fa-drumstick-bite mr-1 text-amber-500"></i> Platos Fuertes
+            </button>
+            <button onclick="filterCategory('entradas')" id="cat-entradas" class="px-4 py-2 rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 font-bold text-xs shrink-0">
+              <i class="fa-solid fa-bowl-food mr-1 text-emerald-500"></i> Entradas
+            </button>
+            <button onclick="filterCategory('bebidas')" id="cat-bebidas" class="px-4 py-2 rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 font-bold text-xs shrink-0">
+              <i class="fa-solid fa-glass-water mr-1 text-blue-500"></i> Bebidas
+            </button>
+            <button onclick="filterCategory('postres')" id="cat-postres" class="px-4 py-2 rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 font-bold text-xs shrink-0">
+              <i class="fa-solid fa-cake-candles mr-1 text-pink-500"></i> Postres
+            </button>
+          </div>
+
+          <!-- MENU ITEMS GRID -->
+          <div id="menu-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            
+            <!-- Item 1 -->
+            <div class="menu-card cat-fuertes bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-amber-400 transition-all">
+              <div class="flex space-x-3">
+                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80" class="w-20 h-20 rounded-xl object-cover" alt="Hamburguesa">
+                <div>
+                  <span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full">Especial Chef</span>
+                  <h4 class="font-bold text-sm text-slate-900 mt-1">Hamburguesa Trufada</h4>
+                  <p class="text-[11px] text-slate-500 line-clamp-2">200g carne angus, queso cheddar madurado y mayonesa de trufa.</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
+                <span class="text-base font-black text-slate-900">$16.50 <span class="text-[10px] text-slate-400 font-normal">USD</span></span>
+                <button onclick="addToCart(1, 'Hamburguesa Trufada', 16.50)" class="bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition-all flex items-center space-x-1">
+                  <i class="fa-solid fa-plus text-[10px]"></i>
+                  <span>Agregar</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="menu-card cat-fuertes bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-amber-400 transition-all">
+              <div class="flex space-x-3">
+                <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=300&q=80" class="w-20 h-20 rounded-xl object-cover" alt="Ojo de Bife">
+                <div>
+                  <span class="text-[10px] font-bold bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full">Parrilla Premium</span>
+                  <h4 class="font-bold text-sm text-slate-900 mt-1">Ojo de Bife 400g</h4>
+                  <p class="text-[11px] text-slate-500 line-clamp-2">Corte madurado a la parrilla con chimichurri rústico y papas.</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
+                <span class="text-base font-black text-slate-900">$28.00 <span class="text-[10px] text-slate-400 font-normal">USD</span></span>
+                <button onclick="addToCart(2, 'Ojo de Bife 400g', 28.00)" class="bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition-all flex items-center space-x-1">
+                  <i class="fa-solid fa-plus text-[10px]"></i>
+                  <span>Agregar</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="menu-card cat-entradas bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-amber-400 transition-all">
+              <div class="flex space-x-3">
+                <img src="https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?auto=format&fit=crop&w=300&q=80" class="w-20 h-20 rounded-xl object-cover" alt="Ceviche">
+                <div>
+                  <span class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">Fresco & Marino</span>
+                  <h4 class="font-bold text-sm text-slate-900 mt-1">Ceviche Mixto Peruano</h4>
+                  <p class="text-[11px] text-slate-500 line-clamp-2">Pesca del día, camarones, leche de tigre, choclo y camote.</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
+                <span class="text-base font-black text-slate-900">$14.00 <span class="text-[10px] text-slate-400 font-normal">USD</span></span>
+                <button onclick="addToCart(3, 'Ceviche Mixto Peruano', 14.00)" class="bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition-all flex items-center space-x-1">
+                  <i class="fa-solid fa-plus text-[10px]"></i>
+                  <span>Agregar</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="menu-card cat-fuertes bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-amber-400 transition-all">
+              <div class="flex space-x-3">
+                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=300&q=80" class="w-20 h-20 rounded-xl object-cover" alt="Pizza">
+                <div>
+                  <span class="text-[10px] font-bold bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">Horno a Leña</span>
+                  <h4 class="font-bold text-sm text-slate-900 mt-1">Pizza Prosciutto Artesanal</h4>
+                  <p class="text-[11px] text-slate-500 line-clamp-2">Masa madre, mozzarella di bufala, jamón prosciutto y rúcula.</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
+                <span class="text-base font-black text-slate-900">$19.50 <span class="text-[10px] text-slate-400 font-normal">USD</span></span>
+                <button onclick="addToCart(4, 'Pizza Prosciutto Artesanal', 19.50)" class="bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition-all flex items-center space-x-1">
+                  <i class="fa-solid fa-plus text-[10px]"></i>
+                  <span>Agregar</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="menu-card cat-bebidas bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-amber-400 transition-all">
+              <div class="flex space-x-3">
+                <img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=300&q=80" class="w-20 h-20 rounded-xl object-cover" alt="Coctel">
+                <div>
+                  <span class="text-[10px] font-bold bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full">Coctelería</span>
+                  <h4 class="font-bold text-sm text-slate-900 mt-1">Sangría de la Casa (Jarra)</h4>
+                  <p class="text-[11px] text-slate-500 line-clamp-2">Vino tinto reserva, brandy, frutas de estación y canela.</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
+                <span class="text-base font-black text-slate-900">$18.00 <span class="text-[10px] text-slate-400 font-normal">USD</span></span>
+                <button onclick="addToCart(5, 'Sangría de la Casa', 18.00)" class="bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition-all flex items-center space-x-1">
+                  <i class="fa-solid fa-plus text-[10px]"></i>
+                  <span>Agregar</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Item 6 -->
+            <div class="menu-card cat-postres bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between hover:border-amber-400 transition-all">
+              <div class="flex space-x-3">
+                <img src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=300&q=80" class="w-20 h-20 rounded-xl object-cover" alt="Tiramisu">
+                <div>
+                  <span class="text-[10px] font-bold bg-pink-100 text-pink-800 px-2 py-0.5 rounded-full">Repostería</span>
+                  <h4 class="font-bold text-sm text-slate-900 mt-1">Tiramisú Tradicional</h4>
+                  <p class="text-[11px] text-slate-500 line-clamp-2">Mascarpone italiano, café espresso y cacao amargo.</p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
+                <span class="text-base font-black text-slate-900">$8.50 <span class="text-[10px] text-slate-400 font-normal">USD</span></span>
+                <button onclick="addToCart(6, 'Tiramisú Tradicional', 8.50)" class="bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-white text-xs font-bold px-3 py-1.5 rounded-xl transition-all flex items-center space-x-1">
+                  <i class="fa-solid fa-plus text-[10px]"></i>
+                  <span>Agregar</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- RIGHT 1 COL: ACTIVE TICKET & CART -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900">Comanda de Venta</h3>
+                <p class="text-[11px] text-slate-500">Ticket activo para envío a cocina</p>
+              </div>
+              <span class="bg-amber-100 text-amber-900 font-bold text-xs px-2.5 py-1 rounded-lg border border-amber-300">
+                <i class="fa-solid fa-receipt mr-1"></i> #ORD-204
+              </span>
+            </div>
+
+            <!-- TABLE SELECTOR -->
+            <div class="mt-3">
+              <label class="block text-xs font-bold text-slate-700 mb-1">Asignar Mesa o Pedido:</label>
+              <select id="cart-table-select" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 outline-none focus:ring-2 focus:ring-amber-500">
+                <option value="Mesa 1">Mesa 1 (Terraza - 4 pers)</option>
+                <option value="Mesa 2">Mesa 2 (Principal - 2 pers)</option>
+                <option value="Mesa 3" selected>Mesa 3 (VIP - 6 pers)</option>
+                <option value="Mesa 4">Mesa 4 (Interior - 4 pers)</option>
+                <option value="Para Llevar">📦 Pedido Para Llevar / Delivery</option>
+              </select>
+            </div>
+
+            <!-- CART ITEMS LIST -->
+            <div class="mt-4 space-y-2 max-h-64 overflow-y-auto custom-scrollbar pr-1" id="cart-items-container">
+              <div class="text-center py-8 text-slate-400 text-xs">
+                <i class="fa-solid fa-basket-shopping text-3xl mb-2 text-slate-300"></i>
+                <p>No hay platos en la comanda.</p>
+                <p class="text-[10px] text-slate-400">Haz clic en "+ Agregar" en los platos del menú.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- CART TOTALS & CHECKOUT -->
+          <div class="border-t border-slate-100 pt-3 space-y-3">
+            <div class="space-y-1.5 text-xs text-slate-600">
+              <div class="flex justify-between">
+                <span>Subtotal:</span>
+                <span id="cart-subtotal" class="font-bold text-slate-900">$0.00 USD</span>
+              </div>
+              <div class="flex justify-between">
+                <span>IVA / Impuestos (10%):</span>
+                <span id="cart-tax" class="font-bold text-slate-900">$0.00 USD</span>
+              </div>
+              <div class="flex justify-between items-center text-amber-600">
+                <span>Propina Sugerida (10%):</span>
+                <span id="cart-tip" class="font-bold">$0.00 USD</span>
+              </div>
+              <div class="flex justify-between text-base font-black text-slate-900 pt-2 border-t border-slate-200">
+                <span>Total a Pagar:</span>
+                <span id="cart-total" class="text-xl text-amber-600">$0.00 USD</span>
+              </div>
+            </div>
+
+            <button onclick="processOrder()" class="w-full bg-slate-900 hover:bg-slate-800 text-amber-400 font-extrabold py-3 rounded-xl shadow-lg transition-all text-xs flex items-center justify-center space-x-2">
+              <i class="fa-solid fa-paper-plane"></i>
+              <span>Enviar Comanda a Cocina (KDS)</span>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- TAB 2: MAPA DE MESAS INTERACTIVO -->
+    <div id="tab-tables" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+          <div>
+            <h2 class="text-lg font-extrabold text-slate-900">Mapa de Mesas & Estado del Salón</h2>
+            <p class="text-xs text-slate-500">Gestión de ocupación en tiempo real y cierre de cuentas.</p>
+          </div>
+
+          <div class="flex items-center space-x-3 text-xs font-bold">
+            <div class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500"></span><span>Disponible (7)</span></div>
+            <div class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-full bg-rose-500"></span><span>Ocupada (3)</span></div>
+            <div class="flex items-center space-x-1.5"><span class="w-3 h-3 rounded-full bg-amber-500"></span><span>Reservada (2)</span></div>
+          </div>
+        </div>
+
+        <!-- TABLES GRID -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          
+          <!-- Table 1 -->
+          <div class="bg-slate-50 border-2 border-rose-500 rounded-2xl p-4 flex flex-col justify-between space-y-3 hover:shadow-md transition-all">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="bg-rose-100 text-rose-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Ocupada</span>
+                <h4 class="font-black text-slate-900 text-base mt-1">Mesa 1</h4>
+                <p class="text-[11px] text-slate-500">Zona Terraza • 4 pers</p>
+              </div>
+              <span class="text-xs font-mono bg-white border border-slate-200 px-2 py-1 rounded-lg text-slate-700 font-bold">35 min</span>
+            </div>
+            <div class="border-t border-slate-200 pt-2 flex items-center justify-between text-xs">
+              <span class="text-slate-500">Consumo:</span>
+              <span class="font-extrabold text-slate-900">$62.50 USD</span>
+            </div>
+            <button onclick="closeTableBill('Mesa 1', 62.50)" class="w-full bg-slate-900 text-white text-xs font-bold py-1.5 rounded-xl hover:bg-slate-800">
+              Ver Cuenta / Cobrar
+            </button>
+          </div>
+
+          <!-- Table 2 -->
+          <div class="bg-slate-50 border border-emerald-300 rounded-2xl p-4 flex flex-col justify-between space-y-3 hover:shadow-md transition-all">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Disponible</span>
+                <h4 class="font-black text-slate-900 text-base mt-1">Mesa 2</h4>
+                <p class="text-[11px] text-slate-500">Salón Principal • 2 pers</p>
+              </div>
+            </div>
+            <div class="border-t border-slate-200 pt-2 flex items-center justify-between text-xs">
+              <span class="text-slate-500">Sin comanda activa</span>
+            </div>
+            <button onclick="openTableForOrder('Mesa 2')" class="w-full bg-amber-500 text-slate-950 text-xs font-bold py-1.5 rounded-xl hover:bg-amber-400">
+              Abrir Comanda
+            </button>
+          </div>
+
+          <!-- Table 3 -->
+          <div class="bg-slate-50 border-2 border-rose-500 rounded-2xl p-4 flex flex-col justify-between space-y-3 hover:shadow-md transition-all">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="bg-rose-100 text-rose-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Ocupada</span>
+                <h4 class="font-black text-slate-900 text-base mt-1">Mesa 3 (VIP)</h4>
+                <p class="text-[11px] text-slate-500">Zona Cava • 6 pers</p>
+              </div>
+              <span class="text-xs font-mono bg-white border border-slate-200 px-2 py-1 rounded-lg text-slate-700 font-bold">18 min</span>
+            </div>
+            <div class="border-t border-slate-200 pt-2 flex items-center justify-between text-xs">
+              <span class="text-slate-500">Consumo:</span>
+              <span class="font-extrabold text-slate-900">$118.00 USD</span>
+            </div>
+            <button onclick="closeTableBill('Mesa 3 (VIP)', 118.00)" class="w-full bg-slate-900 text-white text-xs font-bold py-1.5 rounded-xl hover:bg-slate-800">
+              Ver Cuenta / Cobrar
+            </button>
+          </div>
+
+          <!-- Table 4 -->
+          <div class="bg-slate-50 border-2 border-amber-500 rounded-2xl p-4 flex flex-col justify-between space-y-3 hover:shadow-md transition-all">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="bg-amber-100 text-amber-900 text-[10px] font-bold px-2 py-0.5 rounded-full">Reservada</span>
+                <h4 class="font-black text-slate-900 text-base mt-1">Mesa 4</h4>
+                <p class="text-[11px] text-slate-500">Reserva 8:30 PM • 4p</p>
+              </div>
+            </div>
+            <div class="border-t border-slate-200 pt-2 flex items-center justify-between text-xs">
+              <span class="text-slate-500">Cliente: Sr. Carlos R.</span>
+            </div>
+            <button onclick="openTableForOrder('Mesa 4')" class="w-full bg-amber-500 text-slate-950 text-xs font-bold py-1.5 rounded-xl hover:bg-amber-400">
+              Ocupar Mesa
+            </button>
+          </div>
+
+          <!-- Tables 5 to 8 -->
+          <div class="bg-slate-50 border border-emerald-300 rounded-2xl p-4 flex flex-col justify-between space-y-3 hover:shadow-md transition-all">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Disponible</span>
+                <h4 class="font-black text-slate-900 text-base mt-1">Mesa 5</h4>
+                <p class="text-[11px] text-slate-500">Salón Principal • 4 pers</p>
+              </div>
+            </div>
+            <button onclick="openTableForOrder('Mesa 5')" class="w-full bg-amber-500 text-slate-950 text-xs font-bold py-1.5 rounded-xl hover:bg-amber-400">Abrir Comanda</button>
+          </div>
+
+          <div class="bg-slate-50 border border-emerald-300 rounded-2xl p-4 flex flex-col justify-between space-y-3 hover:shadow-md transition-all">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Disponible</span>
+                <h4 class="font-black text-slate-900 text-base mt-1">Mesa 6</h4>
+                <p class="text-[11px] text-slate-500">Zona Terraza • 2 pers</p>
+              </div>
+            </div>
+            <button onclick="openTableForOrder('Mesa 6')" class="w-full bg-amber-500 text-slate-950 text-xs font-bold py-1.5 rounded-xl hover:bg-amber-400">Abrir Comanda</button>
+          </div>
+
+          <div class="bg-slate-50 border-2 border-rose-500 rounded-2xl p-4 flex flex-col justify-between space-y-3 hover:shadow-md transition-all">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="bg-rose-100 text-rose-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Ocupada</span>
+                <h4 class="font-black text-slate-900 text-base mt-1">Mesa 7</h4>
+                <p class="text-[11px] text-slate-500">Salón Principal • 4 pers</p>
+              </div>
+              <span class="text-xs font-mono bg-white border border-slate-200 px-2 py-1 rounded-lg text-slate-700 font-bold">12 min</span>
+            </div>
+            <div class="border-t border-slate-200 pt-2 flex items-center justify-between text-xs">
+              <span class="text-slate-500">Consumo:</span>
+              <span class="font-extrabold text-slate-900">$48.00 USD</span>
+            </div>
+            <button onclick="closeTableBill('Mesa 7', 48.00)" class="w-full bg-slate-900 text-white text-xs font-bold py-1.5 rounded-xl hover:bg-slate-800">Ver Cuenta / Cobrar</button>
+          </div>
+
+          <div class="bg-slate-50 border border-emerald-300 rounded-2xl p-4 flex flex-col justify-between space-y-3 hover:shadow-md transition-all">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded-full">Disponible</span>
+                <h4 class="font-black text-slate-900 text-base mt-1">Mesa 8</h4>
+                <p class="text-[11px] text-slate-500">Barra Cocteles • 2 pers</p>
+              </div>
+            </div>
+            <button onclick="openTableForOrder('Mesa 8')" class="w-full bg-amber-500 text-slate-950 text-xs font-bold py-1.5 rounded-xl hover:bg-amber-400">Abrir Comanda</button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 3: PANTALLA DE COCINA (KDS) -->
+    <div id="tab-kds" class="hidden space-y-6">
+      <div class="bg-slate-950 text-white rounded-2xl border border-slate-800 p-6 shadow-xl space-y-6">
+        
+        <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-rose-600 flex items-center justify-center text-white">
+              <i class="fa-solid fa-fire text-lg"></i>
+            </div>
+            <div>
+              <h2 class="text-lg font-extrabold text-white">Pantalla de Cocina (KDS)</h2>
+              <p class="text-xs text-slate-400">Comandas de preparación en tiempo real</p>
+            </div>
+          </div>
+          
+          <div class="flex items-center space-x-2 text-xs">
+            <span class="bg-slate-800 text-slate-300 px-3 py-1 rounded-lg border border-slate-700">Modo Pantalla Completa</span>
+            <span class="bg-emerald-500/20 text-emerald-400 font-mono font-bold px-3 py-1 rounded-lg border border-emerald-500/30">Auto-Sync ON</span>
+          </div>
+        </div>
+
+        <!-- KDS PIPELINE COLUMNS -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="kds-columns">
+          
+          <!-- Column 1: Pendientes -->
+          <div class="space-y-4">
+            <div class="flex items-center justify-between bg-rose-950/60 p-3 rounded-xl border border-rose-800/60">
+              <span class="text-xs font-bold uppercase text-rose-400 flex items-center">
+                <i class="fa-solid fa-clock mr-1.5"></i> Pendientes de Entrada
+              </span>
+              <span id="kds-pending-count" class="bg-rose-500 text-white text-xs font-black px-2 py-0.5 rounded-full">2</span>
+            </div>
+
+            <div id="kds-pending-list" class="space-y-3">
+              
+              <!-- Ticket 1 -->
+              <div class="bg-slate-900 p-4 rounded-xl border-2 border-rose-500 space-y-3 shadow-lg">
+                <div class="flex justify-between items-start border-b border-slate-800 pb-2">
+                  <div>
+                    <span class="text-[10px] font-bold text-rose-400 bg-rose-500/20 px-2 py-0.5 rounded">Mesa 3</span>
+                    <h4 class="font-extrabold text-sm text-white mt-1">#ORD-204</h4>
+                  </div>
+                  <span class="text-xs font-mono font-bold text-rose-400 bg-slate-800 px-2 py-1 rounded">5 min ago</span>
+                </div>
+
+                <ul class="text-xs space-y-1.5 text-slate-300">
+                  <li class="flex justify-between font-bold text-white">
+                    <span>1x Ojo de Bife 400g</span>
+                    <span class="text-amber-400 text-[11px]">(Término Medio)</span>
+                  </li>
+                  <li class="flex justify-between font-bold text-white">
+                    <span>2x Hamburguesa Trufada</span>
+                    <span class="text-slate-400 text-[11px]">(Sin cebolla)</span>
+                  </li>
+                  <li class="flex justify-between text-slate-400">
+                    <span>1x Sangría (Jarra)</span>
+                    <span class="text-emerald-400">Enviado Bar</span>
+                  </li>
+                </ul>
+
+                <button onclick="moveKdsTicket(this, 'prep')" class="w-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold py-2 rounded-lg transition-all">
+                  Comenzar Preparación
+                </button>
+              </div>
+
+              <!-- Ticket 2 -->
+              <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 space-y-3 shadow-lg">
+                <div class="flex justify-between items-start border-b border-slate-800 pb-2">
+                  <div>
+                    <span class="text-[10px] font-bold text-amber-400 bg-amber-500/20 px-2 py-0.5 rounded">Mesa 1</span>
+                    <h4 class="font-extrabold text-sm text-white mt-1">#ORD-203</h4>
+                  </div>
+                  <span class="text-xs font-mono font-bold text-amber-400 bg-slate-800 px-2 py-1 rounded">12 min ago</span>
+                </div>
+
+                <ul class="text-xs space-y-1.5 text-slate-300">
+                  <li class="flex justify-between font-bold text-white">
+                    <span>2x Ceviche Mixto Peruano</span>
+                  </li>
+                  <li class="flex justify-between font-bold text-white">
+                    <span>1x Pizza Prosciutto</span>
+                  </li>
+                </ul>
+
+                <button onclick="moveKdsTicket(this, 'prep')" class="w-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold py-2 rounded-lg transition-all">
+                  Comenzar Preparación
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Column 2: En Preparacion -->
+          <div class="space-y-4">
+            <div class="flex items-center justify-between bg-amber-950/60 p-3 rounded-xl border border-amber-800/60">
+              <span class="text-xs font-bold uppercase text-amber-400 flex items-center">
+                <i class="fa-solid fa-fire-burner mr-1.5"></i> En Fogón / Preparación
+              </span>
+              <span id="kds-prep-count" class="bg-amber-500 text-slate-950 text-xs font-black px-2 py-0.5 rounded-full">1</span>
+            </div>
+
+            <div id="kds-prep-list" class="space-y-3">
+              <div class="bg-slate-900 p-4 rounded-xl border-2 border-amber-500 space-y-3 shadow-lg">
+                <div class="flex justify-between items-start border-b border-slate-800 pb-2">
+                  <div>
+                    <span class="text-[10px] font-bold text-amber-400 bg-amber-500/20 px-2 py-0.5 rounded">Mesa 7</span>
+                    <h4 class="font-extrabold text-sm text-white mt-1">#ORD-201</h4>
+                  </div>
+                  <span class="text-xs font-mono font-bold text-amber-400 bg-slate-800 px-2 py-1 rounded">14 min</span>
+                </div>
+
+                <ul class="text-xs space-y-1.5 text-slate-300">
+                  <li class="flex justify-between font-bold text-white">
+                    <span>1x Ojo de Bife 400g</span>
+                  </li>
+                  <li class="flex justify-between font-bold text-white">
+                    <span>1x Tiramisú</span>
+                  </li>
+                </ul>
+
+                <button onclick="moveKdsTicket(this, 'ready')" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold py-2 rounded-lg transition-all">
+                  Marcar Listo para Servir
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 3: Listos -->
+          <div class="space-y-4">
+            <div class="flex items-center justify-between bg-emerald-950/60 p-3 rounded-xl border border-emerald-800/60">
+              <span class="text-xs font-bold uppercase text-emerald-400 flex items-center">
+                <i class="fa-solid fa-bell mr-1.5"></i> Listos para Entregar
+              </span>
+              <span id="kds-ready-count" class="bg-emerald-500 text-slate-950 text-xs font-black px-2 py-0.5 rounded-full">1</span>
+            </div>
+
+            <div id="kds-ready-list" class="space-y-3">
+              <div class="bg-slate-900 p-4 rounded-xl border border-emerald-500/60 space-y-3 shadow-lg opacity-90">
+                <div class="flex justify-between items-start border-b border-slate-800 pb-2">
+                  <div>
+                    <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded">Mesa 2</span>
+                    <h4 class="font-extrabold text-sm text-white mt-1">#ORD-199</h4>
+                  </div>
+                  <span class="text-xs font-mono font-bold text-emerald-400">Listo</span>
+                </div>
+
+                <ul class="text-xs space-y-1.5 text-slate-300">
+                  <li class="flex justify-between font-bold text-white">
+                    <span>2x Hamburguesa Trufada</span>
+                  </li>
+                </ul>
+
+                <button onclick="this.parentElement.remove()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold py-1.5 rounded-lg transition-all">
+                  Archivar Ticket
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 4: METRICAS & VENTAS -->
+    <div id="tab-analytics" class="hidden space-y-6">
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
+        
+        <div class="border-b border-slate-100 pb-4">
+          <h2 class="text-lg font-extrabold text-slate-900">Métricas & Rendimiento de Ventas</h2>
+          <p class="text-xs text-slate-500">Resumen operativo del turno y productos más vendidos.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <span class="text-[11px] font-bold text-slate-500 uppercase">Ventas Turno Noche</span>
+            <h3 class="text-2xl font-black text-slate-900 mt-1">$1,840.50 <span class="text-xs font-normal text-slate-500">USD</span></h3>
+            <span class="text-xs text-emerald-600 font-bold mt-1 inline-block"><i class="fa-solid fa-arrow-up text-[10px]"></i> +22% vs ayer</span>
+          </div>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <span class="text-[11px] font-bold text-slate-500 uppercase">Comandas Atendidas</span>
+            <h3 class="text-2xl font-black text-slate-900 mt-1">64 <span class="text-xs font-normal text-slate-500">pedidos</span></h3>
+            <span class="text-xs text-slate-500 font-medium mt-1 inline-block">Promedio $28.70 / ticket</span>
+          </div>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <span class="text-[11px] font-bold text-slate-500 uppercase">Tiempo Prom. Cocina</span>
+            <h3 class="text-2xl font-black text-slate-900 mt-1">13.5 <span class="text-xs font-normal text-slate-500">min</span></h3>
+            <span class="text-xs text-emerald-600 font-bold mt-1 inline-block"><i class="fa-solid fa-bolt text-[10px]"></i> Óptimo (&lt; 15m)</span>
+          </div>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <span class="text-[11px] font-bold text-slate-500 uppercase">Ocupación del Salón</span>
+            <h3 class="text-2xl font-black text-slate-900 mt-1">83%</h3>
+            <span class="text-xs text-amber-600 font-bold mt-1 inline-block">Hora Pico Activa</span>
+          </div>
+        </div>
+
+        <!-- TOP SELLING DISHES -->
+        <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Platos Más Vendidos Hoy</h3>
+          <div class="space-y-2 text-xs">
+            <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200">
+              <span class="font-bold text-slate-800">1. Hamburguesa Trufada</span>
+              <span class="font-mono font-bold text-slate-900">38 unidades ($627.00 USD)</span>
+            </div>
+            <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200">
+              <span class="font-bold text-slate-800">2. Ojo de Bife 400g</span>
+              <span class="font-mono font-bold text-slate-900">22 unidades ($616.00 USD)</span>
+            </div>
+            <div class="flex items-center justify-between bg-white p-3 rounded-lg border border-slate-200">
+              <span class="font-bold text-slate-800">3. Pizza Prosciutto Artesanal</span>
+              <span class="font-mono font-bold text-slate-900">18 unidades ($351.00 USD)</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- JAVASCRIPT APP LOGIC -->
+  <script>
+    let cart = [];
+
+    function switchTab(tabId) {
+      const tabs = ['pos', 'tables', 'kds', 'analytics'];
+      tabs.forEach(t => {
+        document.getElementById(`tab-${t}`).classList.add('hidden');
+        const navBtn = document.getElementById(`nav-${t}`);
+        if (navBtn) {
+          navBtn.className = "px-3 py-2 rounded-lg text-indigo-200 hover:text-white hover:bg-indigo-900/60 flex items-center space-x-2 transition-all";
+        }
+      });
+
+      document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+      const activeNav = document.getElementById(`nav-${tabId}`);
+      if (activeNav) {
+        activeNav.className = "px-3 py-2 rounded-lg bg-amber-500 text-slate-950 font-bold flex items-center space-x-2 transition-all";
+      }
+    }
+
+    function filterCategory(cat) {
+      const cards = document.querySelectorAll('.menu-card');
+      const buttons = ['all', 'fuertes', 'entradas', 'bebidas', 'postres'];
+
+      buttons.forEach(b => {
+        const btn = document.getElementById(`cat-${b}`);
+        if (btn) {
+          if (b === cat) {
+            btn.className = "px-4 py-2 rounded-xl bg-slate-900 text-white font-bold text-xs shrink-0 shadow-sm";
+          } else {
+            btn.className = "px-4 py-2 rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 font-bold text-xs shrink-0";
+          }
+        }
+      });
+
+      cards.forEach(card => {
+        if (cat === 'all' || card.classList.contains(`cat-${cat}`)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    function addToCart(id, name, price) {
+      const existing = cart.find(i => i.id === id);
+      if (existing) {
+        existing.qty++;
+      } else {
+        cart.push({ id, name, price, qty: 1 });
+      }
+      renderCart();
+    }
+
+    function updateCartQty(id, delta) {
+      const item = cart.find(i => i.id === id);
+      if (item) {
+        item.qty += delta;
+        if (item.qty <= 0) {
+          cart = cart.filter(i => i.id !== id);
+        }
+      }
+      renderCart();
+    }
+
+    function renderCart() {
+      const container = document.getElementById('cart-items-container');
+      const itemCountSpan = document.getElementById('cart-item-count');
+      
+      let totalItems = 0;
+      let subtotal = 0;
+
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-slate-400 text-xs">
+            <i class="fa-solid fa-basket-shopping text-3xl mb-2 text-slate-300"></i>
+            <p>No hay platos en la comanda.</p>
+            <p class="text-[10px] text-slate-400">Haz clic en "+ Agregar" en los platos del menú.</p>
+          </div>
+        `;
+      } else {
+        let html = '';
+        cart.forEach(item => {
+          totalItems += item.qty;
+          const itemTotal = item.price * item.qty;
+          subtotal += itemTotal;
+
+          html += `
+            <div class="flex items-center justify-between bg-slate-50 p-2.5 rounded-xl border border-slate-200 text-xs">
+              <div class="pr-2">
+                <p class="font-bold text-slate-900">${item.name}</p>
+                <p class="text-[10px] text-slate-500">$${item.price.toFixed(2)} USD c/u</p>
+              </div>
+              <div class="flex items-center space-x-2">
+                <div class="flex items-center space-x-1 bg-white border border-slate-300 rounded-lg px-1 py-0.5">
+                  <button onclick="updateCartQty(${item.id}, -1)" class="w-5 h-5 flex items-center justify-center text-slate-600 hover:bg-slate-100 rounded font-bold">-</button>
+                  <span class="w-4 text-center font-bold text-slate-900">${item.qty}</span>
+                  <button onclick="updateCartQty(${item.id}, 1)" class="w-5 h-5 flex items-center justify-center text-slate-600 hover:bg-slate-100 rounded font-bold">+</button>
+                </div>
+                <span class="font-black text-slate-900 w-14 text-right">$${itemTotal.toFixed(2)}</span>
+              </div>
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+      }
+
+      itemCountSpan.innerText = totalItems;
+
+      const tax = subtotal * 0.10;
+      const tip = subtotal * 0.10;
+      const total = subtotal + tax + tip;
+
+      document.getElementById('cart-subtotal').innerText = `$${subtotal.toFixed(2)} USD`;
+      document.getElementById('cart-tax').innerText = `$${tax.toFixed(2)} USD`;
+      document.getElementById('cart-tip').innerText = `$${tip.toFixed(2)} USD`;
+      document.getElementById('cart-total').innerText = `$${total.toFixed(2)} USD`;
+    }
+
+    function processOrder() {
+      if (cart.length === 0) {
+        alert("Agrega platos al menú antes de enviar la comanda.");
+        return;
+      }
+
+      const selectedTable = document.getElementById('cart-table-select').value;
+      const randomOrderNum = Math.floor(205 + Math.random() * 50);
+
+      // Create new ticket HTML for KDS
+      const pendingList = document.getElementById('kds-pending-list');
+      const ticketHtml = document.createElement('div');
+      ticketHtml.className = "bg-slate-900 p-4 rounded-xl border-2 border-rose-500 space-y-3 shadow-lg";
+      
+      let itemsListHtml = '';
+      cart.forEach(i => {
+        itemsListHtml += `<li class="flex justify-between font-bold text-white"><span>${i.qty}x ${i.name}</span></li>`;
+      });
+
+      ticketHtml.innerHTML = `
+        <div class="flex justify-between items-start border-b border-slate-800 pb-2">
+          <div>
+            <span class="text-[10px] font-bold text-rose-400 bg-rose-500/20 px-2 py-0.5 rounded">${selectedTable}</span>
+            <h4 class="font-extrabold text-sm text-white mt-1">#ORD-${randomOrderNum}</h4>
+          </div>
+          <span class="text-xs font-mono font-bold text-rose-400 bg-slate-800 px-2 py-1 rounded">Just Now</span>
+        </div>
+        <ul class="text-xs space-y-1.5 text-slate-300">
+          ${itemsListHtml}
+        </ul>
+        <button onclick="moveKdsTicket(this, 'prep')" class="w-full bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold py-2 rounded-lg transition-all">
+          Comenzar Preparación
+        </button>
+      `;
+
+      pendingList.prepend(ticketHtml);
+
+      // Update KDS count
+      const countSpan = document.getElementById('kds-pending-count');
+      countSpan.innerText = parseInt(countSpan.innerText) + 1;
+
+      alert(`¡Comanda #ORD-${randomOrderNum} enviada exitosamente a la Cocina para ${selectedTable}!`);
+
+      cart = [];
+      renderCart();
+      switchTab('kds');
+    }
+
+    function moveKdsTicket(btn, nextState) {
+      const card = btn.parentElement;
+      if (nextState === 'prep') {
+        const prepList = document.getElementById('kds-prep-list');
+        btn.innerText = "Marcar Listo para Servir";
+        btn.className = "w-full bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold py-2 rounded-lg transition-all";
+        btn.setAttribute("onclick", "moveKdsTicket(this, 'ready')");
+        card.className = "bg-slate-900 p-4 rounded-xl border-2 border-amber-500 space-y-3 shadow-lg";
+        prepList.prepend(card);
+      } else if (nextState === 'ready') {
+        const readyList = document.getElementById('kds-ready-list');
+        btn.innerText = "Archivar Ticket";
+        btn.className = "w-full bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold py-1.5 rounded-lg transition-all";
+        btn.setAttribute("onclick", "this.parentElement.remove()");
+        card.className = "bg-slate-900 p-4 rounded-xl border border-emerald-500/60 space-y-3 shadow-lg opacity-90";
+        readyList.prepend(card);
+      }
+    }
+
+    function openTableForOrder(tableName) {
+      document.getElementById('cart-table-select').value = tableName;
+      switchTab('pos');
+    }
+
+    function closeTableBill(tableName, amount) {
+      if (confirm(`¿Proceder al cobro de la cuenta para ${tableName} por un total de $${amount.toFixed(2)} USD?`)) {
+        alert(`Cuenta pagada exitosamente. La ${tableName} ahora está disponible.`);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+/*
+  ============================================================
+  ARCHIVO    : css/ventajas.css
+  DESCRIPCIÓN: Sección de ventajas/beneficios del servicio.
+               3 tarjetas con ícono, título y descripción.
+  ============================================================
+*/
+
+.ventajas {
+  padding: 8rem 4rem;
+  background-color: var(--color-gris-bg);
+}
+
+.ventajas-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+}
+
+/* Tarjeta individual */
+.ventaja-card {
+  background-color: #fff;
+  border-radius: var(--radio-lg);
+  padding: 3.5rem;
+  text-align: center;
+  box-shadow: var(--sombra-suave);
+  transition: transform 0.3s ease;
+}
+
+.ventaja-card:hover {
+  transform: translateY(-6px);
+}
+
+/* Círculo con ícono */
+.ventaja-icon {
+  width: 7rem;
+  height: 7rem;
+  background: linear-gradient(135deg, var(--color-primario), var(--color-medio));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2rem;
+}
+
+.ventaja-icon i {
+  font-size: 2.8rem;
+  color: #fff;
+}
+
+.ventaja-card h3 {
+  font-size: var(--texto-lg);
+  margin-bottom: 1rem;
+  color: var(--color-oscuro);
+}
+
+.ventaja-card p {
+  color: var(--color-gris-txt);
+  font-size: 1.5rem;
+  line-height: 1.7;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .ventajas-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .ventajas {
+    padding: 5rem 2rem;
+  }
+  .ventajas-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<!--
+  ============================================================
+  PROYECTO   : Remodelaciones & Acabados
+  ARCHIVO    : index.html
+  DESCRIPCIÓN: Página principal del sitio web
+  AUTOR      : Jefferson Urbina
+  VERSIÓN    : 2.0
+  FECHA      : 2025
+  ============================================================
+
+  ESTRUCTURA DE CARPETAS:
+  ├── index.html          ← Estás aquí
+  ├── css/
+  │   ├── normalize.css   ← Reset de estilos del navegador
+  │   ├── variables.css   ← Colores, fuentes y variables globales
+  │   ├── base.css        ← Estilos base y globales
+  │   ├── nav.css         ← Barra de navegación
+  │   ├── hero.css        ← Sección principal (encabezado)
+  │   ├── ventajas.css    ← Sección de ventajas/beneficios
+  │   ├── nosotros.css    ← Sección "Sobre nosotros"
+  │   ├── servicios.css   ← Tarjetas de servicios
+  │   ├── modal.css       ← Ventanas emergentes de cada servicio
+  │   ├── testimonios.css ← Sección de reseñas de clientes
+  │   ├── contacto.css    ← Formulario y sección de contacto
+  │   └── footer.css      ← Pie de página
+  ├── js/
+  │   ├── app.js          ← Lógica general (menú, año, notificaciones)
+  │   └── modal.js        ← Lógica de modales y datos de servicios
+  └── img/
+      ├── fondo.avif      ← Imagen de fondo del hero
+      ├── fondo2.jpg      ← Imagen de fondo sección nosotros
+      ├── herramientas.jpg← Imagen de fondo sección contacto
+      └── plomero.png     ← Imagen plomero (sección nosotros)
+
+  ============================================================
+-->
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ============================================================
+    TÍTULO Y META TAGS
+    Cambia el <title> para modificar lo que aparece en la pestaña
+    del navegador y en resultados de Google.
+  ============================================================ -->
+  <title>Remodelaciones &amp; Acabados | Tu hogar, nuestra pasión</title>
+  <meta name="description" content="servicios de remodelaciones y acabados en Bogotá. Expertos en pintura de interiores, instalaciones eléctricas,cambio interructores,instalacion de luces,
+  soldadura electrica,impermeabilizaciones,techo cielo raso en pvc,divisiones de driwall,cielo raso driwall,enchape ceramica y porcelanato,remodelacion de baños,
+  remodelacion de cocinas,armado de estructura metalica techos, cambio de griferia, plomería y remodelación de espacios. ¡Agenda tu cita!">
+  <meta name="keywords" content="remodelaciones, pintura, plomería, electricidad, cielo raso,servicios de remodelaciones y acabados en Bogotá. Expertos en pintura de interiores, instalaciones eléctricas,cambio interructoler,instalacion de luces,
+  soldadura electrica,impermeabilizaciones,techo cielo raso en pvc,divisiones de driwall,cielo raso driwall,enchape ceramica y porcelanato,remodelacion de baños,
+  remodelacion de cocinas,armado de estructura metalica techos, cambio de griferia, plomería y remodelación de espacios Colombia">
+  <meta name="author" content="Jefferson Urbina">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+
+  <!-- ============================================================
+    FUENTES DE GOOGLE FONTS
+    Para cambiar fuentes, reemplaza la URL de Google Fonts y
+    actualiza las variables --fuente-titulos y --fuente-parrafos
+    en css/variables.css
+  ============================================================ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- ============================================================
+    ICONOS FONT AWESOME
+    Kit personal de Jefferson Urbina.
+    Para cambiar iconos busca en: https://fontawesome.com/icons
+  ============================================================ -->
+  <script src="https://kit.fontawesome.com/39866f6cf0.js" crossorigin="anonymous"></script>
+
+  <!-- ============================================================
+    HOJAS DE ESTILO CSS
+    El orden importa. Cargamos primero normalize, luego variables,
+    luego base, y después cada sección por separado.
+    Para modificar estilos, abre el archivo CSS correspondiente.
+  ============================================================ -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/nav.css">
+  <link rel="stylesheet" href="css/hero.css">
+  <link rel="stylesheet" href="css/ventajas.css">
+  <link rel="stylesheet" href="css/nosotros.css">
+  <link rel="stylesheet" href="css/servicios.css">
+  <link rel="stylesheet" href="css/modal.css">
+  <link rel="stylesheet" href="css/testimonios.css">
+  <link rel="stylesheet" href="css/contacto.css">
+  <link rel="stylesheet" href="css/footer.css">
+
+</head>
+
+<body>
+
+  <!-- ============================================================
+    BARRA DE NAVEGACIÓN
+    Editar links en <ul class="nav-links"> para cambiar el menú.
+    El logo se edita en la clase .nav-logo
+    Editar estilos en: css/nav.css
+  ============================================================ -->
+  <nav class="navbar">
+    <a class="nav-logo" href="#inicio">
+      Remodelaciones <span>&amp; Acabados</span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#nosotros">Nosotros</a></li>
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+
+    <a class="nav-cta" href="#contacto">Agendar cita</a>
+
+    <!-- Botón hamburguesa para móvil (se activa en js/app.js) -->
+    <div class="hamburguesa" id="hamburguesa">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+
+
+  <!-- ============================================================
+    SECCIÓN HERO (ENCABEZADO PRINCIPAL)
+    Imagen de fondo: img/fondo.avif
+    Texto principal: editar el <h1> y <p>
+    Opciones del select: agregar o quitar <option> según servicios
+    Editar estilos en: css/hero.css
+  ============================================================ -->
+  <header class="hero" id="inicio">
+    <div class="hero-content contenedor">
+
+      <!-- Texto del lado izquierdo -->
+      <div class="hero-texto">
+        <h1>Transformamos tu hogar en un <span>espacio ideal</span></h1>
+        <p>Servicios profesionales de remodelación, pintura, plomería, electricidad y más. Calidad garantizada en cada proyecto.</p>
+        <div class="hero-btns">
+          <a href="#servicios" class="btn btn-primario">Ver Servicios</a>
+          <a href="#nosotros" class="btn btn-secundario">Conoce más</a>
+        </div>
+      </div>
+
+      <!-- Formulario del lado derecho -->
+      <!-- ============================================================
+        FORMULARIO HERO — CONECTADO A WEB3FORMS
+      ============================================================ -->
+      <form class="hero-form" id="form-hero">
+        <h2>Agenda tu cita</h2>
+
+        <!-- ★ PEGA AQUÍ TU CLAVE DE WEB3FORMS ★ -->
+        <input type="hidden" name="access_key" value="a4d9f0eb-7941-48b4-8889-de1b7c3245ee">
+        <input type="hidden" name="subject" value="Nueva cita agendada — Remodelaciones & Acabados">
+        <input type="hidden" name="from_name" value="Remodelaciones & Acabados">
+        <!-- Honeypot anti-spam: NO borrar este campo -->
+        <input type="checkbox" name="botcheck" style="display:none;">
+
+        <div class="form-grupo">
+          <input type="text" name="name" placeholder="Tu nombre completo" required>
+        </div>
+
+        <div class="form-grupo">
+          <input type="email" name="email" placeholder="Correo electrónico" required>
+        </div>
+
+        <div class="form-grupo">
+          <input type="tel" name="phone" placeholder="Número de teléfono" required>
+        </div>
+
+        <!-- Agregar o quitar opciones de servicio aquí -->
+        <div class="form-grupo">
+          <select name="servicio">
+            <option value="">¿Qué servicio necesitas?</option>
+            <option value="soporte">Soporte y Consultoría</option>
+            <option value="pintura">Pintura de apartamentos</option>
+            <option value="plomeria">Plomería</option>
+            <option value="electricidad">Electricidad</option>
+            <option value="cieloraso">Cielo raso</option>
+            <option value="remodelacion">Remodelación en general</option>
+            <option value="soldadura">Soldadura</option>
+            <option value="impermeabilizacion">Impermeabilización y techos</option>
+            <option value="enchape">Enchape</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-form" id="btn-hero-submit">Solicitar cita →</button>
+      </form>
+
+    </div>
+  </header>
+
+
+  <!-- ============================================================
+    SECCIÓN ESTADÍSTICAS
+    Editar los números y etiquetas directamente en el HTML.
+    Editar estilos en: css/hero.css (bloque .stats)
+  ============================================================ -->
+  <div class="stats">
+    <div class="stats-grid contenedor">
+      <div class="stat">
+        <div class="stat-num">+500</div>
+        <div class="stat-label">Proyectos completados</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">8+</div>
+        <div class="stat-label">Años de experiencia</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">98%</div>
+        <div class="stat-label">Clientes satisfechos</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">6</div>
+        <div class="stat-label">Servicios especializados</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+    SECCIÓN VENTAJAS / BENEFICIOS
+    Agregar más tarjetas copiando el bloque <div class="ventaja-card">
+    Cambiar iconos usando clases de Font Awesome (fa-solid fa-ICONO)
+    Editar estilos en: css/ventajas.css
+  ============================================================ -->
+  <section class="ventajas" id="ventajas">
+    <div class="ventajas-grid contenedor">
+
+      <div class="ventaja-card">
+        <div class="ventaja-icon">
+          <i class="fa-solid fa-clock" aria-hidden="true"></i>
+        </div>
+        <h3>Puntualidad garantizada</h3>
+        <p>Respetamos su tiempo. Cumplimos cada compromiso con puntualidad y entregamos los proyectos en la fecha acordada.</p>
+      </div>
+
+      <div class="ventaja-card">
+        <div class="ventaja-icon">
+          <i class="fa-solid fa-house" aria-hidden="true"></i>
+        </div>
+        <h3>Diseños personalizados</h3>
+        <p>Cada hogar es único. Creamos soluciones a medida según sus gustos, necesidades y presupuesto disponible.</p>
+      </div>
+
+      <div class="ventaja-card">
+        <div class="ventaja-icon">
+          <i class="fa-solid fa-trowel-bricks" aria-hidden="true"></i>
+        </div>
+        <h3>Calidad certificada</h3>
+        <p>Utilizamos materiales de primera calidad y técnicas profesionales que garantizan resultados duraderos.</p>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+    SECCIÓN SOBRE NOSOTROS
+    Imagen de fondo: img/fondo2.jpg (se cambia en css/nosotros.css)
+    La lista de checkmarks se edita directamente aquí.
+    Editar estilos en: css/nosotros.css
+  ============================================================ -->
+  <section class="nosotros contenedor" id="nosotros">
+
+    <div class="nosotros-imagen">
+      <!-- Para agregar imagen real, agregar aquí:
+           <img src="img/plomero.png" alt="Equipo de trabajo"> -->
+    </div>
+
+    <div class="nosotros-texto">
+      <h2>Hacemos hogares <span>felices</span></h2>
+      <p>Somos un equipo de profesionales apasionados por la remodelación y los acabados de alta calidad. Con más de 8 años de experiencia, hemos transformado cientos de hogares en Colombia.</p>
+      <p>Nuestro compromiso es brindar el mejor servicio, usando materiales de primera y respetando siempre el presupuesto del cliente.</p>
+
+      <!-- Agregar o quitar ítems de la lista libremente -->
+      <ul class="nosotros-lista">
+        <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Presupuesto sin costo</li>
+        <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Materiales de primera calidad</li>
+        <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Garantía en todos los trabajos</li>
+        <li><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Equipo certificado y asegurado</li>
+      </ul>
+
+      <a href="#contacto" class="btn btn-primario">Contáctanos</a>
+    </div>
+
+  </section>
+
+
+  <!-- ============================================================
+    SECCIÓN DE SERVICIOS
+    Cada tarjeta tiene un atributo data-servicio que enlaza con
+    el objeto de datos en js/modal.js
+    Para agregar un servicio nuevo:
+      1. Copia un bloque .servicio-card completo
+      2. Cambia el data-servicio="NOMBRE_NUEVO"
+      3. Agrega los datos en js/modal.js con la misma clave
+    Editar estilos en: css/servicios.css
+  ============================================================ -->
+  <section class="servicios-seccion" id="servicios">
+    <div class="seccion-titulo">
+      <h2>Nuestros Servicios</h2>
+      <p>Haz clic en cualquier servicio para ver ejemplos de trabajos y lo que incluye.</p>
+      <div class="titulo-linea"></div>
+    </div>
+
+    <div class="servicios-grid contenedor">
+
+      <!-- SERVICIO 1: Soporte -->
+      <div class="servicio-card" data-servicio="soporte" tabindex="0" role="button" aria-label="Ver detalles de Soporte y Consultoría">
+        <div class="servicio-img color-soporte">
+          <i class="fa-solid fa-headphones" aria-hidden="true"></i>
+        </div>
+        <div class="servicio-cuerpo">
+          <span class="badge">Disponible 24/7</span>
+          <h3>Soporte y Consultoría</h3>
+          <p>Asesoría experta para tu proyecto de remodelación, planificación de espacios y selección de materiales.</p>
+          <button class="btn-ver" aria-label="Ver trabajos de Soporte">
+            Ver trabajos <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- SERVICIO 2: Pintura -->
+      <div class="servicio-card" data-servicio="pintura" tabindex="0" role="button" aria-label="Ver detalles de Pintura de Apartamentos">
+        <div class="servicio-img color-pintura">
+          <i class="fa-solid fa-paint-roller" aria-hidden="true"></i>
+        </div>
+        <div class="servicio-cuerpo">
+          <span class="badge">Más solicitado</span>
+          <h3>Pintura de Apartamentos</h3>
+          <p>Transformamos el color de tu hogar con acabados perfectos, técnicas modernas y pintura de primera calidad.</p>
+          <button class="btn-ver" aria-label="Ver trabajos de Pintura">
+            Ver trabajos <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- SERVICIO 3: Plomería -->
+      <div class="servicio-card" data-servicio="plomeria" tabindex="0" role="button" aria-label="Ver detalles de Plomería">
+        <div class="servicio-img color-plomeria">
+          <i class="fa-solid fa-faucet-drip" aria-hidden="true"></i>
+        </div>
+        <div class="servicio-cuerpo">
+          <span class="badge">Urgencias</span>
+          <h3>Plomería</h3>
+          <p>Instalación, reparación y mantenimiento de tuberías, grifería y sistemas de agua en todo el hogar.</p>
+          <button class="btn-ver" aria-label="Ver trabajos de Plomería">
+            Ver trabajos <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- SERVICIO 4: Electricidad -->
+      <div class="servicio-card" data-servicio="electricidad" tabindex="0" role="button" aria-label="Ver detalles de Electricidad">
+        <div class="servicio-img color-electricidad">
+          <i class="fa-solid fa-plug" aria-hidden="true"></i>
+        </div>
+        <div class="servicio-cuerpo">
+          <span class="badge">Certificado</span>
+          <h3>Electricidad</h3>
+          <p>Instalaciones eléctricas seguras, modernización de tableros, puntos de luz y soluciones para tu hogar.</p>
+          <button class="btn-ver" aria-label="Ver trabajos de Electricidad">
+            Ver trabajos <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- SERVICIO 5: Cielo Raso -->
+      <div class="servicio-card" data-servicio="cieloraso" tabindex="0" role="button" aria-label="Ver detalles de Cielo Raso">
+        <div class="servicio-img color-cieloraso">
+          <i class="fa-solid fa-people-roof" aria-hidden="true"></i>
+        </div>
+        <div class="servicio-cuerpo">
+          <span class="badge">Diseño exclusivo</span>
+          <h3>Cielo Raso</h3>
+          <p>Instalación de cielos rasos en drywall, PVC y yeso. Diseños modernos que transforman cualquier espacio.</p>
+          <button class="btn-ver" aria-label="Ver trabajos de Cielo Raso">
+            Ver trabajos <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- SERVICIO 6: Remodelación General -->
+      <div class="servicio-card" data-servicio="remodelacion" tabindex="0" role="button" aria-label="Ver detalles de Remodelación General">
+        <div class="servicio-img color-remodelacion">
+          <i class="fa-solid fa-house-chimney-window" aria-hidden="true"></i>
+        </div>
+        <div class="servicio-cuerpo">
+          <span class="badge">Paquete completo</span>
+          <h3>Remodelación General</h3>
+          <p>Renovación integral del hogar: pisos, paredes, cocinas, baños y todos los espacios que necesites.</p>
+          <button class="btn-ver" aria-label="Ver trabajos de Remodelación">
+            Ver trabajos <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- SERVICIO 7: Soldadura -->
+      <div class="servicio-card" data-servicio="soldadura" tabindex="0" role="button" aria-label="Ver detalles de Soldadura">
+        <div class="servicio-img color-soldadura">
+          <i class="fa-solid fa-fire-flame-curved" aria-hidden="true"></i>
+        </div>
+        <div class="servicio-cuerpo">
+          <span class="badge">Estructuras metálicas</span>
+          <h3>Soldadura</h3>
+          <p>Fabricación e instalación de rejas, portones, puertas, estructuras metálicas y cerramientos a medida.</p>
+          <button class="btn-ver" aria-label="Ver trabajos de Soldadura">
+            Ver trabajos <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- SERVICIO 8: Impermeabilización y cambio de techos -->
+      <div class="servicio-card" data-servicio="impermeabilizacion" tabindex="0" role="button" aria-label="Ver detalles de Impermeabilización y cambio de techos">
+        <div class="servicio-img color-impermeabilizacion">
+          <i class="fa-solid fa-droplet-slash" aria-hidden="true"></i>
+        </div>
+        <div class="servicio-cuerpo">
+          <span class="badge">Filtraciones y techos</span>
+          <h3>Impermeabilización y Techos</h3>
+          <p>Soluciones definitivas contra filtraciones, humedad y goteras. Cambio y reparación de techos con garantía.</p>
+          <button class="btn-ver" aria-label="Ver trabajos de Impermeabilización">
+            Ver trabajos <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- SERVICIO 9: Enchape -->
+      <div class="servicio-card" data-servicio="enchape" tabindex="0" role="button" aria-label="Ver detalles de Enchape">
+        <div class="servicio-img color-enchape">
+          <i class="fa-solid fa-border-all" aria-hidden="true"></i>
+        </div>
+        <div class="servicio-cuerpo">
+          <span class="badge">Pisos y revestimientos</span>
+          <h3>Enchape</h3>
+          <p>Instalación de baldosas, cerámicas, porcelanato y mosaicos en pisos, baños, cocinas y más.</p>
+          <button class="btn-ver" aria-label="Ver trabajos de Enchape">
+            Ver trabajos <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+    MODAL DE SERVICIOS
+    Este es el contenedor vacío. El contenido se inyecta
+    dinámicamente desde js/modal.js al hacer clic en un servicio.
+    Editar estilos en: css/modal.css
+  ============================================================ -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+    <div class="modal" id="modal-contenido">
+      <!-- El contenido se genera en js/modal.js -->
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+    SECCIÓN TESTIMONIOS
+    Agregar más reseñas copiando el bloque .testimonio-card
+    Cambiar las iniciales del .avatar y los datos del autor
+    Editar estilos en: css/testimonios.css
+  ============================================================ -->
+  <section class="testimonios contenedor">
+    <div class="seccion-titulo">
+      <h2>Lo que dicen nuestros clientes</h2>
+      <div class="titulo-linea"></div>
+    </div>
+
+    <div class="testimonios-grid">
+
+      <div class="testimonio-card">
+        <div class="estrellas" aria-label="5 de 5 estrellas">★★★★★</div>
+        <p class="testimonio-texto">"Excelente trabajo en la pintura de mi apartamento. Los colores quedaron perfectos y terminaron antes de lo previsto. Muy profesionales."</p>
+        <div class="testimonio-autor">
+          <div class="avatar" aria-hidden="true">MA</div>
+          <div class="autor-info">
+            <strong>María Alejandra</strong>
+            <span>Bogotá, D.C.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonio-card">
+        <div class="estrellas" aria-label="5 de 5 estrellas">★★★★★</div>
+        <p class="testimonio-texto">"Tenía una fuga de agua importante y vinieron el mismo día. Solucionaron el problema rápidamente y a buen precio. Los recomiendo."</p>
+        <div class="testimonio-autor">
+          <div class="avatar" aria-hidden="true">CR</div>
+          <div class="autor-info">
+            <strong>Carlos Ríos</strong>
+            <span>Bogotá, D.C.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonio-card">
+        <div class="estrellas" aria-label="5 de 5 estrellas">★★★★★</div>
+        <p class="testimonio-texto">"Hicieron el cielo raso de toda mi casa y quedó espectacular. El equipo fue muy ordenado y respetuoso con mi hogar."</p>
+        <div class="testimonio-autor">
+          <div class="avatar" aria-hidden="true">LG</div>
+          <div class="autor-info">
+            <strong>Lucía Gómez</strong>
+            <span>Bogotá, D.C.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+    SECCIÓN DE CONTACTO
+    Editar: email, teléfono y dirección en .contacto-detalle
+    El formulario envía a send2.php (igual que el original)
+    Editar estilos en: css/contacto.css
+  ============================================================ -->
+  <section class="contacto-seccion" id="contacto">
+    <div class="contacto-inner contenedor">
+
+      <!-- Información de contacto -->
+      <div class="contacto-info">
+        <h2>Hablemos de tu proyecto</h2>
+        <p>Estamos listos para ayudarte a transformar tu hogar. Contáctanos y recibe una asesoría sin costo.</p>
+
+        <!-- Editar los datos de contacto aquí -->
+        <div class="contacto-detalle">
+          <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+          <span>jeffersonurbina20@gmail.com</span>
+        </div>
+        <div class="contacto-detalle">
+          <i class="fa-solid fa-phone" aria-hidden="true"></i>
+          <span>319 207 8407</span>
+        </div>
+        <div class="contacto-detalle">
+          <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+          <span>Bogotá, Colombia</span>
+        </div>
+      </div>
+
+      <!-- Formulario de contacto -->
+      <!-- ============================================================
+        FORMULARIO CONTACTO — CONECTADO A WEB3FORMS
+        Usa la misma clave que pusiste en el formulario del hero.
+      ============================================================ -->
+      <form class="contacto-form" id="form-contacto">
+
+        <!-- ★ PEGA AQUÍ TU CLAVE DE WEB3FORMS (la misma del hero) ★ -->
+        <input type="hidden" name="access_key" value="a4d9f0eb-7941-48b4-8889-de1b7c3245ee">
+        <input type="hidden" name="subject" value="Nuevo mensaje de contacto — Remodelaciones & Acabados">
+        <input type="hidden" name="from_name" value="Remodelaciones & Acabados">
+        <!-- Honeypot anti-spam: NO borrar este campo -->
+        <input type="checkbox" name="botcheck" style="display:none;">
+        <div class="form-grupo">
+          <label for="c-nombre">Nombre</label>
+          <input type="text" id="c-nombre" name="name" placeholder="Tu nombre completo" required>
+        </div>
+
+        <div class="form-grupo">
+          <label for="c-email">Email</label>
+          <input type="email" id="c-email" name="email" placeholder="Correo electrónico" required>
+        </div>
+
+        <div class="form-grupo">
+          <label for="c-telefono">Teléfono</label>
+          <input type="tel" id="c-telefono" name="phone" placeholder="Número de teléfono" required>
+        </div>
+
+        <div class="form-grupo">
+          <label for="c-servicio">Servicio de interés</label>
+          <select id="c-servicio" name="servicio">
+            <option value="">Selecciona un servicio</option>
+            <option value="soporte">Soporte y Consultoría</option>
+            <option value="pintura">Pintura de apartamentos</option>
+            <option value="plomeria">Plomería</option>
+            <option value="electricidad">Electricidad</option>
+            <option value="cieloraso">Cielo raso</option>
+            <option value="remodelacion">Remodelación en general</option>
+            <option value="soldadura">Soldadura</option>
+            <option value="impermeabilizacion">Impermeabilización y techos</option>
+            <option value="enchape">Enchape</option>
+          </select>
+        </div>
+
+        <div class="form-grupo">
+          <label for="c-mensaje">Mensaje</label>
+          <textarea id="c-mensaje" name="message" rows="5" placeholder="Cuéntanos sobre tu proyecto..."></textarea>
+        </div>
+
+        <!-- CHECKBOX DE POLÍTICA DE DATOS — OBLIGATORIO (Ley 1581/2012) -->
+        <div class="form-grupo" style="display:flex;align-items:flex-start;gap:1rem;">
+          <input type="checkbox" id="acepto_politica" name="acepto_politica" value="1"
+            style="width:1.8rem;height:1.8rem;margin-top:0.3rem;flex-shrink:0;accent-color:#006fe6;" required>
+          <label for="acepto_politica" style="font-size:1.4rem;color:rgba(255,255,255,0.75);cursor:pointer;">
+            He leído y acepto la
+            <a href="politica-de-datos.html" target="_blank"
+               style="color:#f5a623;text-decoration:underline;">
+              política de tratamiento de datos personales
+            </a>
+            conforme a la Ley 1581 de 2012.
+          </label>
+        </div>
+
+        <div class="form-grupo">
+          <button type="submit" class="btn btn-form">Enviar mensaje</button>
+        </div>
+      </form>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+    FOOTER
+    El año se actualiza automáticamente desde js/app.js
+    Editar estilos en: css/footer.css
+  ============================================================ -->
+  <footer class="footer">
+    <div class="footer-inner contenedor">
+      <div class="footer-logo">
+        Remodelaciones <span>&amp; Acabados</span>
+      </div>
+      <p>Todos los derechos reservados &copy; <span id="anio-actual"></span> &mdash; Desarrollado por <strong>Jefferson Urbina</strong></p>
+    </div>
+  </footer>
+
+
+  <!-- ============================================================
+    NOTIFICACIÓN DE FORMULARIO ENVIADO
+    Aparece al enviar cualquier formulario.
+    Lógica en: js/app.js (función mostrarNotificacion)
+    Editar estilos en: css/base.css (bloque .notificacion)
+  ============================================================ -->
+  <div class="notificacion" id="notificacion" role="alert" aria-live="polite">
+    <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+    <span>¡Mensaje enviado! Te contactaremos pronto.</span>
+  </div>
+
+
+  <!-- ============================================================
+    BOTÓN FLOTANTE DE WHATSAPP
+    El número está en el href: https://wa.me/57XXXXXXXXXX
+    Formato: 57 (código Colombia) + número sin espacios ni guiones
+    Para cambiar el número, editar solo la parte numérica del href.
+    Para cambiar el mensaje predefinido, editar el parámetro ?text=
+  ============================================================ -->
+  <a
+    class="whatsapp-flotante"
+    href="https://wa.me/573192078407?text=Hola%2C%20me%20interesa%20un%20servicio%20de%20remodelaci%C3%B3n.%20%C2%BFMe%20pueden%20dar%20m%C3%A1s%20informaci%C3%B3n%3F"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Contactar por WhatsApp al 3192078407"
+  >
+    <!-- Ícono de WhatsApp -->
+    <div class="whatsapp-btn">
+      <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+    </div>
+
+    <!-- Tooltip con texto al hacer hover -->
+    <div class="whatsapp-tooltip">
+      ¡Escríbenos!
+      <span>3192078407</span>
+    </div>
+  </a>
+
+
+  <!-- ============================================================
+    SCRIPTS DE JAVASCRIPT
+    Se cargan al final del body para mejor rendimiento.
+    Primero modal.js (datos y lógica de modales),
+    luego app.js (lógica general de la página).
+  ============================================================ -->
+  <script src="js/modal.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Start of HubSpot Embed Code captura de formularion Hubspot-->
+<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/51720178.js"></script>
+<!-- End of HubSpot Embed Code -->
+
+</body>
+</html>

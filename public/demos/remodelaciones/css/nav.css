@@ -1,0 +1,190 @@
+/*
+  ============================================================
+  ARCHIVO    : css/nav.css
+  DESCRIPCIÓN: Estilos de la barra de navegación fija.
+               Incluye logo, links, botón CTA y menú hamburguesa
+               para dispositivos móviles.
+  ============================================================
+
+  SECCIONES:
+  1. Barra de navegación (contenedor)
+  2. Logo
+  3. Links del menú
+  4. Botón CTA ("Agendar cita")
+  5. Menú hamburguesa (móvil)
+  6. Responsive - tablet y móvil
+*/
+
+
+/* ----------------------------------------------------------
+  1. BARRA DE NAVEGACIÓN (CONTENEDOR)
+  position: fixed → se queda fija al hacer scroll
+  backdrop-filter → efecto de vidrio esmerilado
+---------------------------------------------------------- */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 2px 24px rgba(10, 17, 40, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.4rem 4rem;
+}
+
+
+/* ----------------------------------------------------------
+  2. LOGO
+  Para cambiar el texto, editar el HTML en index.html
+  El <span> tiene el color azul de acento
+---------------------------------------------------------- */
+.nav-logo {
+  font-family: var(--fuente-titulos);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-oscuro);
+  text-decoration: none;
+}
+
+.nav-logo span {
+  color: var(--color-primario);
+}
+
+
+/* ----------------------------------------------------------
+  3. LINKS DEL MENÚ
+  Para agregar un link nuevo, editar el <ul class="nav-links">
+  en index.html
+---------------------------------------------------------- */
+.nav-links {
+  display: flex;
+  gap: 3rem;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--color-oscuro);
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--color-primario);
+}
+
+
+/* ----------------------------------------------------------
+  4. BOTÓN CTA ("Agendar cita")
+  Para cambiar el texto, editar el .nav-cta en index.html
+  Para cambiar el enlace destino, editar href="#contacto"
+---------------------------------------------------------- */
+.nav-cta {
+  background-color: var(--color-primario);
+  color: #fff;
+  padding: 0.8rem 2.2rem;
+  border-radius: var(--radio-pill);
+  font-size: 1.5rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.nav-cta:hover {
+  background-color: var(--color-medio);
+  transform: translateY(-1px);
+}
+
+
+/* ----------------------------------------------------------
+  5. MENÚ HAMBURGUESA (MÓVIL)
+  Solo visible en pantallas menores a 900px.
+  La lógica de apertura/cierre está en js/app.js
+---------------------------------------------------------- */
+.hamburguesa {
+  display: none; /* oculto en escritorio */
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.hamburguesa span {
+  width: 26px;
+  height: 2px;
+  background-color: var(--color-oscuro);
+  border-radius: 2px;
+  display: block;
+  transition: var(--transicion);
+}
+
+/* Animación al abrir el menú */
+.hamburguesa.activo span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.hamburguesa.activo span:nth-child(2) {
+  opacity: 0;
+}
+.hamburguesa.activo span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+
+/* ----------------------------------------------------------
+  6. RESPONSIVE
+  En pantallas pequeñas, el menú se oculta y aparece
+  el botón hamburguesa. Los links se despliegan verticalmente.
+---------------------------------------------------------- */
+@media (max-width: 900px) {
+  .navbar {
+    padding: 1.4rem 2rem;
+  }
+
+  /* Ocultar links y CTA en móvil */
+  .nav-links,
+  .nav-cta {
+    display: none;
+  }
+
+  /* Mostrar hamburguesa */
+  .hamburguesa {
+    display: flex;
+  }
+
+  /* Menú desplegable móvil (se activa con .menu-abierto en js/app.js) */
+  .nav-links.menu-abierto {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 65px;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    padding: 1.5rem 0;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    gap: 0;
+    animation: despliegueMenu 0.25s ease;
+  }
+
+  .nav-links.menu-abierto li a {
+    display: block;
+    padding: 1.2rem 3rem;
+    font-size: 1.7rem;
+  }
+
+  .nav-links.menu-abierto li a:hover {
+    background-color: var(--color-gris-bg);
+  }
+
+  @keyframes despliegueMenu {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}

@@ -1,0 +1,98 @@
+/*
+  ============================================================
+  ARCHIVO    : css/variables.css
+  DESCRIPCIÓN: Variables globales del proyecto.
+               Aquí se controlan TODOS los colores, fuentes,
+               tamaños y espaciados del sitio desde un solo lugar.
+  ============================================================
+
+  ¿CÓMO USAR ESTE ARCHIVO?
+  Si quieres cambiar el color azul principal del sitio,
+  solo cambia --color-primario y se actualizará en todo el sitio.
+
+  SECCIONES:
+  1. Colores principales
+  2. Colores de servicios
+  3. Tipografía
+  4. Espaciados y tamaños
+  5. Efectos visuales
+*/
+
+
+:root {
+
+  /* ----------------------------------------------------------
+    1. COLORES PRINCIPALES
+    Paleta de colores base del sitio.
+    --color-primario  → azul principal (botones, íconos, links)
+    --color-oscuro    → azul muy oscuro (fondos, encabezados)
+    --color-medio     → azul intermedio (hover de botones)
+    --color-dorado    → dorado (acento, botones hero)
+    --color-blanco    → blanco cálido (fondo general)
+    --color-gris-bg   → gris muy claro (secciones alternas)
+    --color-gris-txt  → gris medio (textos secundarios)
+  ---------------------------------------------------------- */
+  --color-primario:  #006fe6;
+  --color-oscuro:    #0a1128;
+  --color-medio:     #0d47a1;
+  --color-dorado:    #f5a623;
+  --color-blanco:    #fefcfb;
+  --color-gris-bg:   #f4f6fb;
+  --color-gris-txt:  #555f70;
+
+  /* ----------------------------------------------------------
+    2. COLORES DE SERVICIOS
+    Gradiente para la imagen de cada tarjeta de servicio.
+    Se usan en css/servicios.css (.color-NOMBRE)
+    Formato: color_inicio, color_fin
+  ---------------------------------------------------------- */
+  --grad-soporte:      #1565c0, #42a5f5;
+  --grad-pintura:      #1b5e20, #43a047;
+  --grad-plomeria:     #0d47a1, #1976d2;
+  --grad-electricidad: #e65100, #ff9800;
+  --grad-cieloraso:    #4a148c, #ab47bc;
+  --grad-remodelacion: #006064, #00acc1;
+
+  /* ----------------------------------------------------------
+    3. TIPOGRAFÍA
+    Cambiar aquí afecta TODAS las fuentes del sitio.
+    Asegúrate de que la fuente esté importada en index.html
+  ---------------------------------------------------------- */
+  --fuente-titulos:  'Playfair Display', Georgia, serif;
+  --fuente-parrafos: 'DM Sans', Arial, sans-serif;
+
+  /* Tamaños de fuente base */
+  --texto-xs:   1.2rem;   /* etiquetas pequeñas */
+  --texto-sm:   1.4rem;   /* texto secundario */
+  --texto-base: 1.6rem;   /* párrafos normales */
+  --texto-md:   1.8rem;   /* párrafos grandes */
+  --texto-lg:   2.2rem;   /* subtítulos */
+  --texto-xl:   3.2rem;   /* títulos medianos */
+  --texto-2xl:  4.5rem;   /* títulos de sección */
+  --texto-3xl:  6rem;     /* título hero */
+
+  /* ----------------------------------------------------------
+    4. ESPACIADOS Y TAMAÑOS
+    Radios de borde para tarjetas, botones y contenedores.
+  ---------------------------------------------------------- */
+  --radio-sm:     8px;
+  --radio-md:     14px;
+  --radio-lg:     18px;
+  --radio-xl:     24px;
+  --radio-pill:   50px;   /* botones redondeados */
+
+  /* Ancho máximo del contenedor central */
+  --ancho-contenedor: 120rem;
+
+  /* ----------------------------------------------------------
+    5. EFECTOS VISUALES
+    Sombras reutilizables en tarjetas y formularios.
+  ---------------------------------------------------------- */
+  --sombra-suave:  0 8px 32px rgba(0, 111, 230, 0.10);
+  --sombra-media:  0 12px 40px rgba(0, 111, 230, 0.16);
+  --sombra-fuerte: 0 20px 60px rgba(0,   0,   0,  0.25);
+
+  /* Transición estándar para animaciones hover */
+  --transicion: all 0.3s ease-in-out;
+
+}

@@ -1,0 +1,196 @@
+/*
+  ============================================================
+  ARCHIVO    : css/hero.css
+  DESCRIPCIÓN: Estilos del encabezado principal (hero) y
+               la barra de estadísticas debajo.
+  ============================================================
+
+  SECCIONES:
+  1. Hero - contenedor principal
+  2. Hero - texto izquierdo
+  3. Hero - formulario derecho
+  4. Estadísticas (barra debajo del hero)
+  5. Responsive
+*/
+
+
+/* ----------------------------------------------------------
+  1. HERO - CONTENEDOR PRINCIPAL
+  Imagen de fondo: img/fondo.avif
+  Para cambiar la imagen, editar background-image en .hero
+  El ::before crea la capa oscura semitransparente encima
+---------------------------------------------------------- */
+.hero {
+  min-height: 100vh;
+  background-image: url('../img/fondo.avif');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  padding: 10rem 4rem 6rem;
+}
+
+/* Capa oscura sobre la imagen de fondo */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0; /* top:0; left:0; right:0; bottom:0 */
+  background: linear-gradient(
+    135deg,
+    rgba(10, 17, 40, 0.88) 0%,
+    rgba(13, 71, 161, 0.75) 60%,
+    rgba(0, 111, 230, 0.65) 100%
+  );
+  z-index: -1;
+}
+
+/* Si el navegador soporta parallax */
+@media (min-width: 768px) {
+  .hero {
+    background-attachment: fixed;
+  }
+}
+
+/* Grid de dos columnas: texto | formulario */
+.hero-content {
+  max-width: var(--ancho-contenedor);
+  width: 95%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+}
+
+
+/* ----------------------------------------------------------
+  2. HERO - TEXTO IZQUIERDO
+  Editar el texto directamente en index.html
+  Editar tamaño del h1 con --texto-3xl en variables.css
+---------------------------------------------------------- */
+.hero-texto h1 {
+  font-size: var(--texto-3xl);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 2rem;
+}
+
+/* El <span> dentro del h1 resalta en dorado */
+.hero-texto h1 span {
+  color: var(--color-dorado);
+}
+
+.hero-texto p {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: var(--texto-md);
+  line-height: 1.7;
+  margin-bottom: 3rem;
+}
+
+/* Contenedor de botones del hero */
+.hero-btns {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+
+/* ----------------------------------------------------------
+  3. HERO - FORMULARIO DERECHO
+  Fondo blanco con sombra para destacarse del fondo
+  Editar campos directamente en index.html
+---------------------------------------------------------- */
+.hero-form {
+  background-color: rgba(255, 255, 255, 0.97);
+  border-radius: var(--radio-lg);
+  padding: 4rem;
+  box-shadow: var(--sombra-fuerte);
+}
+
+.hero-form h2 {
+  font-family: var(--fuente-titulos);
+  font-size: var(--texto-xl);
+  font-weight: 700;
+  color: var(--color-oscuro);
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+/* Los campos del formulario heredan los estilos de base.css */
+/* Aquí solo sobreescribimos lo específico del hero */
+.hero-form .form-grupo input,
+.hero-form .form-grupo select {
+  background-color: var(--color-gris-bg);
+}
+
+
+/* ----------------------------------------------------------
+  4. ESTADÍSTICAS (BARRA DEBAJO DEL HERO)
+  Fondo azul oscuro con 4 números destacados.
+  Para agregar más stats, editar index.html y ajustar el grid.
+---------------------------------------------------------- */
+.stats {
+  background-color: var(--color-oscuro);
+  padding: 4rem 2rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  text-align: center;
+}
+
+.stat-num {
+  font-family: var(--fuente-titulos);
+  font-size: 4.5rem;
+  font-weight: 900;
+  color: var(--color-dorado);
+  line-height: 1;
+}
+
+.stat-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: var(--texto-sm);
+  margin-top: 0.6rem;
+}
+
+
+/* ----------------------------------------------------------
+  5. RESPONSIVE
+---------------------------------------------------------- */
+@media (max-width: 900px) {
+  .hero {
+    padding: 10rem 2rem 4rem;
+  }
+
+  /* Pasa a una sola columna en móvil */
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: 4rem;
+  }
+
+  .hero-texto h1 {
+    font-size: 4rem;
+  }
+
+  /* Stats pasa a 2 columnas */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-texto h1 {
+    font-size: 3.2rem;
+  }
+
+  .hero-form {
+    padding: 2.5rem 2rem;
+  }
+}

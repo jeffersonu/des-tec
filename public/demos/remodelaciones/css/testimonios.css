@@ -1,0 +1,95 @@
+/*
+  ============================================================
+  ARCHIVO    : css/testimonios.css
+  DESCRIPCIÓN: Sección de reseñas y testimonios de clientes.
+               3 tarjetas con estrellas, cita y datos del autor.
+  ============================================================
+*/
+
+.testimonios {
+  padding: 8rem 4rem;
+}
+
+.testimonios-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  margin-top: 2rem;
+}
+
+/* Tarjeta de testimonio con borde izquierdo azul */
+.testimonio-card {
+  background-color: #fff;
+  border-radius: var(--radio-lg);
+  padding: 3rem;
+  box-shadow: var(--sombra-suave);
+  border-left: 4px solid var(--color-primario);
+  transition: transform 0.3s ease;
+}
+
+.testimonio-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Estrellas de calificación */
+.estrellas {
+  color: var(--color-dorado);
+  font-size: 1.6rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 2px;
+}
+
+/* Texto de la reseña */
+.testimonio-texto {
+  font-size: 1.5rem;
+  color: var(--color-gris-txt);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+/* Fila del autor con avatar e info */
+.testimonio-autor {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+/* Círculo con iniciales del autor */
+.avatar {
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primario), var(--color-medio));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.autor-info strong {
+  display: block;
+  font-size: 1.5rem;
+  color: var(--color-oscuro);
+}
+
+.autor-info span {
+  font-size: 1.3rem;
+  color: var(--color-gris-txt);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .testimonios {
+    padding: 5rem 2rem;
+  }
+  .testimonios-grid {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

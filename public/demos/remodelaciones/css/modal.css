@@ -1,0 +1,413 @@
+/*
+  ============================================================
+  ARCHIVO    : css/modal.css
+  DESCRIPCIÓN: Ventana emergente de servicios con flip cards
+               y carrusel de fotos.
+  ============================================================
+*/
+
+/* ── OVERLAY ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  backdrop-filter: blur(6px);
+}
+.modal-overlay.activo { display: flex; }
+
+/* ── CAJA DEL MODAL ── */
+.modal {
+  background: #fff;
+  border-radius: var(--radio-xl);
+  max-width: 820px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--sombra-fuerte);
+  animation: entradaModal .35s cubic-bezier(.34,1.56,.64,1);
+}
+.modal::-webkit-scrollbar { width: 6px; }
+.modal::-webkit-scrollbar-thumb { background: #d0d5e8; border-radius: 3px; }
+
+@keyframes entradaModal {
+  from { opacity:0; transform: scale(.88) translateY(20px); }
+  to   { opacity:1; transform: scale(1)   translateY(0);    }
+}
+
+/* ── CABECERA ── */
+.modal-cabecera {
+  padding: 3.5rem 3.5rem 2rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.modal-cabecera-info h2 {
+  font-family: var(--fuente-titulos);
+  font-size: var(--texto-xl);
+  color: var(--color-oscuro);
+}
+.modal-cabecera-info p {
+  color: var(--color-gris-txt);
+  font-size: var(--texto-base);
+  margin-top: .5rem;
+}
+.btn-cerrar {
+  background: var(--color-gris-bg);
+  border: none;
+  width: 4rem; height: 4rem;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 2rem;
+  color: var(--color-oscuro);
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s;
+  flex-shrink: 0; margin-left: 2rem;
+}
+.btn-cerrar:hover { background: #e0e4ef; }
+
+/* ── AVISO "toca cada recuadro" ── */
+.modal-flip-aviso {
+  font-size: 1.3rem;
+  color: var(--color-gris-txt);
+  text-align: center;
+  padding: 0 3.5rem .8rem;
+  display: flex; align-items: center; justify-content: center;
+  gap: .6rem;
+  opacity: .75;
+}
+.modal-flip-aviso i { color: var(--color-primario); }
+
+/* ── GRID DE TARJETAS ── */
+.modal-galeria {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  padding: 0 3.5rem;
+}
+
+/* ── TARJETA BASE (galeria-item) ── */
+.galeria-item {
+  border-radius: var(--radio-md);
+  aspect-ratio: 1;
+  position: relative;
+  cursor: pointer;
+}
+
+/* ============================================================
+  FLIP CARD
+============================================================ */
+
+.flip-card {
+  perspective: 1000px;
+  overflow: visible !important;
+  background: transparent !important;
+}
+
+.flip-interior {
+  position: relative;
+  width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform .55s cubic-bezier(.45,.05,.55,.95);
+}
+
+.flip-card.volteada .flip-interior {
+  transform: rotateY(180deg);
+}
+
+/* Frente y reverso comparten espacio */
+.flip-frente,
+.flip-reverso {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radio-md);
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* ── FRENTE ── */
+.flip-frente {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Contenido interior del frente con emoji 3D ── */
+.fc-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem;
+  gap: .35rem;
+}
+
+/* Emoji grande — se ve en 3D/color en todos los dispositivos */
+.fc-emoji {
+  font-size: 4rem;
+  line-height: 1;
+  /* Sombra para dar sensación de profundidad */
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.45));
+  display: block;
+  margin-bottom: .3rem;
+  /* Pequeña animación al hover */
+  transition: transform .25s ease;
+}
+.flip-card:hover .fc-emoji {
+  transform: scale(1.18) translateY(-3px);
+}
+
+.fc-titulo {
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-shadow: 0 2px 6px rgba(0,0,0,.5);
+  line-height: 1.25;
+  display: block;
+}
+
+.fc-sub {
+  color: rgba(255,255,255,.85);
+  font-size: 1.1rem;
+  text-shadow: 0 1px 4px rgba(0,0,0,.4);
+  display: block;
+}
+
+/* Pie del frente */
+.flip-hint {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(0,0,0,.48);
+  color: #fff;
+  font-size: 1.1rem;
+  padding: .55rem;
+  display: flex; align-items: center; justify-content: center;
+  gap: .4rem;
+  transition: background .2s;
+}
+.flip-card:hover .flip-hint { background: rgba(0,0,0,.65); }
+
+/* ── REVERSO ── */
+.flip-reverso {
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  background: #0a0a0a;
+}
+
+/* ============================================================
+  CARRUSEL DENTRO DEL REVERSO
+============================================================ */
+
+/* Contenedor del carrusel — ocupa todo el espacio restante */
+.flip-carrusel {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  min-height: 0;
+}
+
+/* Pista que se desplaza horizontalmente */
+.flip-pista {
+  display: flex;
+  height: 100%;
+  transition: transform .38s ease;
+  will-change: transform;
+}
+
+/* Cada slide ocupa el 100% del ancho del carrusel.
+   El ancho exacto en px lo fija JS al navegar (moverCarrusel).
+   min-width:100% es el valor inicial antes del primer clic.   */
+.flip-slide {
+  min-width: 100%;
+  width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+  overflow: hidden;
+  /* Evitar que el navegador calcule mal el ancho con subpíxeles */
+  box-sizing: border-box;
+}
+
+.flip-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  /* foto completa sin deformar, recorta si hace falta */
+  display: block;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ── Barra inferior: título + flechas + volver ── */
+.flip-barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(0,0,0,.75);
+  padding: .55rem .8rem;
+  gap: .5rem;
+  flex-shrink: 0;
+}
+
+.flip-barra-titulo {
+  color: #fff;
+  font-size: 1.15rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.flip-controles {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  flex-shrink: 0;
+}
+
+/* Contador  "2 / 8" */
+.flip-contador {
+  color: rgba(255,255,255,.8);
+  font-size: 1.1rem;
+  min-width: 3.6rem;
+  text-align: center;
+}
+
+/* Botones de navegación ← → */
+.flip-btn-nav {
+  background: rgba(255,255,255,.2);
+  border: none;
+  color: #fff;
+  width: 2.8rem; height: 2.8rem;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .18s;
+  flex-shrink: 0;
+}
+.flip-btn-nav:hover  { background: rgba(255,255,255,.38); }
+.flip-btn-nav:active { background: rgba(255,255,255,.55); }
+.flip-btn-nav:disabled { opacity: .3; cursor: default; }
+
+/* Botón volver al frente */
+.flip-volver {
+  background: rgba(255,255,255,.2);
+  border: none;
+  color: #fff;
+  width: 2.8rem; height: 2.8rem;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .18s;
+  flex-shrink: 0;
+}
+.flip-volver:hover { background: rgba(255,255,255,.38); }
+
+/* ── Sin fotos aún ── */
+.flip-sin-fotos {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .7rem;
+  color: rgba(255,255,255,.88);
+  text-align: center;
+  padding: 1rem;
+}
+.flip-sin-fotos p    { font-size: 1.3rem; font-weight: 700; margin: 0; }
+.flip-sin-fotos span { font-size: 1.1rem; opacity: .8; line-height: 1.4; }
+
+/* ============================================================
+  QUÉ INCLUYE
+============================================================ */
+.modal-info { padding: 2.5rem 3.5rem; }
+.modal-info h3 {
+  font-family: var(--fuente-titulos);
+  font-size: 2rem;
+  color: var(--color-oscuro);
+  margin-bottom: 1.5rem;
+}
+.incluye-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.incluye-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.5rem;
+  color: var(--color-oscuro);
+  background: var(--color-gris-bg);
+  padding: 1.2rem 1.5rem;
+  border-radius: var(--radio-sm);
+}
+.incluye-item i { color: var(--color-primario); font-size: 1.8rem; flex-shrink: 0; }
+
+/* ============================================================
+  BOTONES CTA
+============================================================ */
+.modal-cta {
+  padding: 2rem 3.5rem 3.5rem;
+  display: flex;
+  gap: 1.5rem;
+}
+.btn-modal-primario {
+  flex: 1;
+  background: var(--color-primario);
+  color: #fff;
+  border: none;
+  padding: 1.4rem;
+  border-radius: var(--radio-md);
+  font-size: var(--texto-base);
+  font-weight: 700;
+  font-family: var(--fuente-parrafos);
+  cursor: pointer;
+  transition: background .2s;
+}
+.btn-modal-primario:hover { background: var(--color-medio); }
+.btn-modal-secundario {
+  flex: 1;
+  background: transparent;
+  border: 2px solid var(--color-primario);
+  color: var(--color-primario);
+  padding: 1.4rem;
+  border-radius: var(--radio-md);
+  font-size: var(--texto-base);
+  font-weight: 600;
+  font-family: var(--fuente-parrafos);
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-modal-secundario:hover { background: var(--color-primario); color: #fff; }
+
+/* ============================================================
+  RESPONSIVE
+============================================================ */
+@media (max-width: 600px) {
+  .modal-galeria {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 2rem;
+  }
+  .modal-cabecera,
+  .modal-info,
+  .modal-cta { padding-left: 2rem; padding-right: 2rem; }
+  .incluye-grid { grid-template-columns: 1fr; }
+  .modal-cta { flex-direction: column; }
+  .flip-hint span { display: none; }
+  .flip-barra-titulo { font-size: 1rem; }
+  .flip-btn-nav,
+  .flip-volver { width: 2.4rem; height: 2.4rem; font-size: 1.1rem; }
+}

@@ -1,0 +1,222 @@
+/*
+  ============================================================
+  ARCHIVO    : css/servicios.css
+  DESCRIPCIÓN: Sección de servicios con tarjetas interactivas.
+               Cada tarjeta abre un modal al hacer clic.
+               Los colores de cada servicio se definen al final.
+  ============================================================
+
+  SECCIONES:
+  1. Contenedor de la sección
+  2. Grid de tarjetas
+  3. Tarjeta de servicio
+  4. Imagen superior de la tarjeta
+  5. Cuerpo de la tarjeta (texto)
+  6. Badge (etiqueta de categoría)
+  7. Botón "Ver trabajos"
+  8. Colores por servicio
+  9. Responsive
+*/
+
+
+/* ----------------------------------------------------------
+  1. CONTENEDOR DE LA SECCIÓN
+---------------------------------------------------------- */
+.servicios-seccion {
+  padding: 8rem 4rem;
+  background-color: var(--color-gris-bg);
+}
+
+
+/* ----------------------------------------------------------
+  2. GRID DE TARJETAS
+  Para cambiar el número de columnas, editar repeat(3, 1fr)
+  Ejemplo: repeat(2, 1fr) para solo 2 por fila
+---------------------------------------------------------- */
+.servicios-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+}
+
+
+/* ----------------------------------------------------------
+  3. TARJETA DE SERVICIO
+  cursor: pointer → muestra que es clickeable
+  border: 2px solid transparent → el borde azul aparece en hover
+---------------------------------------------------------- */
+.servicio-card {
+  background-color: #fff;
+  border-radius: var(--radio-lg);
+  overflow: hidden;
+  box-shadow: var(--sombra-suave);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.servicio-card:hover,
+.servicio-card:focus {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 50px rgba(0, 111, 230, 0.18);
+  border-color: var(--color-primario);
+  outline: none;
+}
+
+
+/* ----------------------------------------------------------
+  4. IMAGEN SUPERIOR DE LA TARJETA
+  El gradiente de cada servicio se define en la sección 8.
+  El ícono se escala al hacer hover sobre la tarjeta.
+---------------------------------------------------------- */
+.servicio-img {
+  height: 16rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.servicio-img i {
+  font-size: 5rem;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s ease;
+}
+
+.servicio-card:hover .servicio-img i {
+  transform: scale(1.15);
+}
+
+
+/* ----------------------------------------------------------
+  5. CUERPO DE LA TARJETA (TEXTO)
+---------------------------------------------------------- */
+.servicio-cuerpo {
+  padding: 2.5rem;
+}
+
+.servicio-cuerpo h3 {
+  font-family: var(--fuente-titulos);
+  font-size: var(--texto-lg);
+  margin-bottom: 1rem;
+  color: var(--color-oscuro);
+}
+
+.servicio-cuerpo p {
+  color: var(--color-gris-txt);
+  font-size: 1.5rem;
+  line-height: 1.65;
+  margin-bottom: 2rem;
+}
+
+
+/* ----------------------------------------------------------
+  6. BADGE (ETIQUETA DE CATEGORÍA)
+  Aparece encima del título de cada tarjeta.
+  Para cambiar el texto, editar el <span class="badge"> en index.html
+---------------------------------------------------------- */
+.badge {
+  display: inline-block;
+  background-color: rgba(0, 111, 230, 0.1);
+  color: var(--color-primario);
+  font-size: var(--texto-xs);
+  padding: 0.3rem 1rem;
+  border-radius: var(--radio-pill);
+  margin-bottom: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+
+/* ----------------------------------------------------------
+  7. BOTÓN "VER TRABAJOS"
+  Abre el modal del servicio al hacer clic.
+  La lógica está en js/modal.js
+---------------------------------------------------------- */
+.btn-ver {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--color-primario);
+  font-weight: 600;
+  font-size: var(--texto-sm);
+  background-color: rgba(0, 111, 230, 0.08);
+  padding: 0.8rem 1.8rem;
+  border-radius: var(--radio-pill);
+  border: none;
+  cursor: pointer;
+  font-family: var(--fuente-parrafos);
+  transition: background-color 0.2s;
+}
+
+.btn-ver:hover {
+  background-color: rgba(0, 111, 230, 0.16);
+}
+
+
+/* ----------------------------------------------------------
+  8. COLORES POR SERVICIO
+  Cada clase .color-NOMBRE define el gradiente de la imagen.
+  Para cambiar el color de un servicio, editar el gradiente aquí.
+  Los valores vienen de --grad-NOMBRE en css/variables.css
+---------------------------------------------------------- */
+.color-soporte {
+  background: linear-gradient(135deg, var(--grad-soporte));
+}
+
+.color-pintura {
+  background: linear-gradient(135deg, var(--grad-pintura));
+}
+
+.color-plomeria {
+  background: linear-gradient(135deg, var(--grad-plomeria));
+}
+
+.color-electricidad {
+  background: linear-gradient(135deg, var(--grad-electricidad));
+}
+
+.color-cieloraso {
+  background: linear-gradient(135deg, var(--grad-cieloraso));
+}
+
+.color-remodelacion {
+  background: linear-gradient(135deg, var(--grad-remodelacion));
+}
+
+/* Color gris acerado para soldadura */
+.color-soldadura {
+  background: linear-gradient(135deg, #37474f, #90a4ae);
+}
+
+/* Color azul-verde profundo para impermeabilización */
+.color-impermeabilizacion {
+  background: linear-gradient(135deg, #01579b, #0288d1);
+}
+
+/* Color terracota-naranja para enchape */
+.color-enchape {
+  background: linear-gradient(135deg, #bf360c, #ff7043);
+}
+
+
+/* ----------------------------------------------------------
+  9. RESPONSIVE
+---------------------------------------------------------- */
+@media (max-width: 900px) {
+  .servicios-seccion {
+    padding: 5rem 2rem;
+  }
+  .servicios-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .servicios-grid {
+    grid-template-columns: 1fr;
+  }
+}

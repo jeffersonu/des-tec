@@ -1,0 +1,33 @@
+=======================================================
+CARPETA: img/servicios/
+=======================================================
+Aquí van las fotos de tus trabajos realizados.
+
+CÓMO NOMBRAR LAS FOTOS:
+  pintura-sala-1.jpg
+  pintura-sala-2.jpg
+  pintura-habitacion-1.jpg
+  plomeria-fuga-1.jpg
+  electricidad-tablero-1.jpg
+  ... etc.
+
+TAMAÑO RECOMENDADO: 800 x 600 píxeles
+FORMATO: JPG o WebP (más liviano)
+PESO MÁXIMO: 300 KB por foto (para que cargue rápido)
+
+CÓMO ASIGNAR LAS FOTOS A CADA RECUADRITO:
+  1. Sube las fotos a esta carpeta
+  2. Abre js/modal.js
+  3. Busca el servicio (ej: pintura) y el trabajo (ej: Sala y comedor)
+  4. Agrega las rutas en el campo "fotos":
+
+  Ejemplo:
+  { etiqueta: 'Sala y comedor', descripcion: 'Ambiente elegante',
+    fotos: [
+      'img/servicios/pintura-sala-1.jpg',
+      'img/servicios/pintura-sala-2.jpg',
+    ]
+  },
+
+Cada recuadrito acepta hasta 3 fotos.
+=======================================================
