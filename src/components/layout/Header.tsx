@@ -96,13 +96,13 @@ export default function Header({ config, activeSection }: HeaderProps) {
           className="flex items-center space-x-3 cursor-pointer select-none group"
         >
           <div
-            className="relative flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl overflow-hidden border border-white/20 bg-slate-900/80 shadow-md transition-colors duration-300 group-hover:border-purple-500/50 backdrop-blur-md"
+            className="relative flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden border border-cyan-500/40 bg-slate-950/80 shadow-[0_0_15px_rgba(6,182,212,0.25)] transition-all duration-300 group-hover:border-purple-500/60 group-hover:shadow-[0_0_20px_rgba(168,85,247,0.35)] backdrop-blur-md"
           >
             <img 
-              src={destecLogo}
+              src="/icons/icon-192x192.png"
               alt="Des-Tec Logo"
               referrerPolicy="no-referrer"
-              className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
+              className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105 rounded-full"
             />
           </div>
           <div className="text-left">

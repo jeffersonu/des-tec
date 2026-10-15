@@ -9,7 +9,6 @@ import { AppConfig, PortfolioProject } from './types';
 // Modular Layout & UI Subcomponents
 const InteractiveStarsCanvas = lazy(() => import('./components/ui/InteractiveStarsCanvas'));
 import CosmicBackdrop from './components/ui/CosmicBackdrop';
-import Cursor from './components/ui/Cursor';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import VirtualAssistant from './components/ui/VirtualAssistant';
@@ -92,9 +91,6 @@ export default function App() {
       <Suspense fallback={null}>
         <InteractiveStarsCanvas />
       </Suspense>
-
-      {/* Premium lagging magnetic cursor */}
-      <Cursor />
 
       {/* Floating high-end quick-navigation index bar (active on home) */}
       {location.pathname === '/' && <FloatingNav activeSection={activeSection} />}

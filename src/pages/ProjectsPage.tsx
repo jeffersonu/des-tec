@@ -125,7 +125,7 @@ export default function ProjectsPage({ config, onSelectProject }: ProjectsPagePr
       <section className="relative w-full overflow-hidden">
         <PageHeroCarousel
           slides={getProjectsSlides(scrollToContact)}
-          autoPlayInterval={15000}
+          autoPlayInterval={5000}
         />
       </section>
 

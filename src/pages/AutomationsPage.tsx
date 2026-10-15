@@ -127,7 +127,7 @@ export default function AutomationsPage({ config, onSelectProject }: Automations
       <section className="relative w-full overflow-hidden">
         <PageHeroCarousel
           slides={getAutomationSlides(scrollToContact)}
-          autoPlayInterval={15000}
+          autoPlayInterval={5000}
         />
       </section>
 

@@ -128,7 +128,7 @@ export default function WebDevPage({ config, onSelectProject }: WebDevPageProps)
       <section className="relative w-full overflow-hidden">
         <PageHeroCarousel
           slides={getWebDevSlides(scrollToContact)}
-          autoPlayInterval={15000}
+          autoPlayInterval={5000}
         />
       </section>
 

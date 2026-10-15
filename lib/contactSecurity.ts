@@ -18,6 +18,8 @@
 // ==========================================
 // 1. SANITIZACIÓN / ANTI-INYECCIÓN (XSS, SQL, header injection)
 // ==========================================
+// 1. SANITIZACIÓN / ANTI-INYECCIÓN (XSS, Header Injection & Sanitización Canónica)
+// ==========================================
 export function sanitizeAndFilter(val: any, isLongMessageField = false): any {
   if (typeof val !== 'string') {
     if (val && typeof val === 'object') {
@@ -32,75 +34,84 @@ export function sanitizeAndFilter(val: any, isLongMessageField = false): any {
 
   let clean = val;
 
-  // A. Protege contra Email / Header Injection (quita saltos de línea en campos tipo metadata)
+  // A. Elimina bytes nulos (\0) que causan bypasses en parsers y capas nativas
+  clean = clean.replace(/\0/g, '');
+
+  // B. Protege contra Email / Header Injection (remueve saltos de línea en campos de metadata de una línea)
   if (!isLongMessageField) {
     clean = clean.replace(/[\r\n]+/g, ' ');
   }
 
-  // B. Protege contra HTML Injection & XSS
+  // C. Protege contra HTML Injection & XSS (codificación canónica de caracteres peligrosos)
+  // Nota: No codificamos '/' para no romper URLs legítimas, fechas (DD/MM/AAAA), rutas o formatos telefónicos
   clean = clean
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#x27;')
-    .replace(/\//g, '&#x2F;');
+    .replace(/'/g, '&#x27;');
 
-  // C. Defensa Anti-SQL Injection
-  const sqlKeywords = [
-    /select\s+.*\s+from/gi,
-    /union\s+select/gi,
-    /insert\s+into/gi,
-    /delete\s+from/gi,
-    /drop\s+table/gi,
-    /update\s+.*\s+set/gi,
-    /or\s+1\s*=\s*1/gi,
-    /or\s+['"]1['"]\s*=\s*['"]1['"]/gi,
-  ];
-  sqlKeywords.forEach((pattern) => {
-    clean = clean.replace(pattern, '[REDACTED_SQL_SIGNATURE]');
-  });
-
-  // D. Patrones adicionales de inyección basada en script
+  // D. Limpieza de vectores comunes de inyección activa por pseudo-protocolos o manejadores de eventos
   const scriptPatterns = [
     /javascript:/gi,
-    /onerror=/gi,
-    /onload=/gi,
+    /vbscript:/gi,
+    /data:\s*text\/html/gi,
+    /onerror\s*=/gi,
+    /onload\s*=/gi,
+    /onclick\s*=/gi,
     /eval\s*\(/gi,
     /<script/gi,
     /<\/script>/gi,
   ];
   scriptPatterns.forEach((pattern) => {
-    clean = clean.replace(pattern, '[REDACTED_SCRIPT_SIGNATURE]');
+    clean = clean.replace(pattern, '[BLOCKED_SCRIPT_PATTERN]');
   });
 
   return clean.trim();
 }
 
 // ==========================================
-// 2. RATE LIMITING EN MEMORIA (anti-spam / anti-DDoS básico)
+// 2. RATE LIMITING EN MEMORIA CON PROTECCIÓN DE MEMORIA (anti-DoS & anti-leak)
 // ==========================================
-// NOTA IMPORTANTE PARA VERCEL: en un entorno serverless, cada instancia de la
-// función puede ejecutarse en un proceso distinto, así que este contador NO
-// se comparte de forma perfecta entre invocaciones concurrentes. Sigue
-// aportando una primera barrera (frena ráfagas dentro de la misma instancia
-// "caliente"), pero si en el futuro necesitas un límite estricto y 100%
-// confiable entre todas las instancias, lo ideal es un almacén externo como
-// Vercel KV / Upstash Redis. Para el volumen normal de un formulario de
-// contacto, esto es suficiente.
 const ipRequests = new Map<string, number[]>();
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minuto
 const MAX_REQUESTS_PER_WINDOW = 5; // Máx. 5 solicitudes por ventana
+const MAX_TRACKED_IPS = 1000; // Límite estricto de entradas para evitar fuga de memoria (DoS)
+
+function pruneExpiredIps(now: number) {
+  for (const [ip, timestamps] of ipRequests.entries()) {
+    const valid = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW);
+    if (valid.length === 0) {
+      ipRequests.delete(ip);
+    } else {
+      ipRequests.set(ip, valid);
+    }
+  }
+}
 
 export function isRateLimited(ip: string): boolean {
   const now = Date.now();
-  if (!ipRequests.has(ip)) {
+
+  // Limpieza preventiva si el mapa crece más allá del umbral seguro
+  if (ipRequests.size > MAX_TRACKED_IPS) {
+    pruneExpiredIps(now);
+  }
+
+  const existing = ipRequests.get(ip);
+  if (!existing) {
     ipRequests.set(ip, [now]);
     return false;
   }
 
-  const timestamps = ipRequests.get(ip)!.filter((t) => now - t < RATE_LIMIT_WINDOW);
+  const timestamps = existing.filter((t) => now - t < RATE_LIMIT_WINDOW);
+  if (timestamps.length === 0) {
+    // Si la entrada anterior expiró por completo, reiniciamos el contador con la petición actual
+    ipRequests.set(ip, [now]);
+    return false;
+  }
+
   if (timestamps.length >= MAX_REQUESTS_PER_WINDOW) {
+    ipRequests.set(ip, timestamps);
     return true;
   }
 
@@ -236,6 +247,7 @@ export interface ContactPayload {
   turnstileToken?: string;
   honeypot?: string;
   isOfflineSync?: boolean;
+  aceptaHabeasData?: boolean;
 }
 
 export interface ContactProcessResult {

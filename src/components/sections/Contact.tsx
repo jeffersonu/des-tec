@@ -24,9 +24,10 @@ export default function Contact({ config }: ContactProps) {
     servicio: 'web-dev',
     presupuesto: 'mid',
     mensaje: '',
+    aceptaHabeasData: true,
   });
 
-  const [errors, setErrors] = useState<Partial<ContactFormData>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof ContactFormData, string>>>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSending, setIsSending] = useState(false);
 
@@ -60,7 +61,7 @@ export default function Contact({ config }: ContactProps) {
 
   // 13. DÓNDE SE RECOGE Y PROCESA EL FORMULARIO EN EL CLIENTE
   const validate = () => {
-    const tempErrors: Partial<ContactFormData> = {};
+    const tempErrors: Partial<Record<keyof ContactFormData, string>> = {};
     if (!formData.nombre.trim()) tempErrors.nombre = 'El nombre completo es requerido.';
     if (!formData.correo.trim()) {
       tempErrors.correo = 'El correo electrónico es requerido.';
@@ -69,6 +70,9 @@ export default function Contact({ config }: ContactProps) {
     }
     if (!formData.whatsapp.trim()) tempErrors.whatsapp = 'El WhatsApp es requerido para el contacto ágil.';
     if (!formData.mensaje.trim()) tempErrors.mensaje = 'Cuéntanos un poco sobre tu requerimiento.';
+    if (formData.aceptaHabeasData === false) {
+      tempErrors.aceptaHabeasData = 'Es necesario autorizar el tratamiento de datos para poder contactarte (Ley 1581 de 2012).';
+    }
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
@@ -99,6 +103,7 @@ export default function Contact({ config }: ContactProps) {
           servicio: 'web-dev',
           presupuesto: 'mid',
           mensaje: '',
+          aceptaHabeasData: true,
         });
         setHoneypot('');
       } catch (err) {
@@ -124,6 +129,7 @@ export default function Contact({ config }: ContactProps) {
           servicio: 'web-dev',
           presupuesto: 'mid',
           mensaje: '',
+          aceptaHabeasData: true,
         });
         setHoneypot('');
         return;
@@ -160,6 +166,7 @@ export default function Contact({ config }: ContactProps) {
             servicio: 'web-dev',
             presupuesto: 'mid',
             mensaje: '',
+            aceptaHabeasData: true,
           });
           setHoneypot('');
         } else {
@@ -523,6 +530,27 @@ export default function Contact({ config }: ContactProps) {
                     <span>{apiError}</span>
                   </div>
                 )}
+
+                {/* Autorización de Tratamiento de Datos (Ley 1581 de 2012 - Colombia) */}
+                <div className="space-y-1 pt-1">
+                  <label className="flex items-start space-x-2.5 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={formData.aceptaHabeasData ?? true}
+                      onChange={(e) => setFormData({ ...formData, aceptaHabeasData: e.target.checked })}
+                      className="mt-0.5 w-4 h-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500 cursor-pointer accent-purple-600"
+                    />
+                    <span className="text-[11px] text-slate-600 font-sans leading-tight">
+                      Autorizo el tratamiento de mis datos de conformidad con la <strong>Ley 1581 de 2012</strong> (Habeas Data) para la gestión y cotización de esta solicitud.
+                    </span>
+                  </label>
+                  {errors.aceptaHabeasData && (
+                    <span className="text-[10px] text-red-500 font-sans flex items-center space-x-1 pl-6">
+                      <AlertTriangle className="w-3 h-3 shrink-0" />
+                      <span>{errors.aceptaHabeasData}</span>
+                    </span>
+                  )}
+                </div>
 
                 {/* Submit button */}
                 <Magnetic>

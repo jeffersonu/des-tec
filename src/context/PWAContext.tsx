@@ -61,13 +61,15 @@ export const PWAProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       for (const item of submissions) {
         try {
           // Send cached contact details to the secure validation API
+          // Desempaquetamos correctamente item.data (guardado por IndexedDB) para no enviar datos anidados
+          const submissionPayload = (item as any).data ? (item as any).data : item;
           const response = await fetch('/api/verify-contact', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              ...item,
+              ...submissionPayload,
               isOfflineSync: true,
             }),
           });
@@ -372,8 +374,8 @@ export const PWAProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             transition={{ type: 'spring', damping: 20, stiffness: 150 }}
             className="fixed bottom-6 left-6 z-[9999] max-w-[340px] p-4 rounded-2xl bg-slate-900/90 border border-[var(--color-primary)]/30 backdrop-blur-md text-white shadow-[0_12px_36px_rgba(0,0,0,0.5)] flex items-start gap-3.5"
           >
-            <div className="p-2 bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 rounded-xl text-[var(--color-primary)] shrink-0">
-              <Smartphone className="w-5 h-5" />
+            <div className="relative w-11 h-11 rounded-full overflow-hidden border border-cyan-400/40 shadow-[0_0_12px_rgba(6,182,212,0.3)] shrink-0 bg-slate-950/90 p-0.5">
+              <img src="/icons/icon-192x192.png" alt="Des-Tec" className="w-full h-full object-contain rounded-full" />
             </div>
             
             <div className="flex-1 min-w-0 text-left">

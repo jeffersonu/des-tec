@@ -106,11 +106,6 @@
   }
 }
 
-/* Custom interactive-hover cursor overrides on specific layouts */
-.interactive-hover {
-  cursor: none !important;
-}
-
 /* Base resets to respect premium theme */
 body {
   background-color: #F7FAFC;

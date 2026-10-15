@@ -166,14 +166,14 @@ export default function Footer({ config }: FooterProps) {
                 onClick={scrollUp} 
                 className="flex items-center space-x-3 cursor-pointer select-none group"
               >
-                <div className={`relative flex items-center justify-center w-10 h-10 rounded-xl overflow-hidden border transition-colors duration-300 ${
-                  isDark ? 'border-slate-800 group-hover:border-[var(--color-primary)]/40' : 'border-[var(--color-secondary)]/15 group-hover:border-[var(--color-primary)]/40'
+                <div className={`relative flex items-center justify-center w-10 h-10 rounded-full overflow-hidden border transition-all duration-300 shadow-[0_0_12px_rgba(6,182,212,0.25)] ${
+                  isDark ? 'border-cyan-500/40 group-hover:border-purple-500/60 group-hover:shadow-[0_0_18px_rgba(168,85,247,0.35)] bg-slate-950/80' : 'border-[var(--color-secondary)]/15 group-hover:border-[var(--color-primary)]/40 bg-slate-950/80'
                 }`}>
                   <img 
-                    src={destecLogo}
+                    src="/icons/icon-192x192.png"
                     alt="Des-Tec Logo"
                     referrerPolicy="no-referrer"
-                    className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+                    className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105 rounded-full"
                   />
                 </div>
                 <div>

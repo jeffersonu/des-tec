@@ -177,7 +177,7 @@ export default function HomePage({ config }: HomePageProps) {
       <section id="inicio" className="relative w-full overflow-hidden">
         <PageHeroCarousel 
           slides={getHomeSlides(scrollToContact)} 
-          autoPlayInterval={15000} 
+          autoPlayInterval={5000} 
         />
       </section>
 

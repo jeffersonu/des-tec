@@ -1,11 +1,34 @@
-import webDevBanner1 from '../assets/images/web_dev_banner_1_1785294526701.jpg';
-import webDevBanner2 from '../assets/images/web_dev_banner_2_1785294542037.jpg';
-import webDevBanner3 from '../assets/images/web_dev_banner_3_1785294561371.jpg';
-import autoBanner1 from '../assets/images/automation_banner_1_1785294577660.jpg';
-import autoBanner2 from '../assets/images/automation_banner_2_1785294598803.jpg';
-import crmBanner1 from '../assets/images/crm_banner_1_1785294614169.jpg';
-import crmBanner2 from '../assets/images/crm_banner_2_1785294631380.jpg';
-import sobreMiBanner1 from '../assets/images/sobre_mi_banner_1_1785294647888.jpg';
+import webDevBanner1 from '../assets/images/web_dev_banner_1_clean.jpg';
+import webDevBanner1Mobile from '../assets/images/web_dev_banner_1_mobile.jpg';
+import webDevBanner1Tablet from '../assets/images/web_dev_banner_1_tablet.jpg';
+
+import webDevBanner2 from '../assets/images/web_dev_banner_2_clean.jpg';
+import webDevBanner2Mobile from '../assets/images/web_dev_banner_2_mobile.jpg';
+import webDevBanner2Tablet from '../assets/images/web_dev_banner_2_tablet.jpg';
+
+import webDevBanner3 from '../assets/images/web_dev_banner_3_clean.jpg';
+import webDevBanner3Mobile from '../assets/images/web_dev_banner_3_mobile.jpg';
+import webDevBanner3Tablet from '../assets/images/web_dev_banner_3_tablet.jpg';
+
+import autoBanner1 from '../assets/images/automation_banner_1_clean.jpg';
+import autoBanner1Mobile from '../assets/images/automation_banner_1_mobile.jpg';
+import autoBanner1Tablet from '../assets/images/automation_banner_1_tablet.jpg';
+
+import autoBanner2 from '../assets/images/automation_banner_2_clean.jpg';
+import autoBanner2Mobile from '../assets/images/automation_banner_2_mobile.jpg';
+import autoBanner2Tablet from '../assets/images/automation_banner_2_tablet.jpg';
+
+import crmBanner1 from '../assets/images/crm_banner_1_clean.jpg';
+import crmBanner1Mobile from '../assets/images/crm_banner_1_mobile.jpg';
+import crmBanner1Tablet from '../assets/images/crm_banner_1_tablet.jpg';
+
+import crmBanner2 from '../assets/images/crm_banner_2_clean.jpg';
+import crmBanner2Mobile from '../assets/images/crm_banner_2_mobile.jpg';
+import crmBanner2Tablet from '../assets/images/crm_banner_2_tablet.jpg';
+
+import sobreMiBanner1 from '../assets/images/sobre_mi_banner_1_clean.jpg';
+import sobreMiBanner1Mobile from '../assets/images/sobre_mi_banner_1_mobile.jpg';
+import sobreMiBanner1Tablet from '../assets/images/sobre_mi_banner_1_tablet.jpg';
 
 import { CarouselSlide } from '../components/ui/PageHeroCarousel';
 
@@ -14,6 +37,8 @@ export const getHomeSlides = (scrollToContact: () => void): CarouselSlide[] => [
   {
     id: 'home-web',
     image: webDevBanner1,
+    mobileImage: webDevBanner1Mobile,
+    tabletImage: webDevBanner1Tablet,
     badge: 'Desarrollo Web & SaaS',
     title: 'Soluciones Web Rápidas, Modernas y Escalables',
     description: 'Creamos experiencias digitales de alto impacto que transforman visitantes en clientes con React y TypeScript.',
@@ -25,6 +50,8 @@ export const getHomeSlides = (scrollToContact: () => void): CarouselSlide[] => [
   {
     id: 'home-auto',
     image: autoBanner1,
+    mobileImage: autoBanner1Mobile,
+    tabletImage: autoBanner1Tablet,
     badge: 'Automatización & n8n',
     title: 'Automatizamos Tus Procesos, Optimizamos Tu Éxito',
     description: 'Workflows inteligentes que integran tus apps, eliminan el trabajo repetitivo y ahorran cientos de horas.',
@@ -36,6 +63,8 @@ export const getHomeSlides = (scrollToContact: () => void): CarouselSlide[] => [
   {
     id: 'home-crm',
     image: crmBanner1,
+    mobileImage: crmBanner1Mobile,
+    tabletImage: crmBanner1Tablet,
     badge: 'CRM & Paneles Comercial',
     title: 'CRM Inteligente: Conecta, Gestiona y Haz Crecer Tu Empresa',
     description: 'Tableros Kanban de ventas, cotizadores automáticos y reportes en tiempo real adaptados a tu negocio.',
@@ -47,6 +76,8 @@ export const getHomeSlides = (scrollToContact: () => void): CarouselSlide[] => [
   {
     id: 'home-tech',
     image: webDevBanner2,
+    mobileImage: webDevBanner2Mobile,
+    tabletImage: webDevBanner2Tablet,
     badge: 'Ingeniería Artesanal',
     title: 'Tecnología Que Conecta Ideas Con Resultados Reales',
     description: 'Desarrollo de software a medida sin plantillas obsoletas para empresas preparadas para escalar.',
@@ -62,6 +93,8 @@ export const getWebDevSlides = (scrollToContact: () => void): CarouselSlide[] =>
   {
     id: 'web-1',
     image: webDevBanner1,
+    mobileImage: webDevBanner1Mobile,
+    tabletImage: webDevBanner1Tablet,
     badge: 'Plataformas Web & SaaS',
     title: 'Creamos Experiencias Digitales de Alto Rendimiento',
     description: 'Sitios corporativos y aplicaciones web ultrarrápidas con arquitectura React modular y diseño responsive.',
@@ -73,6 +106,8 @@ export const getWebDevSlides = (scrollToContact: () => void): CarouselSlide[] =>
   {
     id: 'web-2',
     image: webDevBanner2,
+    mobileImage: webDevBanner2Mobile,
+    tabletImage: webDevBanner2Tablet,
     badge: 'Stack Tecnológico',
     title: 'Tecnología Que Conecta Ideas Con Resultados Reales',
     description: 'Usamos las mejores tecnologías del mercado: React, Next.js, Vue, Node.js, Laravel y MySQL para la máxima estabilidad.',
@@ -84,6 +119,8 @@ export const getWebDevSlides = (scrollToContact: () => void): CarouselSlide[] =>
   {
     id: 'web-3',
     image: webDevBanner3,
+    mobileImage: webDevBanner3Mobile,
+    tabletImage: webDevBanner3Tablet,
     badge: 'Presencia Digital 360°',
     title: 'Llevamos Tu Presencia Digital Al Siguiente Nivel',
     description: 'Diseño UI/UX atractivo, desarrollo escalable, optimización extrema de velocidad y soporte continuo.',
@@ -99,6 +136,8 @@ export const getAutomationSlides = (scrollToContact: () => void): CarouselSlide[
   {
     id: 'auto-1',
     image: autoBanner1,
+    mobileImage: autoBanner1Mobile,
+    tabletImage: autoBanner1Tablet,
     badge: 'Motor n8n Enterprise',
     title: 'Automatizamos Tus Procesos, Optimizamos Tu Éxito',
     description: 'Conectamos tus formularios, bases de datos y herramientas comerciales en un flujo continuo y rápido.',
@@ -110,6 +149,8 @@ export const getAutomationSlides = (scrollToContact: () => void): CarouselSlide[
   {
     id: 'auto-2',
     image: autoBanner2,
+    mobileImage: autoBanner2Mobile,
+    tabletImage: autoBanner2Tablet,
     badge: 'Workflows & Chatbots',
     title: 'Automatizamos Hoy Para Que Tu Negocio Avance Siempre',
     description: 'Diseñamos flujos inteligentes que eliminan lo repetitivo y te dan resultados desde el primer día.',
@@ -125,6 +166,8 @@ export const getCrmSlides = (scrollToContact: () => void): CarouselSlide[] => [
   {
     id: 'crm-1',
     image: crmBanner1,
+    mobileImage: crmBanner1Mobile,
+    tabletImage: crmBanner1Tablet,
     badge: 'CRM Personalizado',
     title: 'CRM Inteligente: Relaciones Que Impulsan Tu Negocio',
     description: 'Gestiona clientes, oportunidades y equipos desde un solo lugar con total claridad y mejores decisiones.',
@@ -136,6 +179,8 @@ export const getCrmSlides = (scrollToContact: () => void): CarouselSlide[] => [
   {
     id: 'crm-2',
     image: crmBanner2,
+    mobileImage: crmBanner2Mobile,
+    tabletImage: crmBanner2Tablet,
     badge: 'Plataforma Integrada',
     title: 'Conecta, Gestiona y Haz Crecer Tu Empresa',
     description: 'Una plataforma todo en uno para automatizar procesos comerciales y convertir oportunidades en resultados.',
@@ -151,6 +196,8 @@ export const getProjectsSlides = (scrollToContact: () => void): CarouselSlide[] 
   {
     id: 'proj-slide-1',
     image: webDevBanner1,
+    mobileImage: webDevBanner1Mobile,
+    tabletImage: webDevBanner1Tablet,
     badge: 'Portafolio de Ingeniería',
     title: 'Proyectos Desarrollados para Empresas de Alto Rendimiento',
     description: 'Explora nuestra galería de soluciones reales: portales web, workflows automatizados con n8n y sistemas CRM personalizados.',
@@ -162,6 +209,8 @@ export const getProjectsSlides = (scrollToContact: () => void): CarouselSlide[] 
   {
     id: 'proj-slide-2',
     image: autoBanner1,
+    mobileImage: autoBanner1Mobile,
+    tabletImage: autoBanner1Tablet,
     badge: 'Flujos & Automatizaciones',
     title: 'Workflows Inteligentes e Integraciones 24/7',
     description: 'Procesos de negocio automatizados con WhatsApp Cloud API, n8n y modelos de inteligencia artificial.',
@@ -173,6 +222,8 @@ export const getProjectsSlides = (scrollToContact: () => void): CarouselSlide[] 
   {
     id: 'proj-slide-3',
     image: crmBanner1,
+    mobileImage: crmBanner1Mobile,
+    tabletImage: crmBanner1Tablet,
     badge: 'Plataformas CRM A Medida',
     title: 'CRM y Paneles de Control Comercial Personalizados',
     description: 'Pipelines Kanban interactivos, cotizadores en tiempo real y gestión operativa eficiente para empresas.',
@@ -188,6 +239,8 @@ export const getSobreMiSlides = (scrollToContact: () => void): CarouselSlide[] =
   {
     id: 'sobre-1',
     image: sobreMiBanner1,
+    mobileImage: sobreMiBanner1Mobile,
+    tabletImage: sobreMiBanner1Tablet,
     badge: 'Des-Tec Equipo',
     title: 'Desarrollo y Tecnología Sin Compromisos',
     description: 'Equipo senior apasionado por crear arquitectura de software limpia, ultrarrápida y enfocada en conversión.',
@@ -199,6 +252,8 @@ export const getSobreMiSlides = (scrollToContact: () => void): CarouselSlide[] =
   {
     id: 'sobre-2',
     image: webDevBanner2,
+    mobileImage: webDevBanner2Mobile,
+    tabletImage: webDevBanner2Tablet,
     badge: 'Especialidades',
     title: 'Ingeniería de Software de Alto Nivel',
     description: 'Construimos cada línea de código a medida sin depender de plantillas lentas ni plugins inseguros.',

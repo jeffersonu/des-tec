@@ -122,7 +122,7 @@ export default function CrmPage({ config, onSelectProject }: CrmPageProps) {
       <section className="relative w-full overflow-hidden">
         <PageHeroCarousel
           slides={getCrmSlides(scrollToContact)}
-          autoPlayInterval={15000}
+          autoPlayInterval={5000}
         />
       </section>
 

@@ -222,7 +222,7 @@ export default function SobreMi({ config }: SobreMiProps) {
         >
           <PageHeroCarousel
             slides={getSobreMiSlides(scrollToContact)}
-            autoPlayInterval={15000}
+            autoPlayInterval={5000}
           />
         </motion.div>
 

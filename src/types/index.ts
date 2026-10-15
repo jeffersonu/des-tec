@@ -57,6 +57,7 @@ export interface ContactFormData {
   servicio: string;
   presupuesto: string;
   mensaje: string;
+  aceptaHabeasData?: boolean;
 }
 
 export interface AppConfig {
