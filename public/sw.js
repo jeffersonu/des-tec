@@ -1,4 +1,4 @@
-const CACHE_NAME = 'destec-pwa-cache-v2.0.0';
+const CACHE_NAME = 'destec-pwa-cache-v2.1.0';
 const OFFLINE_URL = '/offline.html';
 
 // Critical core assets to precache immediately
@@ -15,8 +15,10 @@ const PRECACHE_ASSETS = [
   '/icons/icon-144x144.png',
   '/icons/icon-152x152.png',
   '/icons/icon-192x192.png',
+  '/icons/icon-256x256.png',
   '/icons/icon-384x384.png',
   '/icons/icon-512x512.png',
+  '/icons/icon-maskable-192x192.png',
   '/icons/icon-maskable.png'
 ];
 
