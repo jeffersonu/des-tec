@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppConfig } from '../../types';
 import { 
   Github, 
@@ -13,9 +13,10 @@ import {
   Check, 
   ArrowUpRight 
 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import Magnetic from '../ui/Magnetic';
 import { useTimeTheme } from '../../context/TimeThemeContext';
+import { trackEvent } from '../../utils/analytics';
 import destecLogo from '../../assets/images/img1.jpeg';
 
 interface FooterProps {
@@ -25,6 +26,14 @@ interface FooterProps {
 export default function Footer({ config }: FooterProps) {
   const { theme } = useTimeTheme();
   const isDark = true; // Identidad visual espacial oscura permanente en todo el sitio
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+
+  // Escucha el evento global para abrir la política desde cualquier formulario o sección
+  useEffect(() => {
+    const handleOpenPrivacy = () => setIsPrivacyOpen(true);
+    window.addEventListener('des-tec:open-privacy', handleOpenPrivacy);
+    return () => window.removeEventListener('des-tec:open-privacy', handleOpenPrivacy);
+  }, []);
 
   const scrollUp = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -38,6 +47,10 @@ export default function Footer({ config }: FooterProps) {
   };
 
   const handleOpenWhatsApp = () => {
+    trackEvent('whatsapp_click', {
+      button_location: 'footer',
+      page_path: window.location.pathname,
+    });
     const url = `https://wa.me/${config.whatsapp}?text=${encodeURIComponent(config.whatsappMsg)}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   };
@@ -322,7 +335,16 @@ export default function Footer({ config }: FooterProps) {
               }`}>
                 <li className="flex items-center space-x-2.5">
                   <Mail className="w-4 h-4 text-[var(--color-primary)]/70 shrink-0" />
-                  <a href={`mailto:${config.correo}`} className="hover:text-[var(--color-primary)] transition-colors duration-300 font-medium break-all">
+                  <a
+                    href={`mailto:${config.correo}`}
+                    onClick={() =>
+                      trackEvent('email_click', {
+                        button_location: 'footer',
+                        page_path: window.location.pathname,
+                      })
+                    }
+                    className="hover:text-[var(--color-primary)] transition-colors duration-300 font-medium break-all"
+                  >
                     {config.correo}
                   </a>
                 </li>
@@ -358,19 +380,24 @@ export default function Footer({ config }: FooterProps) {
               }`}>
                 <li className="relative pl-3.5">
                   <span className="absolute left-0 top-1.5 w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]/50" />
+                  Tratamiento de datos bajo la Ley 1581 de 2012 (Habeas Data).
+                </li>
+                <li className="relative pl-3.5">
+                  <span className="absolute left-0 top-1.5 w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]/50" />
                   La información de contacto se usa solo para fines comerciales.
                 </li>
                 <li className="relative pl-3.5">
                   <span className="absolute left-0 top-1.5 w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]/50" />
-                  Toda la información es tratada de forma confidencial.
+                  Analítica web anónima para mejora del servicio sin envío de PII.
                 </li>
-                <li className="relative pl-3.5">
-                  <span className="absolute left-0 top-1.5 w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]/50" />
-                  Servicios prestados mediante acuerdo privado.
-                </li>
-                <li className="relative pl-3.5">
-                  <span className="absolute left-0 top-1.5 w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]/50" />
-                  Disponible para todo el mundo.
+                <li className="relative pl-3.5 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setIsPrivacyOpen(true)}
+                    className="text-cyan-400 hover:text-cyan-300 underline font-semibold text-left cursor-pointer transition-colors"
+                  >
+                    Política de Privacidad y Cookies
+                  </button>
                 </li>
               </ul>
             </div>
@@ -412,6 +439,96 @@ export default function Footer({ config }: FooterProps) {
         </div>
 
       </div>
+
+      {/* MODAL DE POLÍTICA DE PRIVACIDAD, HABEAS DATA (LEY 1581 DE 2012) Y COOKIES ANALÍTICAS */}
+      <AnimatePresence>
+        {isPrivacyOpen && (
+          <div
+            className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md"
+            onClick={() => setIsPrivacyOpen(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ duration: 0.25 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-slate-900 border border-slate-700/80 rounded-2xl p-6 sm:p-8 text-left text-slate-200 shadow-2xl space-y-5 font-sans"
+            >
+              <div className="flex items-start justify-between border-b border-slate-800 pb-4">
+                <div>
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-cyan-400 font-bold block">
+                    Cumplimiento Normativo • Ley 1581 de 2012
+                  </span>
+                  <h3 className="text-lg sm:text-xl font-display font-bold text-white mt-1">
+                    Política de Privacidad, Tratamiento de Datos y Cookies
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsPrivacyOpen(false)}
+                  className="text-slate-400 hover:text-white px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold cursor-pointer transition-colors"
+                >
+                  ✕ Cerrar
+                </button>
+              </div>
+
+              <div className="space-y-4 text-xs leading-relaxed text-slate-300">
+                <div>
+                  <h4 className="font-bold text-white mb-1">1. Responsable del Tratamiento de Datos</h4>
+                  <p>
+                    <strong>{config.nombre}</strong> ({config.ciudad}, {config.pais}), con correo electrónico de contacto{' '}
+                    <span className="text-cyan-300">{config.correo}</span> y línea de atención{' '}
+                    <span className="text-cyan-300">{config.whatsapp}</span>, actúa como responsable del tratamiento de los datos personales recolectados a través de este sitio web de conformidad con la <strong>Ley 1581 de 2012</strong> y el <strong>Decreto 1377 de 2013</strong> de la República de Colombia.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="font-bold text-white mb-1">2. Finalidad de la Recolección</h4>
+                  <p>
+                    Los datos suministrados voluntariamente en nuestro formulario de contacto (nombre, empresa, correo electrónico, número de WhatsApp, ciudad y detalles del proyecto) se utilizan exclusivamente para:
+                  </p>
+                  <ul className="list-disc pl-5 mt-1 space-y-1 text-slate-400">
+                    <li>Evaluar requerimientos técnicos y elaborar cotizaciones formales solicitadas por el titular.</li>
+                    <li>Brindar asesoría comercial y seguimiento sobre servicios de desarrollo de software, automatización y CRM.</li>
+                    <li>No vendemos, alquilamos ni cedemos bases de datos a terceros.</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="font-bold text-white mb-1">3. Derechos del Titular (Habeas Data / ARCO)</h4>
+                  <p>
+                    Como titular de sus datos personales, usted tiene derecho en cualquier momento a conocer, actualizar, rectificar y solicitar la supresión de su información o revocar la autorización otorgada, enviando una solicitud gratuita al correo{' '}
+                    <span className="text-cyan-300">{config.correo}</span>.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="font-bold text-white mb-1">4. Uso de Cookies y Analítica Web Anónima (Google Analytics 4)</h4>
+                  <p>
+                    Este sitio utiliza almacenamiento local técnico (para el funcionamiento sin conexión de la aplicación PWA) y cookies analíticas de primera parte mediante <strong>Google Analytics 4 (GA4)</strong> con el único propósito de medir el tráfico general, las secciones más visitadas y la interacción con botones de contacto:
+                  </p>
+                  <ul className="list-disc pl-5 mt-1 space-y-1 text-slate-400">
+                    <li><strong>Anonimización de IP:</strong> Activada por defecto (<code>anonymize_ip: true</code>).</li>
+                    <li><strong>Cero Datos Personales en Analítica:</strong> Nuestro sistema filtra y bloquea automáticamente cualquier dato personal identificable (correos, teléfonos, nombres o mensajes) antes de enviar eventos estadísticos a Google Analytics.</li>
+                    <li><strong>Cookies Seguras:</strong> Configuradas con atributos <code>SameSite=Lax;Secure</code> bajo conexión cifrada HTTPS.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-slate-800 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setIsPrivacyOpen(false)}
+                  className="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs rounded-xl cursor-pointer transition-colors"
+                >
+                  Entendido
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </footer>
   );
 }

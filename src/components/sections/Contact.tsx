@@ -6,6 +6,7 @@ import Magnetic from '../ui/Magnetic';
 import { defaultBudgetConfig } from '../../data';
 import { usePWA } from '../../context/PWAContext';
 import { saveOfflineSubmission } from '../../utils/offlineDb';
+import { trackEvent } from '../../utils/analytics';
 
 interface ContactProps {
   config: AppConfig;
@@ -90,6 +91,14 @@ export default function Contact({ config }: ContactProps) {
         // Save to offline database (con los valores ya traducidos a texto legible)
         await saveOfflineSubmission(getReadableFormData(formData));
         await refreshQueueCount();
+        // Registra conversión de lead en GA4 sin datos personales (cumplimiento Ley 1581 de 2012)
+        trackEvent('generate_lead', {
+          service_selected: formData.servicio,
+          budget_tier: formData.presupuesto,
+          currency: currency,
+          delivery_mode: 'offline_queue',
+          page_path: window.location.pathname,
+        });
         setIsSending(false);
         setIsOfflineSubmitted(true);
         setIsSubmitted(true);
@@ -153,6 +162,14 @@ export default function Contact({ config }: ContactProps) {
         const data = await response.json();
 
         if (response.ok && data.success) {
+          // Registra conversión de lead en GA4 sin datos personales (cumplimiento Ley 1581 de 2012)
+          trackEvent('generate_lead', {
+            service_selected: formData.servicio,
+            budget_tier: formData.presupuesto,
+            currency: currency,
+            delivery_mode: 'online',
+            page_path: window.location.pathname,
+          });
           setIsSending(false);
           setIsOfflineSubmitted(false);
           setIsSubmitted(true);
@@ -252,7 +269,16 @@ export default function Contact({ config }: ContactProps) {
                 </div>
                 <div className="font-sans text-xs">
                   <div className="text-slate-500 font-bold uppercase">Enviar Correo</div>
-                  <a href={`mailto:${config.correo}`} className="text-slate-900 hover:text-purple-600 font-semibold transition-all">
+                  <a
+                    href={`mailto:${config.correo}`}
+                    onClick={() =>
+                      trackEvent('email_click', {
+                        button_location: 'contact_section',
+                        page_path: window.location.pathname,
+                      })
+                    }
+                    className="text-slate-900 hover:text-purple-600 font-semibold transition-all"
+                  >
                     {config.correo}
                   </a>
                 </div>
@@ -264,7 +290,18 @@ export default function Contact({ config }: ContactProps) {
                 </div>
                 <div className="font-sans text-xs">
                   <div className="text-slate-500 font-bold uppercase">WhatsApp Directo</div>
-                  <a href={`https://wa.me/${config.whatsapp.replace(/\+/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-slate-900 hover:text-purple-600 font-semibold transition-all">
+                  <a
+                    href={`https://wa.me/${config.whatsapp.replace(/\+/g, '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() =>
+                      trackEvent('whatsapp_click', {
+                        button_location: 'contact_section',
+                        page_path: window.location.pathname,
+                      })
+                    }
+                    className="text-slate-900 hover:text-purple-600 font-semibold transition-all"
+                  >
                     {config.whatsapp}
                   </a>
                 </div>
@@ -541,7 +578,17 @@ export default function Contact({ config }: ContactProps) {
                       className="mt-0.5 w-4 h-4 rounded border-slate-300 text-purple-600 focus:ring-purple-500 cursor-pointer accent-purple-600"
                     />
                     <span className="text-[11px] text-slate-600 font-sans leading-tight">
-                      Autorizo el tratamiento de mis datos de conformidad con la <strong>Ley 1581 de 2012</strong> (Habeas Data) para la gestión y cotización de esta solicitud.
+                      Autorizo el tratamiento de mis datos de conformidad con la <strong>Ley 1581 de 2012</strong> (Habeas Data) para la gestión y cotización de esta solicitud.{' '}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          window.dispatchEvent(new CustomEvent('des-tec:open-privacy'));
+                        }}
+                        className="text-purple-700 hover:text-purple-900 underline font-semibold cursor-pointer"
+                      >
+                        Ver Política de Privacidad y Cookies
+                      </button>
                     </span>
                   </label>
                   {errors.aceptaHabeasData && (

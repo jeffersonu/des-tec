@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { AppConfig } from '../../types';
 import { usePWA } from '../../context/PWAContext';
 import { useTimeTheme } from '../../context/TimeThemeContext';
+import { trackEvent } from '../../utils/analytics';
 import assistantResting from '../../assets/images/destec_assistant_idle.svg';
 import assistantWaving from '../../assets/images/destec_assistant_waving.svg';
 import assistantBlinking from '../../assets/images/destec_assistant_blink.svg';
@@ -119,6 +120,11 @@ export default function VirtualAssistant({ config }: VirtualAssistantProps) {
   // OPEN WHATSAPP HANDLER
   const handleOpenWA = () => {
     if (!isOnline) return;
+    // Registra conversión de clic en WhatsApp en GA4 sin enviar datos personales
+    trackEvent('whatsapp_click', {
+      button_location: 'floating_assistant',
+      page_path: window.location.pathname,
+    });
     // Usa el número y mensaje centralizados en config (src/data.ts), para que
     // exista un único lugar donde editar el WhatsApp de todo el sitio.
     const cleanNumber = (config.whatsapp || '').replace(/[^\d]/g, '');
