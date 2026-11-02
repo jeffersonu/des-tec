@@ -4,7 +4,11 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App.tsx';
 import { TimeThemeInterfaceProvider } from './context/TimeThemeContext.tsx';
 import { PWAProvider } from './context/PWAContext.tsx';
+import { initGA } from './utils/analytics.ts';
 import './index.css';
+
+// Inicializa Google Analytics 4 si VITE_GA_MEASUREMENT_ID está configurado
+initGA();
 
 // Intercept and handle benign cross-origin script errors or Turnstile script blocking inside the sandbox iframe
 if (typeof window !== 'undefined') {

@@ -57,6 +57,15 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(event.request.url);
 
+  // 0. Bypass Service Worker cache for Google Analytics / Tag Manager telemetry
+  if (
+    url.hostname.includes('googletagmanager.com') ||
+    url.hostname.includes('google-analytics.com') ||
+    url.hostname.includes('analytics.google.com')
+  ) {
+    return;
+  }
+
   // 1. Navigation requests (HTML pages) -> Network first, fallback to offline template
   if (event.request.mode === 'navigate') {
     event.respondWith(

@@ -16,6 +16,7 @@ const PortfolioModal = lazy(() => import('./components/ui/PortfolioModal'));
 import FloatingNav from './components/layout/FloatingNav';
 import TimeThemeSelector from './components/ui/TimeThemeSelector';
 import { useTimeTheme } from './context/TimeThemeContext';
+import { trackPageView } from './utils/analytics';
 
 // Multi-page Views
 import HomePage from './pages/HomePage';
@@ -28,10 +29,11 @@ export default function App() {
   const { theme } = useTimeTheme();
   const location = useLocation();
 
-  // Scroll to top on route change
+  // Scroll to top and register SPA page view on route change
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [location.pathname]);
+    trackPageView(location.pathname + location.search);
+  }, [location.pathname, location.search]);
 
   // Config state, load from localStorage if exists
   const [config, setConfig] = useState<AppConfig>(() => {
