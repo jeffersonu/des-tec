@@ -166,7 +166,7 @@ function isOriginTrusted(
   return false;
 }
 
-// 4. ENVÍO DEL LEAD A HUBSPOT (Forms API)
+// 4. ENVÍO DEL LEAD A HUBSPOT (Forms API con fallback automático de propiedades)
 async function submitToHubSpot(params: {
   portalId: string;
   formGuid: string;
@@ -179,39 +179,98 @@ async function submitToHubSpot(params: {
   presupuesto?: string;
   mensaje: string;
   pageUri?: string;
-}): Promise<{ ok: boolean; error?: string }> {
+}): Promise<{ ok: boolean; error?: string; isBlockedEmail?: boolean }> {
+  const hubspotUrl = `https://api.hsforms.com/submissions/v3/integration/submit/${params.portalId}/${params.formGuid}`;
+  const context = {
+    pageUri: params.pageUri || 'https://des-tec.co',
+    pageName: 'Des-Tec — Formulario de contacto',
+  };
+
+  // Resumen completo por si el formulario en HubSpot no tiene creadas las propiedades personalizadas 'servicio' o 'presupuesto'
+  const enrichedMessage = [
+    params.mensaje,
+    '',
+    '--- Detalles de la Cotización ---',
+    `Servicio: ${params.servicio || 'No especificado'}`,
+    `Presupuesto: ${params.presupuesto || 'No especificado'}`,
+    params.empresa ? `Empresa: ${params.empresa}` : '',
+    params.ciudad ? `Ciudad: ${params.ciudad}` : '',
+    params.whatsapp ? `WhatsApp: ${params.whatsapp}` : '',
+  ]
+    .filter(Boolean)
+    .join('\n');
+
   try {
-    const hubspotUrl = `https://api.hsforms.com/submissions/v3/integration/submit/${params.portalId}/${params.formGuid}`;
+    // Intento 1: Envío completo con todas las propiedades (solo incluye campos con valor para evitar errores de validación en vacíos)
+    const fullFields = [
+      { name: 'firstname', value: params.nombre },
+      { name: 'email', value: params.correo },
+      ...(params.empresa ? [{ name: 'company', value: params.empresa }] : []),
+      ...(params.whatsapp ? [{ name: 'phone', value: params.whatsapp }] : []),
+      ...(params.ciudad ? [{ name: 'city', value: params.ciudad }] : []),
+      ...(params.servicio ? [{ name: 'servicio', value: params.servicio }] : []),
+      ...(params.presupuesto ? [{ name: 'presupuesto', value: params.presupuesto }] : []),
+      { name: 'message', value: params.mensaje },
+    ];
 
-    const hubspotPayload = {
-      fields: [
-        { name: 'firstname', value: params.nombre },
-        { name: 'email', value: params.correo },
-        { name: 'company', value: params.empresa || '' },
-        { name: 'phone', value: params.whatsapp || '' },
-        { name: 'city', value: params.ciudad || '' },
-        { name: 'servicio', value: params.servicio || '' },
-        { name: 'presupuesto', value: params.presupuesto || '' },
-        { name: 'message', value: params.mensaje },
-      ],
-      context: {
-        pageUri: params.pageUri || 'https://des-tec.co',
-        pageName: 'Des-Tec — Formulario de contacto',
-      },
-    };
-
-    const hubspotResponse = await fetch(hubspotUrl, {
+    const firstResponse = await fetch(hubspotUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(hubspotPayload),
+      body: JSON.stringify({ fields: fullFields, context }),
     });
 
-    if (!hubspotResponse.ok) {
-      const errorText = await hubspotResponse.text();
-      return { ok: false, error: `HTTP ${hubspotResponse.status}: ${errorText}` };
+    if (firstResponse.ok) {
+      return { ok: true };
     }
 
-    return { ok: true };
+    const firstErrorText = await firstResponse.text();
+    console.warn('[HubSpot] Intento 1 rechazado, probando fallback con campos estándar:', firstErrorText);
+
+    // Si HubSpot bloqueó el correo por ser gratuito (@gmail.com, @hotmail.com, etc.)
+    if (firstErrorText.includes('BLOCKED_EMAIL') || firstErrorText.includes('FREE_EMAIL')) {
+      return {
+        ok: false,
+        isBlockedEmail: true,
+        error: firstErrorText,
+      };
+    }
+
+    // Intento 2 (Fallback): Solo propiedades estándar nativas de HubSpot con toda la información dentro de 'message'
+    const fallbackFields = [
+      { name: 'firstname', value: params.nombre },
+      { name: 'email', value: params.correo },
+      ...(params.whatsapp ? [{ name: 'phone', value: params.whatsapp }] : []),
+      { name: 'message', value: enrichedMessage },
+    ];
+
+    const secondResponse = await fetch(hubspotUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fields: fallbackFields, context }),
+    });
+
+    if (secondResponse.ok) {
+      return { ok: true };
+    }
+
+    // Intento 3 (Fallback mínimo): Solo firstname + email por si 'message' o 'phone' no están en el formulario de HubSpot
+    const minimalFields = [
+      { name: 'firstname', value: `${params.nombre} (${params.servicio || 'Contacto'})` },
+      { name: 'email', value: params.correo },
+    ];
+
+    const thirdResponse = await fetch(hubspotUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fields: minimalFields, context }),
+    });
+
+    if (thirdResponse.ok) {
+      return { ok: true };
+    }
+
+    const finalErrorText = await secondResponse.text();
+    return { ok: false, error: `HTTP ${secondResponse.status}: ${finalErrorText}` };
   } catch (err: any) {
     return { ok: false, error: err?.message || String(err) };
   }
@@ -298,27 +357,43 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // D. Envío del lead a HubSpot (si está configurado en variables de entorno)
-    const hubspotPortalId = process.env.HUBSPOT_PORTAL_ID;
-    const hubspotFormGuid = process.env.HUBSPOT_FORM_GUID;
+    const hubspotPortalId = process.env.HUBSPOT_PORTAL_ID?.trim();
+    const hubspotFormGuid = process.env.HUBSPOT_FORM_GUID?.trim();
 
-    if (hubspotPortalId && hubspotFormGuid) {
-      const hubspotResult = await submitToHubSpot({
-        portalId: hubspotPortalId,
-        formGuid: hubspotFormGuid,
-        nombre,
-        correo,
-        empresa,
-        whatsapp,
-        ciudad,
-        servicio,
-        presupuesto,
-        mensaje,
-        pageUri: (req.headers['referer'] as string) || 'https://des-tec.co',
+    if (!hubspotPortalId || !hubspotFormGuid) {
+      console.error('[HubSpot] Faltan variables HUBSPOT_PORTAL_ID o HUBSPOT_FORM_GUID en el servidor.');
+      return res.status(503).json({
+        success: false,
+        message: 'El servicio de recepción de correo (HUBSPOT_PORTAL_ID / HUBSPOT_FORM_GUID) aún no está configurado en las variables de entorno del servidor.',
       });
+    }
 
-      if (!hubspotResult.ok) {
-        console.error('[HubSpot] El envío del lead falló:', hubspotResult.error);
+    const hubspotResult = await submitToHubSpot({
+      portalId: hubspotPortalId,
+      formGuid: hubspotFormGuid,
+      nombre,
+      correo,
+      empresa,
+      whatsapp,
+      ciudad,
+      servicio,
+      presupuesto,
+      mensaje,
+      pageUri: (req.headers['referer'] as string) || 'https://des-tec.co',
+    });
+
+    if (!hubspotResult.ok) {
+      console.error('[HubSpot] El envío del lead falló en todos los intentos:', hubspotResult.error);
+      if (hubspotResult.isBlockedEmail) {
+        return res.status(400).json({
+          success: false,
+          message: 'El formulario de HubSpot tiene bloqueados los correos gratuitos (@gmail.com). Desactiva "Bloquear proveedores de correo gratuitos" en HubSpot o prueba con un correo corporativo.',
+        });
       }
+      return res.status(502).json({
+        success: false,
+        message: 'No se pudo registrar la solicitud en HubSpot CRM. Verifica que el Portal ID y el Form GUID sean correctos en Vercel.',
+      });
     }
 
     return res.status(200).json({
