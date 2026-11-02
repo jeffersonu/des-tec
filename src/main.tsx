@@ -1,10 +1,10 @@
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import App from './App.tsx';
-import { TimeThemeInterfaceProvider } from './context/TimeThemeContext.tsx';
-import { PWAProvider } from './context/PWAContext.tsx';
-import { initGA } from './utils/analytics.ts';
+import App from './App';
+import { TimeThemeInterfaceProvider } from './context/TimeThemeContext';
+import { PWAProvider } from './context/PWAContext';
+import { initGA } from './utils/analytics';
 import './index.css';
 
 // Inicializa Google Analytics 4 si VITE_GA_MEASUREMENT_ID está configurado

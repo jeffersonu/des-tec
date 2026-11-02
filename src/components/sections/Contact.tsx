@@ -159,7 +159,15 @@ export default function Contact({ config }: ContactProps) {
           }),
         });
 
-        const data = await response.json();
+        // Parseo seguro: evita que una respuesta no-JSON del servidor (ej. error 502/500 de plataforma)
+        // lance SyntaxError y se confunda con un fallo de conexión a internet del usuario.
+        const rawText = await response.text();
+        let data: { success?: boolean; message?: string } = {};
+        try {
+          data = rawText ? JSON.parse(rawText) : {};
+        } catch {
+          console.error('[Contact] El servidor devolvió una respuesta no-JSON:', response.status);
+        }
 
         if (response.ok && data.success) {
           // Registra conversión de lead en GA4 sin datos personales (cumplimiento Ley 1581 de 2012)
@@ -188,7 +196,10 @@ export default function Contact({ config }: ContactProps) {
           setHoneypot('');
         } else {
           setIsSending(false);
-          setApiError(data.message || 'No se pudo enviar tu solicitud. Por favor, inténtalo de nuevo.');
+          setApiError(
+            data.message ||
+              `El servidor no pudo procesar la solicitud en este momento (Código ${response.status}). Por favor, inténtalo de nuevo o contáctanos por WhatsApp.`
+          );
         }
       } catch (error) {
         console.error('[Contact] API delivery error:', error);

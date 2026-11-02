@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import dotenv from 'dotenv';
-import { sanitizeAndFilter, isRateLimited, processContactSubmission, type ContactPayload } from './lib/contactSecurity.ts';
+import { sanitizeAndFilter, isRateLimited, isOriginTrusted, processContactSubmission, type ContactPayload } from './lib/contactSecurity';
 
 // Load environment variables from .env config file
 dotenv.config();
@@ -79,35 +79,13 @@ app.use((req, res, next) => {
 // 3. ANTI-CSRF (Cross-Site Request Forgery) MITIGATION
 // Inspects request Origin and Referer on state-modifying endpoints (POST, PUT, DELETE).
 app.use((req, res, next) => {
-  if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(req.method)) {
-    const origin = req.headers.origin;
-    const referer = req.headers.referer;
-    const host = req.headers.host;
-
-    if (process.env.NODE_ENV === 'production') {
-      const allowedHost = host || '';
-      let isVerified = false;
-
-      if (origin) {
-        const originUrl = new URL(origin);
-        if (originUrl.host === allowedHost) {
-          isVerified = true;
-        }
-      } else if (referer) {
-        const refererUrl = new URL(referer);
-        if (refererUrl.host === allowedHost) {
-          isVerified = true;
-        }
-      }
-
-      if (!isVerified) {
-        console.warn(`[Security Alert] CSRF verification failed from Origin/Referer. Blocked request from IP: ${req.ip}`);
-        return res.status(403).json({
-          success: false,
-          message: 'Falla en la verificación del origen seguro. Solicitud denegada.'
-        });
-      }
-    }
+  const isProd = process.env.NODE_ENV === 'production';
+  if (!isOriginTrusted(req.method, req.headers as Record<string, string | string[] | undefined>, isProd)) {
+    console.warn(`[Security Alert] CSRF verification failed from Origin/Referer. Blocked request from IP: ${req.ip}`);
+    return res.status(403).json({
+      success: false,
+      message: 'Falla en la verificación del origen seguro. Solicitud denegada.'
+    });
   }
   next();
 });

@@ -136,17 +136,38 @@ export function isOriginTrusted(
     return Array.isArray(v) ? v[0] : v;
   };
 
+  const normalizeHost = (h: string) => h.trim().toLowerCase().replace(/^www\./, '');
+
   const origin = getHeader('origin');
   const referer = getHeader('referer');
-  const host = getHeader('host') || '';
+  const rawHost = getHeader('x-forwarded-host') || getHeader('host') || '';
+  const allowedHosts = [
+    getHeader('host'),
+    getHeader('x-forwarded-host'),
+    'des-tec.co',
+    'www.des-tec.co',
+  ]
+    .filter(Boolean)
+    .flatMap((h) => h!.split(','))
+    .map((h) => normalizeHost(h));
+
+  if (!origin && !referer) {
+    // En algunas WebViews o PWAs instaladas en Android, el navegador omite Origin/Referer en peticiones same-origin
+    return Boolean(rawHost);
+  }
 
   try {
     if (origin) {
-      const originUrl = new URL(origin);
-      if (originUrl.host === host) return true;
-    } else if (referer) {
-      const refererUrl = new URL(referer);
-      if (refererUrl.host === host) return true;
+      const originHost = normalizeHost(new URL(origin).host);
+      if (allowedHosts.includes(originHost) || originHost.endsWith('.vercel.app') || originHost.endsWith('.run.app')) {
+        return true;
+      }
+    }
+    if (referer) {
+      const refererHost = normalizeHost(new URL(referer).host);
+      if (allowedHosts.includes(refererHost) || refererHost.endsWith('.vercel.app') || refererHost.endsWith('.run.app')) {
+        return true;
+      }
     }
   } catch {
     return false;

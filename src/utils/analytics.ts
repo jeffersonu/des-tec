@@ -4,6 +4,13 @@
  * (no envío de datos personales identificables - PII - ni rastreo invasivo).
  */
 
+declare global {
+  interface Window {
+    dataLayer: unknown[];
+    gtag: (...args: unknown[]) => void;
+  }
+}
+
 // Expresión regular estricta para validar el ID de medición de GA4 (ej: G-1A2B3C4D5E)
 const GA_MEASUREMENT_ID_REGEX = /^G-[A-Z0-9]{6,15}$/i;
 
