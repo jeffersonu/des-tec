@@ -3,17 +3,26 @@
  * ---------------------------------------------------------------------------
  * Función serverless de Vercel para `POST /api/verify-contact`.
  *
- * NOTA ARQUITECTÓNICA IMPORTANTE PARA VERCEL ESM ("type": "module"):
- * Este archivo es 100% autónomo (sin imports relativos a fuera de /api ni
- * extensiones .ts) para evitar el error `ERR_UNKNOWN_FILE_EXTENSION` /
- * `ERR_MODULE_NOT_FOUND` en el runtime Serverless de Node.js en Vercel.
+ * Envía las solicitudes del formulario de contacto directamente a los dos
+ * correos oficiales:
+ *   - informacion.destec@gmail.com
+ *   - jeffersonurbina20@gmail.com
+ * mediante SMTP seguro (Gmail App Password con Nodemailer), y opcionalmente
+ * sincroniza con HubSpot si está configurado.
  * ---------------------------------------------------------------------------
  */
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import nodemailer from 'nodemailer';
 
 export const config = {
   maxDuration: 15,
 };
+
+// Destinatarios oficiales por defecto
+const DEFAULT_RECEIVER_EMAILS = [
+  'informacion.destec@gmail.com',
+  'jeffersonurbina20@gmail.com',
+];
 
 interface ContactPayload {
   nombre: string;
@@ -166,111 +175,130 @@ function isOriginTrusted(
   return false;
 }
 
-// 4. ENVÍO DEL LEAD A HUBSPOT (Forms API con fallback automático de propiedades)
-async function submitToHubSpot(params: {
-  portalId: string;
-  formGuid: string;
-  nombre: string;
-  correo: string;
-  empresa?: string;
-  whatsapp?: string;
-  ciudad?: string;
-  servicio?: string;
-  presupuesto?: string;
-  mensaje: string;
-  pageUri?: string;
-}): Promise<{ ok: boolean; error?: string; isBlockedEmail?: boolean }> {
-  const hubspotUrl = `https://api.hsforms.com/submissions/v3/integration/submit/${params.portalId}/${params.formGuid}`;
-  const context = {
-    pageUri: params.pageUri || 'https://des-tec.co',
-    pageName: 'Des-Tec — Formulario de contacto',
-  };
-
-  // Resumen completo por si el formulario en HubSpot no tiene creadas las propiedades personalizadas 'servicio' o 'presupuesto'
-  const enrichedMessage = [
-    params.mensaje,
-    '',
-    '--- Detalles de la Cotización ---',
-    `Servicio: ${params.servicio || 'No especificado'}`,
-    `Presupuesto: ${params.presupuesto || 'No especificado'}`,
-    params.empresa ? `Empresa: ${params.empresa}` : '',
-    params.ciudad ? `Ciudad: ${params.ciudad}` : '',
-    params.whatsapp ? `WhatsApp: ${params.whatsapp}` : '',
-  ]
-    .filter(Boolean)
-    .join('\n');
-
+// 4. ENVÍO DIRECTO POR CORREO ELECTRÓNICO A LOS DOS CORREOS OFICIALES (Gmail SMTP)
+async function sendDirectNotificationEmails(params: {
+  smtpUser: string;
+  smtpPass: string;
+  smtpHost?: string;
+  smtpPort?: number;
+  recipients: string[];
+  payload: ContactPayload;
+  clientIp: string;
+}): Promise<{ ok: boolean; error?: string }> {
   try {
-    // Intento 1: Envío completo con todas las propiedades (solo incluye campos con valor para evitar errores de validación en vacíos)
-    const fullFields = [
-      { name: 'firstname', value: params.nombre },
-      { name: 'email', value: params.correo },
-      ...(params.empresa ? [{ name: 'company', value: params.empresa }] : []),
-      ...(params.whatsapp ? [{ name: 'phone', value: params.whatsapp }] : []),
-      ...(params.ciudad ? [{ name: 'city', value: params.ciudad }] : []),
-      ...(params.servicio ? [{ name: 'servicio', value: params.servicio }] : []),
-      ...(params.presupuesto ? [{ name: 'presupuesto', value: params.presupuesto }] : []),
-      { name: 'message', value: params.mensaje },
-    ];
+    // Eliminamos espacios en blanco de la Contraseña de Aplicación de Google (ej. "abcd efgh ijkl mnop" -> "abcdefghijklmnop")
+    const cleanPass = params.smtpPass.replace(/\s+/g, '');
+    const host = params.smtpHost || 'smtp.gmail.com';
+    const port = params.smtpPort || 465;
 
-    const firstResponse = await fetch(hubspotUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fields: fullFields, context }),
+    const transporter = nodemailer.createTransport({
+      host,
+      port,
+      secure: port === 465,
+      auth: {
+        user: params.smtpUser,
+        pass: cleanPass,
+      },
     });
 
-    if (firstResponse.ok) {
-      return { ok: true };
-    }
+    const { nombre, empresa, correo, whatsapp, ciudad, servicio, presupuesto, mensaje } = params.payload;
+    const cleanWhatsappDigits = (whatsapp || '').replace(/[^\d]/g, '');
+    const bogotaTime = new Intl.DateTimeFormat('es-CO', {
+      dateStyle: 'full',
+      timeStyle: 'medium',
+      timeZone: 'America/Bogota',
+    }).format(new Date());
 
-    const firstErrorText = await firstResponse.text();
-    console.warn('[HubSpot] Intento 1 rechazado, probando fallback con campos estándar:', firstErrorText);
+    const subject = `🚀 Nueva Cotización Des-Tec: ${nombre} — ${servicio || 'Consulta General'}`;
 
-    // Si HubSpot bloqueó el correo por ser gratuito (@gmail.com, @hotmail.com, etc.)
-    if (firstErrorText.includes('BLOCKED_EMAIL') || firstErrorText.includes('FREE_EMAIL')) {
-      return {
-        ok: false,
-        isBlockedEmail: true,
-        error: firstErrorText,
-      };
-    }
+    const textBody = [
+      'NUEVA SOLICITUD DE COTIZACIÓN — DES-TEC',
+      '========================================',
+      `Fecha (Colombia): ${bogotaTime}`,
+      `Nombre completo: ${nombre}`,
+      `Empresa: ${empresa || 'No especificada'}`,
+      `Correo electrónico: ${correo}`,
+      `WhatsApp: ${whatsapp || 'No especificado'}`,
+      `Ciudad / País: ${ciudad || 'No especificada'}`,
+      `Servicio requerido: ${servicio || 'No especificado'}`,
+      `Presupuesto estimado: ${presupuesto || 'No especificado'}`,
+      '',
+      'DETALLES DEL REQUERIMIENTO:',
+      mensaje,
+      '',
+      '----------------------------------------',
+      'Autorización Ley 1581 de 2012 (Habeas Data): Aceptada por el titular.',
+    ].join('\n');
 
-    // Intento 2 (Fallback): Solo propiedades estándar nativas de HubSpot con toda la información dentro de 'message'
-    const fallbackFields = [
-      { name: 'firstname', value: params.nombre },
-      { name: 'email', value: params.correo },
-      ...(params.whatsapp ? [{ name: 'phone', value: params.whatsapp }] : []),
-      { name: 'message', value: enrichedMessage },
-    ];
+    const htmlBody = `
+      <div style="font-family: Arial, sans-serif; max-width: 620px; margin: 0 auto; background-color: #0f172a; color: #f8fafc; border-radius: 16px; overflow: hidden; border: 1px solid #334155;">
+        <div style="background: linear-gradient(90deg, #7c3aed, #2563eb, #06b6d4); padding: 20px 24px;">
+          <h2 style="margin: 0; font-size: 18px; color: #ffffff;">🚀 Nueva Solicitud de Cotización — Des-Tec</h2>
+          <p style="margin: 4px 0 0 0; font-size: 12px; color: #e2e8f0;">Recibida el ${bogotaTime}</p>
+        </div>
+        <div style="padding: 24px; background-color: #1e293b;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            <tr>
+              <td style="padding: 8px 0; color: #94a3b8; width: 160px; font-weight: bold;">Nombre Completo:</td>
+              <td style="padding: 8px 0; color: #ffffff; font-weight: bold;">${nombre}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color: #94a3b8; font-weight: bold;">Empresa:</td>
+              <td style="padding: 8px 0; color: #e2e8f0;">${empresa || 'No especificada'}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color: #94a3b8; font-weight: bold;">Correo Electrónico:</td>
+              <td style="padding: 8px 0;"><a href="mailto:${correo}" style="color: #38bdf8; text-decoration: underline;">${correo}</a></td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color: #94a3b8; font-weight: bold;">WhatsApp:</td>
+              <td style="padding: 8px 0;">
+                ${
+                  cleanWhatsappDigits
+                    ? `<a href="https://wa.me/${cleanWhatsappDigits}" target="_blank" style="color: #4ade80; text-decoration: underline; font-weight: bold;">${whatsapp} (Abrir chat en WhatsApp)</a>`
+                    : whatsapp || 'No especificado'
+                }
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color: #94a3b8; font-weight: bold;">Ciudad / País:</td>
+              <td style="padding: 8px 0; color: #e2e8f0;">${ciudad || 'No especificada'}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color: #94a3b8; font-weight: bold;">Servicio Requerido:</td>
+              <td style="padding: 8px 0; color: #c084fc; font-weight: bold;">${servicio || 'No especificado'}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color: #94a3b8; font-weight: bold;">Presupuesto Estimado:</td>
+              <td style="padding: 8px 0; color: #38bdf8; font-weight: bold;">${presupuesto || 'No especificado'}</td>
+            </tr>
+          </table>
 
-    const secondResponse = await fetch(hubspotUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fields: fallbackFields, context }),
+          <div style="margin-top: 18px; padding: 16px; background-color: #0f172a; border-radius: 12px; border: 1px solid #334155;">
+            <div style="font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: bold; margin-bottom: 8px;">
+              Detalles del Requerimiento:
+            </div>
+            <div style="font-size: 14px; color: #f1f5f9; white-space: pre-wrap; line-height: 1.5;">${mensaje}</div>
+          </div>
+
+          <div style="margin-top: 16px; font-size: 11px; color: #64748b; border-top: 1px solid #334155; padding-top: 12px;">
+            ✅ El titular aceptó el tratamiento de datos personales conforme a la <strong>Ley 1581 de 2012 (Habeas Data)</strong>.<br/>
+            💡 Puedes responder directamente a este correo para escribirle a <strong>${correo}</strong>.
+          </div>
+        </div>
+      </div>
+    `;
+
+    await transporter.sendMail({
+      from: `"Des-Tec Web" <${params.smtpUser}>`,
+      to: params.recipients.join(', '),
+      replyTo: correo,
+      subject,
+      text: textBody,
+      html: htmlBody,
     });
 
-    if (secondResponse.ok) {
-      return { ok: true };
-    }
-
-    // Intento 3 (Fallback mínimo): Solo firstname + email por si 'message' o 'phone' no están en el formulario de HubSpot
-    const minimalFields = [
-      { name: 'firstname', value: `${params.nombre} (${params.servicio || 'Contacto'})` },
-      { name: 'email', value: params.correo },
-    ];
-
-    const thirdResponse = await fetch(hubspotUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ fields: minimalFields, context }),
-    });
-
-    if (thirdResponse.ok) {
-      return { ok: true };
-    }
-
-    const finalErrorText = await secondResponse.text();
-    return { ok: false, error: `HTTP ${secondResponse.status}: ${finalErrorText}` };
+    return { ok: true };
   } catch (err: any) {
     return { ok: false, error: err?.message || String(err) };
   }
@@ -328,7 +356,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // 4. Sanitización
     const sanitized = sanitizeAndFilter({ ...body }) as ContactPayload;
-    const { nombre, empresa, correo, whatsapp, ciudad, servicio, presupuesto, mensaje, honeypot } = sanitized;
+    const { nombre, correo, mensaje, honeypot } = sanitized;
 
     // A. Honeypot
     if (honeypot) {
@@ -356,43 +384,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ success: false, message: 'La solicitud contiene patrones de contenido bloqueados por seguridad.' });
     }
 
-    // D. Envío del lead a HubSpot (si está configurado en variables de entorno)
-    const hubspotPortalId = process.env.HUBSPOT_PORTAL_ID?.trim();
-    const hubspotFormGuid = process.env.HUBSPOT_FORM_GUID?.trim();
+    // D. Envío directo a los dos correos electrónicos oficiales (informacion.destec@gmail.com y jeffersonurbina20@gmail.com)
+    const smtpUser = (process.env.SMTP_USER || 'informacion.destec@gmail.com').trim();
+    const smtpPass = (process.env.SMTP_PASS || '').trim();
+    const customRecipients = process.env.CONTACT_RECEIVER_EMAILS
+      ? process.env.CONTACT_RECEIVER_EMAILS.split(',').map((e) => e.trim()).filter(Boolean)
+      : DEFAULT_RECEIVER_EMAILS;
 
-    if (!hubspotPortalId || !hubspotFormGuid) {
-      console.error('[HubSpot] Faltan variables HUBSPOT_PORTAL_ID o HUBSPOT_FORM_GUID en el servidor.');
+    if (!smtpPass) {
+      console.error('[Email] Falta configurar la variable de entorno SMTP_PASS en Vercel.');
       return res.status(503).json({
         success: false,
-        message: 'El servicio de recepción de correo (HUBSPOT_PORTAL_ID / HUBSPOT_FORM_GUID) aún no está configurado en las variables de entorno del servidor.',
+        message: 'Falta configurar la contraseña de aplicación de Gmail (SMTP_PASS) en las variables de entorno de Vercel para enviar el correo.',
       });
     }
 
-    const hubspotResult = await submitToHubSpot({
-      portalId: hubspotPortalId,
-      formGuid: hubspotFormGuid,
-      nombre,
-      correo,
-      empresa,
-      whatsapp,
-      ciudad,
-      servicio,
-      presupuesto,
-      mensaje,
-      pageUri: (req.headers['referer'] as string) || 'https://des-tec.co',
+    const emailResult = await sendDirectNotificationEmails({
+      smtpUser,
+      smtpPass,
+      smtpHost: process.env.SMTP_HOST?.trim(),
+      smtpPort: process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 465,
+      recipients: customRecipients,
+      payload: sanitized,
+      clientIp,
     });
 
-    if (!hubspotResult.ok) {
-      console.error('[HubSpot] El envío del lead falló en todos los intentos:', hubspotResult.error);
-      if (hubspotResult.isBlockedEmail) {
-        return res.status(400).json({
-          success: false,
-          message: 'El formulario de HubSpot tiene bloqueados los correos gratuitos (@gmail.com). Desactiva "Bloquear proveedores de correo gratuitos" en HubSpot o prueba con un correo corporativo.',
-        });
-      }
+    if (!emailResult.ok) {
+      console.error('[Email] Error al enviar el correo por SMTP:', emailResult.error);
       return res.status(502).json({
         success: false,
-        message: 'No se pudo registrar la solicitud en HubSpot CRM. Verifica que el Portal ID y el Form GUID sean correctos en Vercel.',
+        message: 'No se pudo enviar el correo electrónico. Verifica que SMTP_USER y SMTP_PASS (Contraseña de aplicación de 16 letras de Google) sean correctos en Vercel.',
       });
     }
 
