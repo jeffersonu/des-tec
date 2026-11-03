@@ -7,12 +7,11 @@
  * correos oficiales:
  *   - informacion.destec@gmail.com
  *   - jeffersonurbina20@gmail.com
- * mediante SMTP seguro (Gmail App Password con Nodemailer), y opcionalmente
- * sincroniza con HubSpot si está configurado.
+ * utilizando la API REST v3 moderna de Brevo sobre HTTPS (`https://api.brevo.com/v3/smtp/email`),
+ * sin exponer ni requerir acceso a las contraseñas de las cuentas de Google.
  * ---------------------------------------------------------------------------
  */
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import nodemailer from 'nodemailer';
 
 export const config = {
   maxDuration: 15,
@@ -175,32 +174,14 @@ function isOriginTrusted(
   return false;
 }
 
-// 4. ENVÍO DIRECTO POR CORREO ELECTRÓNICO A LOS DOS CORREOS OFICIALES (Gmail SMTP)
-async function sendDirectNotificationEmails(params: {
-  smtpUser: string;
-  smtpPass: string;
-  smtpHost?: string;
-  smtpPort?: number;
+// 4. ENVÍO TRANSACCIONAL MODERNO VÍA BREVO REST API v3 (HTTPS)
+async function sendEmailViaBrevo(params: {
+  apiKey: string;
+  senderEmail: string;
   recipients: string[];
   payload: ContactPayload;
-  clientIp: string;
 }): Promise<{ ok: boolean; error?: string }> {
   try {
-    // Eliminamos espacios en blanco de la Contraseña de Aplicación de Google (ej. "abcd efgh ijkl mnop" -> "abcdefghijklmnop")
-    const cleanPass = params.smtpPass.replace(/\s+/g, '');
-    const host = params.smtpHost || 'smtp.gmail.com';
-    const port = params.smtpPort || 465;
-
-    const transporter = nodemailer.createTransport({
-      host,
-      port,
-      secure: port === 465,
-      auth: {
-        user: params.smtpUser,
-        pass: cleanPass,
-      },
-    });
-
     const { nombre, empresa, correo, whatsapp, ciudad, servicio, presupuesto, mensaje } = params.payload;
     const cleanWhatsappDigits = (whatsapp || '').replace(/[^\d]/g, '');
     const bogotaTime = new Intl.DateTimeFormat('es-CO', {
@@ -211,7 +192,7 @@ async function sendDirectNotificationEmails(params: {
 
     const subject = `🚀 Nueva Cotización Des-Tec: ${nombre} — ${servicio || 'Consulta General'}`;
 
-    const textBody = [
+    const textContent = [
       'NUEVA SOLICITUD DE COTIZACIÓN — DES-TEC',
       '========================================',
       `Fecha (Colombia): ${bogotaTime}`,
@@ -230,7 +211,7 @@ async function sendDirectNotificationEmails(params: {
       'Autorización Ley 1581 de 2012 (Habeas Data): Aceptada por el titular.',
     ].join('\n');
 
-    const htmlBody = `
+    const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 620px; margin: 0 auto; background-color: #0f172a; color: #f8fafc; border-radius: 16px; overflow: hidden; border: 1px solid #334155;">
         <div style="background: linear-gradient(90deg, #7c3aed, #2563eb, #06b6d4); padding: 20px 24px;">
           <h2 style="margin: 0; font-size: 18px; color: #ffffff;">🚀 Nueva Solicitud de Cotización — Des-Tec</h2>
@@ -289,14 +270,34 @@ async function sendDirectNotificationEmails(params: {
       </div>
     `;
 
-    await transporter.sendMail({
-      from: `"Des-Tec Web" <${params.smtpUser}>`,
-      to: params.recipients.join(', '),
-      replyTo: correo,
-      subject,
-      text: textBody,
-      html: htmlBody,
+    // Llamada HTTPS al endpoint oficial de Brevo Transactional Email API v3
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        accept: 'application/json',
+        'content-type': 'application/json',
+        'api-key': params.apiKey,
+      },
+      body: JSON.stringify({
+        sender: {
+          name: 'Des-Tec Web',
+          email: params.senderEmail,
+        },
+        to: params.recipients.map((email) => ({ email })),
+        replyTo: {
+          email: correo,
+          name: nombre,
+        },
+        subject,
+        htmlContent,
+        textContent,
+      }),
     });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      return { ok: false, error: `HTTP ${response.status}: ${errorText}` };
+    }
 
     return { ok: true };
   } catch (err: any) {
@@ -384,36 +385,33 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ success: false, message: 'La solicitud contiene patrones de contenido bloqueados por seguridad.' });
     }
 
-    // D. Envío directo a los dos correos electrónicos oficiales (informacion.destec@gmail.com y jeffersonurbina20@gmail.com)
-    const smtpUser = (process.env.SMTP_USER || 'informacion.destec@gmail.com').trim();
-    const smtpPass = (process.env.SMTP_PASS || '').trim();
+    // D. Envío directo mediante la API REST v3 de Brevo a los dos correos oficiales
+    const brevoApiKey = (process.env.BREVO_API_KEY || '').trim();
+    const senderEmail = (process.env.BREVO_SENDER_EMAIL || 'informacion.destec@gmail.com').trim();
     const customRecipients = process.env.CONTACT_RECEIVER_EMAILS
       ? process.env.CONTACT_RECEIVER_EMAILS.split(',').map((e) => e.trim()).filter(Boolean)
       : DEFAULT_RECEIVER_EMAILS;
 
-    if (!smtpPass) {
-      console.error('[Email] Falta configurar la variable de entorno SMTP_PASS en Vercel.');
+    if (!brevoApiKey) {
+      console.error('[Brevo] Falta configurar la variable de entorno BREVO_API_KEY en Vercel.');
       return res.status(503).json({
         success: false,
-        message: 'Falta configurar la contraseña de aplicación de Gmail (SMTP_PASS) en las variables de entorno de Vercel para enviar el correo.',
+        message: 'Falta configurar la llave de API de Brevo (BREVO_API_KEY) en las variables de entorno de Vercel.',
       });
     }
 
-    const emailResult = await sendDirectNotificationEmails({
-      smtpUser,
-      smtpPass,
-      smtpHost: process.env.SMTP_HOST?.trim(),
-      smtpPort: process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 465,
+    const emailResult = await sendEmailViaBrevo({
+      apiKey: brevoApiKey,
+      senderEmail,
       recipients: customRecipients,
       payload: sanitized,
-      clientIp,
     });
 
     if (!emailResult.ok) {
-      console.error('[Email] Error al enviar el correo por SMTP:', emailResult.error);
+      console.error('[Brevo] Error al enviar el correo:', emailResult.error);
       return res.status(502).json({
         success: false,
-        message: 'No se pudo enviar el correo electrónico. Verifica que SMTP_USER y SMTP_PASS (Contraseña de aplicación de 16 letras de Google) sean correctos en Vercel.',
+        message: 'No se pudo procesar el envío en Brevo. Verifica que BREVO_API_KEY sea válida y que el correo remitente (BREVO_SENDER_EMAIL) esté verificado en tu cuenta de Brevo.',
       });
     }
 

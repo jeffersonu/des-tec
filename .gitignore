@@ -8,3 +8,4 @@ coverage/
 !.env.example
 DOCUMENTACION.docx
 DOCUMENTACION.pdf
+public/assets/aistudio/
