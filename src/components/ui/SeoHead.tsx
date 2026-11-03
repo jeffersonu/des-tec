@@ -88,7 +88,7 @@ export default function SeoHead({
       logo: 'https://des-tec.co/logo.jpg',
       image: ogImage,
       telephone: '+573192078407',
-      email: 'informacion.destec@gmail.com',
+      email: 'contacto@des-tec.co',
       priceRange: '$$$',
       address: {
         '@type': 'PostalAddress',

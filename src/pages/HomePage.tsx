@@ -130,7 +130,7 @@ export default function HomePage({ config }: HomePageProps) {
               image: 'https://des-tec.co/logo.jpg',
               description: 'Servicios profesionales de desarrollo web de alto rendimiento, automatización de procesos con n8n y chatbots de WhatsApp.',
               telephone: '+573192078407',
-              email: 'informacion.destec@gmail.com',
+              email: 'contacto@des-tec.co',
               priceRange: '$$$',
               address: {
                 '@type': 'PostalAddress',

@@ -5,7 +5,7 @@ export const defaultAppConfig: AppConfig = {
   cargo: 'Desarrollo y Tecnología',
   ciudad: 'Bogotá',
   pais: 'Colombia',
-  correo: 'informacion.destec@gmail.com',
+  correo: 'contacto@des-tec.co',
   whatsapp: '+573192078407',
   whatsappMsg: 'Hola Des-Tec, me interesa solicitar una cotización para un proyecto tecnológico.',
   redes: {

@@ -40,7 +40,11 @@ export default function App() {
     const saved = localStorage.getItem('des_tec_studio_config');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (!parsed.correo || parsed.correo === 'informacion.destec@gmail.com') {
+          parsed.correo = defaultAppConfig.correo;
+        }
+        return { ...defaultAppConfig, ...parsed };
       } catch (e) {
         return defaultAppConfig;
       }

@@ -398,7 +398,7 @@ export async function processContactSubmission(
 
   // D. Envío directo mediante la API REST v3 de Brevo a los dos correos oficiales
   const brevoApiKey = (process.env.BREVO_API_KEY || '').trim();
-  const senderEmail = (process.env.BREVO_SENDER_EMAIL || 'informacion.destec@gmail.com').trim();
+  const senderEmail = (process.env.BREVO_SENDER_EMAIL || 'contacto@des-tec.co').trim();
   const customRecipients = process.env.CONTACT_RECEIVER_EMAILS
     ? process.env.CONTACT_RECEIVER_EMAILS.split(',').map((e) => e.trim()).filter(Boolean)
     : DEFAULT_RECEIVER_EMAILS;
